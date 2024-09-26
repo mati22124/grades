@@ -3,9 +3,10 @@ import Firebase
 import GoogleSignIn
 
 struct LoginView: View {
-    @State private var email = ""
-    @State private var password = ""
     @State private var isSigningUp = false
+    @Binding var showLoginView: Bool
+    
+    @StateObject private var viewModel = signInViewModel()
     
     let backgroundColor = Color(red: 0.2, green: 0.5, blue: 0.8) // Darker sky blue
     let accentColor = Color(red: 1.0, green: 0.8, blue: 0.0) // Gold accent
@@ -29,10 +30,10 @@ struct LoginView: View {
                 
                 
                 VStack(spacing: 20) {
-                    TextField("", text: $email, prompt: Text("Email").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))
+                    TextField("", text: $viewModel.email, prompt: Text("Email").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))
                         .textFieldStyle(ModernTextFieldStyle())
                     VStack {
-                        SecureField("", text: $password, prompt: Text("Password").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
+                        SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
                         HStack {
                             Button {
                                 // place here
@@ -50,7 +51,14 @@ struct LoginView: View {
                 .padding(.top, 5)
                 VStack(spacing: 15) {
                     Button(action: {
-                        // Implement login logic here
+                        Task {
+                            do {
+                                try await viewModel.signIn()
+                                showLoginView = false
+                            } catch {
+                                print("error \(error)")
+                            }
+                        }
                     }) {
                         Text("Log In")
                             .font(.custom("ProductSans-Bold", size: 18))
@@ -87,7 +95,14 @@ struct LoginView: View {
                     }
                     
                     Button(action: {
-                        // Implement Google Sign-In logic here
+                        Task {
+                            do {
+                                try await viewModel.signInGoogle()
+                                showLoginView = false
+                            } catch {
+                                print("error \(error)")
+                            }
+                        }
                     }) {
                         HStack {
                             Image("googleLogo")
@@ -114,6 +129,9 @@ struct LoginView: View {
             }
             .padding(.horizontal, 30)
         }
+        .fullScreenCover(isPresented: $isSigningUp) {
+            SignUpView(showSignUpView: $isSigningUp, showLoginView: $showLoginView)
+        }
     }
 }
 
@@ -125,10 +143,13 @@ struct ModernTextFieldStyle: TextFieldStyle {
             .clipShape(Capsule())
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
             .autocapitalization(.none)
+            .autocorrectionDisabled()
             .foregroundStyle(.white)
+            .font(.custom("ProductSans-Regular", size: 16))
+            .tint(.white)
     }
 }
 
 #Preview {
-    LoginView()
+    LoginView(showLoginView: .constant(true))
 }
