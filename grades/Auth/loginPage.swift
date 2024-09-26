@@ -1,6 +1,7 @@
 import SwiftUI
 import Firebase
 import GoogleSignIn
+import AuthenticationServices
 
 struct LoginView: View {
     @State private var isSigningUp = false
@@ -120,6 +121,26 @@ struct LoginView: View {
                         .clipShape(Capsule())
                         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
+                    Button {
+                        Task {
+                            do {
+                                try await viewModel.signInApple()
+                            } catch {
+                                print("error \(error)")
+                            }
+                        }
+                    } label: {
+                        SignInWithAppleButtonViewRepresentable(type: .signIn, style: .black)
+                    }
+                    .clipShape(Capsule())
+                    .frame(height: 60)
+                    .onChange(of: viewModel.signedInWithApple) { oldValue, newValue in
+                        if newValue {
+                            showLoginView = false
+                        }
+                    }
+                    
+                        
                 }
                 
 //                Text("Learning is just a tap away!")
@@ -147,6 +168,20 @@ struct ModernTextFieldStyle: TextFieldStyle {
             .foregroundStyle(.white)
             .font(.custom("ProductSans-Regular", size: 16))
             .tint(.white)
+    }
+}
+
+struct SignInWithAppleButtonViewRepresentable: UIViewRepresentable {
+    
+    let type: ASAuthorizationAppleIDButton.ButtonType
+    let style: ASAuthorizationAppleIDButton.Style
+    
+    func makeUIView(context: Context) -> ASAuthorizationAppleIDButton {
+        ASAuthorizationAppleIDButton(type: type, style: style)
+    }
+    
+    func updateUIView(_ uiView: ASAuthorizationAppleIDButton, context: Context) {
+        
     }
 }
 

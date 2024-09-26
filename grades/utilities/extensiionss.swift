@@ -5,6 +5,7 @@
 //  Created by Mayank Tiku on 9/26/24.
 //
 import SwiftUI
+import AuthenticationServices
 
 
 extension UIApplication {
@@ -21,5 +22,11 @@ extension UIApplication {
             return topViewController(controller: presented)
         }
         return controller
+    }
+}
+
+extension UIViewController: @retroactive ASAuthorizationControllerPresentationContextProviding {
+    public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
 }

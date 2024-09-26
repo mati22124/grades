@@ -52,6 +52,15 @@ final class authManager {
         return authResult(user: authResultt.user)
     }
     
+    func signInWithApple(withIDToken: String, rawNonce: String, fullName: PersonNameComponents?) async throws -> authResult {
+        guard let full = fullName else {
+            throw authError.noUser
+        }
+        let credential = OAuthProvider.appleCredential(withIDToken: withIDToken, rawNonce: rawNonce, fullName: full)
+        let authResultt = try await Auth.auth().signIn(with: credential)
+        return authResult(user: authResultt.user)
+    }
+    
 }
 
 
