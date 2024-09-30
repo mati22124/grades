@@ -27,7 +27,7 @@ struct grade: Codable {
     var points: Float
     var earned: Float
     var weight: Float
-    
+    var date: Date
 }
 
 struct categoy {

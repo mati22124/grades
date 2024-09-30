@@ -13,6 +13,7 @@
 		A4A1E5FC2CA1DF2A00CE0B01 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A4A1E5FB2CA1DF2A00CE0B01 /* FirebaseFirestore */; };
 		A4DEB8022CA222DA008EFE1A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A4DEB8012CA222DA008EFE1A /* GoogleSignIn */; };
 		A4DEB8042CA222DA008EFE1A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A4DEB8032CA222DA008EFE1A /* GoogleSignInSwift */; };
+		A4E704E52CA718FA006793E2 /* TabBar in Frameworks */ = {isa = PBXBuildFile; productRef = A4E704E42CA718FA006793E2 /* TabBar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 			files = (
 				A4DEB8022CA222DA008EFE1A /* GoogleSignIn in Frameworks */,
 				A4A1E5FA2CA1DF2A00CE0B01 /* FirebaseDatabase in Frameworks */,
+				A4E704E52CA718FA006793E2 /* TabBar in Frameworks */,
 				A4A1E5FC2CA1DF2A00CE0B01 /* FirebaseFirestore in Frameworks */,
 				A4DEB8042CA222DA008EFE1A /* GoogleSignInSwift in Frameworks */,
 				A4A1E5F62CA1DF2A00CE0B01 /* FirebaseAnalytics in Frameworks */,
@@ -99,6 +101,7 @@
 				A4A1E5FB2CA1DF2A00CE0B01 /* FirebaseFirestore */,
 				A4DEB8012CA222DA008EFE1A /* GoogleSignIn */,
 				A4DEB8032CA222DA008EFE1A /* GoogleSignInSwift */,
+				A4E704E42CA718FA006793E2 /* TabBar */,
 			);
 			productName = grades;
 			productReference = A46FAF432CA1D4CD00B9C882 /* grades.app */;
@@ -131,6 +134,7 @@
 			packageReferences = (
 				A4A1E5F42CA1DF2A00CE0B01 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A4DEB8002CA222DA008EFE1A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				A4E704E32CA718FA006793E2 /* XCRemoteSwiftPackageReference "TabBar" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A46FAF442CA1D4CD00B9C882 /* Products */;
@@ -384,6 +388,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		A4E704E32CA718FA006793E2 /* XCRemoteSwiftPackageReference "TabBar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onl1ner/TabBar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -416,6 +428,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A4DEB8002CA222DA008EFE1A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		A4E704E42CA718FA006793E2 /* TabBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A4E704E32CA718FA006793E2 /* XCRemoteSwiftPackageReference "TabBar" */;
+			productName = TabBar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

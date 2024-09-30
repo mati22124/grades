@@ -13,17 +13,7 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
-            NavigationStack {
-//                GradesView()
-                VStack {
-                    Text("Hello, World!")
-                    Button("Sign out") {
-                        try? authManager.shared.signOut()
-                        showSignInView = true
-                    }
-                    Spacer()
-                }
-            }
+            mainView(showSignInView: $showSignInView)
         }
         .onAppear {
             let authUser = try? authManager.shared.getAuthUser()
