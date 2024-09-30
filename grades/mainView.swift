@@ -25,7 +25,12 @@ struct mainView: View {
                 }
                 .tag(0)
                 .ignoresSafeArea(.all)
-                Text("Search")
+                Button {
+                    try? authManager.shared.signOut()
+                    showSignInView = true
+                } label: {
+                    Text("Sign Out")
+                }
                     .tag(1)
             }
             
