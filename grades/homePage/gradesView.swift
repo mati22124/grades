@@ -7,35 +7,20 @@
 
 import SwiftUI
 
-struct ClassGrade: Identifiable {
-    let id = UUID()
-    let name: String
-    let grade: String
-}
-
-struct StudentClassesView: View {
-    let backgroundColor = Color(red: 0.2, green: 0.5, blue: 0.8) // Darker sky blue
-    let accentColor = Color(red: 1.0, green: 0.8, blue: 0.0) // Gold accent
+struct gradesView: View {
+    @Binding var showSignInView: Bool
     
-    let classes = [
-        ClassGrade(name: "Mathematics", grade: "A"),
-        ClassGrade(name: "Science", grade: "B+"),
-        ClassGrade(name: "Literature", grade: "A-"),
-        ClassGrade(name: "History", grade: "B"),
-        ClassGrade(name: "Physical Education", grade: "A"),
-        ClassGrade(name: "Art", grade: "A+")
-    ]
+    @StateObject var viewModel = gradesViewModel()
     
     var body: some View {
         ZStack {
             Color.bgBlue.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 20) {
-                
                 ScrollView {
                     VStack(spacing: 15) {
-                        ForEach(classes) { classGrade in
-                            ClassGradeRow(classGrade: classGrade)
+                        ForEach(viewModel.courses) { classGrade in
+                            ClassGradeRow(course: classGrade)
                         }
                     }
                     .padding(.top, 10)
@@ -43,21 +28,41 @@ struct StudentClassesView: View {
             }
             .padding(.horizontal, 20)
         }
+        .toolbar(content: {
+            ToolbarItem {
+                Button {
+                    //add course logic
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                }
+            }
+        })
+        .onChange(of: showSignInView, { _, newValue in
+            if newValue == false {
+                Task {
+                    do {
+                        try await viewModel.loadCurrentUser()
+                    } catch {
+                        print("error: \(error)")
+                    }
+                }
+            }
+        })
     }
 }
 
 struct ClassGradeRow: View {
-    let classGrade: ClassGrade
+    let course: course
     
     var body: some View {
         HStack {
-            Text(classGrade.name)
+            Text(course.name)
                 .font(.system(size: 18, weight: .semibold, design: .rounded))
                 .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.8))
             
             Spacer()
             
-            Text(classGrade.grade)
+            Text("\(course.average)")
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.8))
         }
@@ -68,8 +73,6 @@ struct ClassGradeRow: View {
     }
 }
 
-struct StudentClassesView_Previews: PreviewProvider {
-    static var previews: some View {
-        StudentClassesView()
-    }
+#Preview {
+    gradesView(showSignInView: .constant(false))
 }

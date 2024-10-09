@@ -19,7 +19,7 @@ struct mainView: View {
             // Content area
             TabView(selection: $selectedTab) {
                 NavigationStack() {
-                    StudentClassesView()
+                    gradesView(showSignInView: $showSignInView)
                         .navigationTitle("grades")
                         .navigationBarTitleDisplayMode(.automatic)
                 }
