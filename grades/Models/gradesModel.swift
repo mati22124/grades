@@ -12,7 +12,7 @@ class course: Codable, Identifiable {
     var grades: [grade]
     var categories: [categoy]
     var isPoints: Bool
-    var id: UUID = UUID()
+    var id: String
     
     // add func vars for average
     var average: Float {
@@ -29,6 +29,7 @@ class course: Codable, Identifiable {
         self.grades = []
         self.categories = []
         self.isPoints = isPoints
+        self.id = UUID().uuidString
     }
 }
 

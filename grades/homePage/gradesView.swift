@@ -37,6 +37,15 @@ struct gradesView: View {
                 }
             }
         })
+        .onAppear(perform: {
+            Task {
+                do {
+                    try await viewModel.loadCurrentUser()
+                } catch {
+                    print("error: \(error)")
+                }
+            }
+        })
         .onChange(of: showSignInView, { _, newValue in
             if newValue == false {
                 Task {

@@ -11,54 +11,47 @@ import Foundation
 final class gradesViewModel: ObservableObject {
     @Published var user: DBUser? = nil
     
-    var courses: [course] {
-        get {
-            if let user = user {
-                return user.courses
-            } else {
-                return []
-            }
-        }
-        set {
-            if user != nil {
-                user!.courses = newValue
-            }
-        }
-    }
+    @Published var courses: [course] = []
     
-    @Published var selectedClass: course? = nil
     @Published private(set) var currentUser: authResult? = nil
 
     func loadCurrentUser() async throws {
         currentUser = try authManager.shared.getAuthUser()
         if let u = currentUser {
-            do {
+            do { // Get user handle
                 user = try await userManager.shared.getUser(userId: u.uid)
                 print("get user")
             } catch {
                 if error.localizedDescription == "The data couldn’t be read because it is missing." {
-                    try userManager.shared.setUser(data: DBUser(uid: u.uid, name: "", email: u.email ?? "", courses: []))
-                    print("Set user run")
+                    try userManager.shared.setUser(data: DBUser(uid: u.uid, name: "", email: u.email ?? ""))
+                    print("Set user ran")
                 } else {
                     throw coursesError.noUserInFirebase
                 }
             }
+            
+            do {
+                courses = try await coursesManager.shared.getCourses(userId: u.uid)
+            } catch {
+                print("Error getting courses: \(error)")
+            }
         } else {
-            throw coursesError.noUser
+            throw authError.noUser
         }
     }
     
-    func addCourse(name: String, isPoints: Bool) {
+    func addCourse(name: String, isPoints: Bool) throws {
         let newCourse = course(name: name, isPoints: isPoints)
-        guard let _ = user else { return }
-        user!.courses.append(newCourse)
+        guard let _ = user else { throw authError.noUser }
+        courses.append(newCourse)
+        try? publishCourses()
     }
     
-    func publish() throws {
+    func publishCourses() throws {
         if let user = user {
-            try userManager.shared.setUser(data: user)
+            try coursesManager.shared.setCourses(uid: user.uid, data: courses)
         } else {
-            throw coursesError.noUser
+            throw authError.noUser
         }
     }
 }
