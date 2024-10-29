@@ -31,6 +31,16 @@ extension UIViewController: @retroactive ASAuthorizationControllerPresentationCo
     }
 }
 
+extension View {
+    @available(iOS 14, *)
+    func navigationBarTitleTextColor(_ color: Color) -> some View {
+        let uiColor = UIColor(color)
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: uiColor ]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: uiColor ]
+        return self
+    }
+}
+
 extension Double {
     func removeZerosFromEnd() -> String {
         let formatter = NumberFormatter()
@@ -38,5 +48,14 @@ extension Double {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 16 //maximum digits in Double after dot (maximum precision)
         return String(formatter.string(from: number) ?? "")
+    }
+    
+    func round(to places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+    
+    func roundedGrade() -> String {
+        return String(format: "%.2f", self.round(to: 2))
     }
 }

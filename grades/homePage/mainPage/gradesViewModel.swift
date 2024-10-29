@@ -41,6 +41,8 @@ final class gradesViewModel: ObservableObject {
     }
     
     func addCourse(name: String, teacher: String, isPoints: Bool) throws {
+        if name.isEmpty || teacher.isEmpty { throw coursesError.courseEmpty }
+        guard let _ = user else { throw authError.noUser }
         let newCourse = course(name: name, teacher: teacher, isPoints: isPoints)
         guard let _ = user else { throw authError.noUser }
         courses.append(newCourse)
@@ -57,6 +59,6 @@ final class gradesViewModel: ObservableObject {
 }
 
 enum coursesError: Error {
-    case noUser
+    case courseEmpty
     case noUserInFirebase
 }

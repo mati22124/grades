@@ -20,9 +20,14 @@ struct gradesView: View {
             
             VStack(spacing: 20) {
                 ScrollView {
-                        ForEach(viewModel.courses) { classGrade in
                     VStack(spacing: 12) {
-                            ClassGradeBlock(classGrade: classGrade)
+                        ForEach(viewModel.courses) { course in
+                            NavigationLink {
+                                CourseDetailView(course: course)
+                            } label: {
+                                ClassGradeBlock(classGrade: course)
+                                    .environmentObject(viewModel)
+                            }
                         }
                     }
                     .padding(.top, 10)
@@ -32,8 +37,11 @@ struct gradesView: View {
         }
         .toolbar(content: {
             ToolbarItem {
-                Button {
-                    //add course logic
+                NavigationLink {
+                    addCourseView()
+                        .environmentObject(viewModel)
+                        .navigationTitle("Add Course")
+                        .navigationBarTitleDisplayMode(.inline)
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .foregroundStyle(.white)
@@ -65,33 +73,38 @@ struct gradesView: View {
 
 struct ClassGradeBlock: View {
     let classGrade: course
+    @EnvironmentObject var viewModel: gradesViewModel
     
     var body: some View {
         HStack {
             VStack {
                 Text(classGrade.name)
                     .font(.system(size: 18, weight: .semibold, design: .rounded))
-                    .foregroundColor(.mainBlue) 
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(classGrade.teacher)
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
-                    .foregroundColor(.mainBlue)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             Spacer()
-            
-            Text("\(classGrade.average.removeZerosFromEnd())")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundColor(.mainBlue)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(.white) //Color.accentRed.brightness(-0.08)
-                .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+            VStack {
+                Text(classGrade.averageToGrade())
+                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                Text("\(classGrade.average.roundedGrade())%")
+                    .font(.system(size: 15, weight: .regular, design: .rounded))
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.accentRed.brightness(-0.08)) //Color.accentRed.brightness(-0.08)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         }
         .padding()
-        .background(.white) //Color.bgBlue.opacity(0.75)
+        .background(Color.bgBlue.brightness(-0.06)) //Color.bgBlue.opacity(0.75)
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
