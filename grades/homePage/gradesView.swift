@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct gradesView: View {
+    let backgroundColor = Color(red: 0.9, green: 0.95, blue: 1.0) // Lighter sky blue
+    let accentColor = Color(red: 1.0, green: 0.8, blue: 0.0) // Gold accent
     @Binding var showSignInView: Bool
     
     @StateObject var viewModel = gradesViewModel()
@@ -18,9 +20,9 @@ struct gradesView: View {
             
             VStack(spacing: 20) {
                 ScrollView {
-                    VStack(spacing: 15) {
                         ForEach(viewModel.courses) { classGrade in
-                            ClassGradeRow(course: classGrade)
+                    VStack(spacing: 12) {
+                            ClassGradeBlock(classGrade: classGrade)
                         }
                     }
                     .padding(.top, 10)
@@ -34,6 +36,7 @@ struct gradesView: View {
                     //add course logic
                 } label: {
                     Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(.white)
                 }
             }
         })
@@ -60,24 +63,36 @@ struct gradesView: View {
     }
 }
 
-struct ClassGradeRow: View {
-    let course: course
+struct ClassGradeBlock: View {
+    let classGrade: course
     
     var body: some View {
         HStack {
-            Text(course.name)
-                .font(.system(size: 18, weight: .semibold, design: .rounded))
-                .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.8))
+            VStack {
+                Text(classGrade.name)
+                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .foregroundColor(.mainBlue) 
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(classGrade.teacher)
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundColor(.mainBlue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             
             Spacer()
             
-            Text("\(course.average)")
-                .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.8))
+            Text("\(classGrade.average.removeZerosFromEnd())")
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundColor(.mainBlue)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(.white) //Color.accentRed.brightness(-0.08)
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         }
         .padding()
-        .background(Color.white)
-        .clipShape(Capsule())
+        .background(.white) //Color.bgBlue.opacity(0.75)
+        .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
@@ -85,3 +100,4 @@ struct ClassGradeRow: View {
 #Preview {
     gradesView(showSignInView: .constant(false))
 }
+

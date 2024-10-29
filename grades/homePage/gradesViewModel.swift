@@ -40,8 +40,8 @@ final class gradesViewModel: ObservableObject {
         }
     }
     
-    func addCourse(name: String, isPoints: Bool) throws {
-        let newCourse = course(name: name, isPoints: isPoints)
+    func addCourse(name: String, teacher: String, isPoints: Bool) throws {
+        let newCourse = course(name: name, teacher: teacher, isPoints: isPoints)
         guard let _ = user else { throw authError.noUser }
         courses.append(newCourse)
         try? publishCourses()
