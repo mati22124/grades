@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CourseDetailView: View {
-    let course: course
+    @Binding var course: course
     
     var body: some View {
         ZStack {
@@ -19,24 +19,9 @@ struct CourseDetailView: View {
                 VStack(spacing: 20) {
                     // Header Card
                     CourseHeaderCard(course: course)
-                    
-//                    // Categories Section
-//                    if !course.categories.isEmpty {
-//                        VStack(alignment: .leading, spacing: 8) {
-//                            Text("Categories")
-//                                .font(.system(size: 20, weight: .bold, design: .rounded))
-//                                .foregroundColor(.white)
-//                                .padding(.horizontal)
-//                            
-//                            ForEach(course.categories, id: \.name) { category in
-//                                CategoryCard(category: category)
-//                            }
-//                        }
-//                    }
-                    
-                    // Grades Section
+              
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(course.grades.isEmpty ? "No assignments":"Assignments")
+                        Text(course.grades.isEmpty ? "No assignments" : "Assignments")
                             .font(.system(size: 20, weight: course.grades.isEmpty ? .regular: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .padding(.horizontal)
@@ -49,6 +34,18 @@ struct CourseDetailView: View {
                 .padding()
             }
         }
+        .toolbar(content: {
+            ToolbarItem {
+                NavigationLink {
+                    addGradeView(course: $course)
+                        .navigationTitle("Add Grade")
+                        .navigationBarTitleDisplayMode(.inline)
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(.white)
+                }
+            }
+        })
         .navigationTitle(course.name)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -159,16 +156,16 @@ struct GradeCard: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        CourseDetailView(course: course(
-            name: "AP Lang",
-            teacher: "fentussy",
-            isPoints: true,
-            grades: [
-                grade(name: "Dialectical Journal", points: 100, earned: 95, weight: 1, date: Date())
-//                grade(points: 100, earned: 92, weight: 1, date: Date())
-            ])
-        )
-    }
-}
+//#Preview {
+//    NavigationView {
+//        CourseDetailView(course: course(
+//            name: "AP Lang",
+//            teacher: "fentussy",
+//            isPoints: true,
+//            grades: [
+//                grade(name: "Dialectical Journal", points: 100, earned: 95, weight: 1, date: Date())
+////                grade(points: 100, earned: 92, weight: 1, date: Date())
+//            ])
+//        )
+//    }
+//}

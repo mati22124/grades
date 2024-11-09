@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     
-    @State var showSignInView: Bool = true
+    @State var showSignInView: Bool = false
     
     var body: some View {
         ZStack {

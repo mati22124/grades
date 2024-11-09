@@ -29,14 +29,16 @@ final class gradesViewModel: ObservableObject {
                     throw coursesError.noUserInFirebase
                 }
             }
-            
-            do {
-                courses = try await coursesManager.shared.getCourses(userId: u.uid)
-            } catch {
-                print("Error getting courses: \(error)")
-            }
+            // TODO: somehow add error handling within the listener if im unable to get somethhing yk.
+            addcoursesListener(userId: u.uid)
         } else {
             throw authError.noUser
+        }
+    }
+    
+    func addcoursesListener(userId: String) {
+        coursesManager.shared.addCoursesListener(userId: userId) { [weak self] courses in
+            self?.courses = courses
         }
     }
     
@@ -50,8 +52,8 @@ final class gradesViewModel: ObservableObject {
     }
     
     func publishCourses() throws {
-        if let user = user {
-            try coursesManager.shared.setCourses(uid: user.uid, data: courses)
+        if let _ = user {
+            try coursesManager.shared.setCourses(data: courses)
         } else {
             throw authError.noUser
         }

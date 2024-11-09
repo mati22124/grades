@@ -14,6 +14,8 @@ struct gradesView: View {
     
     @StateObject var viewModel = gradesViewModel()
     
+    @State private var didAppear: Bool = false
+    
     var body: some View {
         ZStack {
             Color.bgBlue.edgesIgnoringSafeArea(.all)
@@ -21,9 +23,9 @@ struct gradesView: View {
             VStack(spacing: 20) {
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(viewModel.courses) { course in
+                        ForEach($viewModel.courses) { $course in
                             NavigationLink {
-                                CourseDetailView(course: course)
+                                CourseDetailView(course: $course)
                             } label: {
                                 ClassGradeBlock(classGrade: course)
                                     .environmentObject(viewModel)
@@ -49,19 +51,23 @@ struct gradesView: View {
             }
         })
         .onAppear(perform: {
-            Task {
-                do {
-                    try await viewModel.loadCurrentUser()
-                } catch {
-                    print("error: \(error)")
+            if !didAppear {
+                Task {
+                    do {
+                        try await viewModel.loadCurrentUser()
+                        didAppear = true
+                    } catch {
+                        print("error: \(error)")
+                    }
                 }
             }
         })
         .onChange(of: showSignInView, { _, newValue in
-            if newValue == false {
+            if !didAppear && newValue == false {
                 Task {
                     do {
                         try await viewModel.loadCurrentUser()
+                        didAppear = true
                     } catch {
                         print("error: \(error)")
                     }

@@ -17,23 +17,26 @@ struct mainView: View {
     var body: some View {
         VStack {
             // Content area
-            TabView(selection: $selectedTab) {
+            switch(selectedTab) {
+            case 0:
                 NavigationStack() {
                     gradesView(showSignInView: $showSignInView)
                         .navigationTitle("grades")
                         .navigationBarTitleDisplayMode(.automatic)
                 }
-                .tag(0)
                 .ignoresSafeArea(.all)
+            case 1:
                 Button {
                     try? authManager.shared.signOut()
                     showSignInView = true
                 } label: {
                     Text("Sign Out")
                 }
-                    .tag(1)
+            default:
+                Text("Error")
             }
-            
+
+            Spacer()
             // Custom capsule-shaped tab bar
             HStack {
                 ForEach(0..<2) { index in
@@ -49,7 +52,10 @@ struct mainView: View {
             .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
             .padding(.horizontal)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.bgBlue)
+        .ignoresSafeArea(.keyboard)
+
     }
         
     func getImageName(for index: Int) -> String {

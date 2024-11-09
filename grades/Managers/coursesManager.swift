@@ -25,9 +25,30 @@ final class coursesManager {
         return y
     }
     
-    func setCourses(uid: String, data: [course]) throws {
-        for i in data {
-            try usercollection.document(uid).collection("courses").document(i.id).setData(from: i)
+    func addCoursesListener(userId: String, completion: @escaping (_ courses: [course]) -> Void)  {
+        usercollection.document(userId).collection("courses").addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("No documents")
+                return
+            }
+            
+            let courses: [course] = documents.compactMap { documentSnapshot in
+                return try? documentSnapshot.data(as: course.self)
+            }
+            completion(courses)
         }
+    }
+    
+    func setCourses(data: [course]) throws {
+        let x = try authManager.shared.getAuthUser()
+        for i in data {
+            try usercollection.document(x.uid).collection("courses").document(i.id).setData(from: i)
+        }
+    }
+    
+    func setCourse(data: course) throws {
+        let x = try authManager.shared.getAuthUser()
+        
+        try usercollection.document(x.uid).collection("courses").document(data.id).setData(from: data)
     }
 }
