@@ -8,54 +8,51 @@
 import SwiftUI
 
 struct mainView: View {
-    
     @Binding var showSignInView: Bool
-    
     @State private var selectedTab: Int = 0
     
-    
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // Content area
-            switch(selectedTab) {
-            case 0:
-                NavigationStack() {
-                    gradesView(showSignInView: $showSignInView)
-                        .navigationTitle("grades")
-                        .navigationBarTitleDisplayMode(.automatic)
+            VStack {
+                switch(selectedTab) {
+                case 0:
+                    NavigationStack {
+                        gradesView(showSignInView: $showSignInView)
+                            .navigationTitle("grades")
+                            .navigationBarTitleDisplayMode(.automatic)
+                            .navigationBarTitleTextColor(.secCol)
+                    }
+                case 1:
+                    Button {
+                        try? authManager.shared.signOut()
+                        showSignInView = true
+                    } label: {
+                        Text("Sign Out")
+                    }
+                default:
+                    Text("Error")
                 }
-                .ignoresSafeArea(.all)
-            case 1:
-                Button {
-                    try? authManager.shared.signOut()
-                    showSignInView = true
-                } label: {
-                    Text("Sign Out")
-                }
-            default:
-                Text("Error")
-            }
-
-            Spacer()
+            }.ignoresSafeArea(.keyboard, edges: .bottom)
+            
             // Custom capsule-shaped tab bar
             HStack {
                 ForEach(0..<2) { index in
                     TabBarItem(imageName: getImageName(for: index),
-                               title: getTitle(for: index),
-                               isSelected: selectedTab == index,
-                               action: { selectedTab = index })
+                             title: getTitle(for: index),
+                             isSelected: selectedTab == index,
+                             action: { selectedTab = index })
                 }
             }
             .padding(8)
-            .background(Color(UIColor.systemBackground)) // Add contrasting background
+            .background(Color(UIColor.systemBackground))
             .clipShape(Capsule())
             .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
             .padding(.horizontal)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.bgBlue)
+        .background(Color.primaryCol)
         .ignoresSafeArea(.keyboard)
-
     }
         
     func getImageName(for index: Int) -> String {
@@ -95,7 +92,7 @@ struct TabBarItem: View {
             .foregroundColor(isSelected ? .white : .gray)
             .padding(.vertical, 10)
             .padding(.horizontal, isSelected ? 16 : 12)
-            .background(isSelected ? Color.blue : Color.clear)
+            .background(isSelected ? Color.terCol : Color.clear)
             .clipShape(Capsule())
         }
     }

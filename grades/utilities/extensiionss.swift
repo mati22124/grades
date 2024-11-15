@@ -59,3 +59,18 @@ extension Double {
         return String(format: "%.2f", self.round(to: 2))
     }
 }
+
+public struct RemoveFocusOnTapModifier: ViewModifier {
+    public func body(content: Content) -> some View {
+        content
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+            }
+    }
+}
+
+extension View {
+    public func removeFocusOnTap() -> some View {
+        modifier(RemoveFocusOnTapModifier())
+    }
+}

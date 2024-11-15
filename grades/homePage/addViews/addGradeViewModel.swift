@@ -20,8 +20,7 @@ class AddGradeViewModel: ObservableObject {
         !pointsEarned.isEmpty &&
         !totalPoints.isEmpty &&
         (Double(pointsEarned) ?? 0) >= 0 &&
-        (Double(totalPoints) ?? 0) > 0 &&
-        (Double(pointsEarned) ?? 0) <= (Double(totalPoints) ?? 0)
+        (Double(totalPoints) ?? 0) > 0
     }
     
     

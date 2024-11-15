@@ -12,101 +12,104 @@ struct addGradeView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = AddGradeViewModel()
     
+    @State private var isPressed = false
     @Binding var course: course
     
     var body: some View {
-        ZStack {
-            Color.bgBlue.edgesIgnoringSafeArea(.all)
-            
-            ScrollView {
-                VStack(spacing: 24) {
-                    // Assignment Name
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Assignment Name")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
-                            .foregroundColor(.white)
-                        
-                        TextField("", text: $viewModel.name, prompt: Text("Enter assignment name").foregroundStyle(.lightGray).font(.custom("ProductSans-Regular", size: 16)))
-                            .textFieldStyle(ModernTextFieldStyle())
-                            .autocorrectionDisabled()
-                    }
+        GeometryReader { _ in
+            VStack(spacing: 16) {
+                // Assignment Name
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Assignment Name")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundColor(.secCol)
                     
-                    // Points Section
-                    HStack(spacing: 16) {
-                        // Points Earned
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Points Earned")
-                                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                                .foregroundColor(.white)
-                            
-                            TextField("", text: $viewModel.pointsEarned, prompt: Text("Enter here").foregroundStyle(.lightGray).font(.custom("ProductSans-Regular", size: 16)))
-                                .textFieldStyle(ModernTextFieldStyle())
-                                .keyboardType(.decimalPad)
-                        }
-                        
-                        // Total Points
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Total Points")
-                                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                                .foregroundColor(.white)
-                            
-                            TextField("100", text: $viewModel.totalPoints, prompt: Text("Enter here").foregroundStyle(.lightGray).font(.custom("ProductSans-Regular", size: 16)))
-                                .textFieldStyle(ModernTextFieldStyle())
-                                .keyboardType(.decimalPad)
-                        }
-                    }
-                    
-                    // Date Picker
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Date")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
-                            .foregroundColor(.white)
-                        
-                        DatePicker("Assignment Date",
-                                 selection: $viewModel.date,
-                                 displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .padding()
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(10)
-                        .accentColor(.accentRed)
-                        .colorScheme(.dark)
-                    }
-                    
-                    // Save Button
-                    Button(action: {
-                        do {
-                            try viewModel.saveGrade(&course)
-                            dismiss()
-                        } catch {
-                            print(error)
-                        }
-                    }) {
-                        Text("Add Grade")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(viewModel.isValidInput ? Color.accentRed : Color.gray)
-                            .cornerRadius(12)
-                    }
-                    .disabled(!viewModel.isValidInput)
+                    TextField("", text: $viewModel.name, prompt: Text("Enter assignment name").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                        .textFieldStyle(ModernTextFieldStyle())
+                        .autocorrectionDisabled()
                 }
-                .padding()
+                .removeFocusOnTap()
+
+                // Points Section
+                HStack(spacing: 16) {
+                    // Points Earned
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Points Earned")
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .foregroundColor(.secCol)
+                        
+                        TextField("", text: $viewModel.pointsEarned, prompt: Text("Enter here").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                            .textFieldStyle(ModernTextFieldStyle())
+                            .keyboardType(.decimalPad)
+                    }
+                    .removeFocusOnTap()
+
+                    
+                    // Total Points
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Total Points")
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .foregroundColor(.secCol)
+                        
+                        TextField("100", text: $viewModel.totalPoints, prompt: Text("Enter here").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                            .textFieldStyle(ModernTextFieldStyle())
+                            .keyboardType(.decimalPad)
+                    }
+                }
+                .removeFocusOnTap()
+
+                
+                // Date Picker
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Date")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundColor(.secCol)
+                    
+                    DatePicker("Assignment Date",
+                               selection: $viewModel.date,
+                               displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(10)
+                    .accentColor(.terCol)
+                    .colorScheme(.dark)
+                }
+                
+                //            Spacer(minLength: 0)
+                
+                // Save Button
+                Button(action: {
+                    do {
+                        isPressed = true
+                        try viewModel.saveGrade(&course)
+                        dismiss()
+                        isPressed = false
+                    } catch {
+                        isPressed = false
+                        print(error)
+                    }
+                }) {
+                    Text(isPressed ? "Adding Grade..." : "Add Grade")
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(isPressed ? .gray : .secCol)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(viewModel.isValidInput ? Color.terCol : Color.gray)
+                        .cornerRadius(12)
+                }
+                .disabled(!viewModel.isValidInput)
             }
+            .padding()
+            .background(Color.primaryCol.edgesIgnoringSafeArea(.all).removeFocusOnTap())
+            .navigationTitle("Add Grade")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleTextColor(.secCol)
         }
-        .navigationTitle("Add Grade")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-//#Preview {
-//    NavigationView {
-//        addGradeView(course: course(
-//            name: "Sample Course",
-//            teacher: "John Doe",
-//            isPoints: true,
-//            grades: []
-//        ))
-//    }
-//}
+#Preview {
+    @Previewable @State var coursee = course(name: "test", teacher: "sruaj nistala", isPoints: true)
+    addGradeView(course: $coursee)
+}

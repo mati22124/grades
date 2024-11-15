@@ -24,6 +24,7 @@ final class gradesViewModel: ObservableObject {
             } catch {
                 if error.localizedDescription == "The data couldn’t be read because it is missing." {
                     try userManager.shared.setUser(data: DBUser(uid: u.uid, name: "", email: u.email ?? ""))
+                    user = DBUser(uid: u.uid, name: "", email: u.email ?? "")
                     print("Set user ran")
                 } else {
                     throw coursesError.noUserInFirebase

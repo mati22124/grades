@@ -18,7 +18,7 @@ struct gradesView: View {
     
     var body: some View {
         ZStack {
-            Color.bgBlue.edgesIgnoringSafeArea(.all)
+            Color.primaryCol.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 20) {
                 ScrollView {
@@ -35,6 +35,7 @@ struct gradesView: View {
                     .padding(.top, 10)
                 }
             }
+            .ignoresSafeArea(.keyboard)
             .padding(.horizontal, 20)
         }
         .toolbar(content: {
@@ -46,7 +47,7 @@ struct gradesView: View {
                         .navigationBarTitleDisplayMode(.inline)
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.secCol)
                 }
             }
         })
@@ -86,11 +87,11 @@ struct ClassGradeBlock: View {
             VStack {
                 Text(classGrade.name)
                     .font(.system(size: 18, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white)
+                    .foregroundColor(.secCol)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(classGrade.teacher)
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white)
+                    .foregroundColor(.secCol)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
@@ -98,19 +99,19 @@ struct ClassGradeBlock: View {
             VStack {
                 Text(classGrade.averageToGrade())
                     .font(.system(size: 30, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
+                    .foregroundColor(.secCol)
                 Text("\(classGrade.average.roundedGrade())%")
                     .font(.system(size: 15, weight: .regular, design: .rounded))
-                    .foregroundColor(.white)
+                    .foregroundColor(.secCol)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
-            .background(Color.accentRed.brightness(-0.08)) //Color.accentRed.brightness(-0.08)
-            .cornerRadius(12)
+            .background(Color.terCol) //Color.accentRed.brightness(-0.08)
+            .cornerRadius(5)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         }
         .padding()
-        .background(Color.bgBlue.brightness(-0.06)) //Color.bgBlue.opacity(0.75)
+        .background(Color.primaryCol) //Color.bgBlue.opacity(0.75)
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
