@@ -11,64 +11,63 @@ struct mainView: View {
     @Binding var showSignInView: Bool
     @State private var selectedTab: Int = 0
     
+    var items = [ittabbar(image: "books.vertical.fill", title: "Grades", index: 0), ittabbar(image: "gear", title: "Settings", index: 1)]
+    
     var body: some View {
         VStack(spacing: 0) {
             // Content area
-            VStack {
-                switch(selectedTab) {
-                case 0:
+//            VStack {
+//                switch(selectedTab) {
+//                case 0:
+//
+//                case 1:
+//                    Button {
+//                        try? authManager.shared.signOut()
+//                        showSignInView = true
+//                    } label: {
+//                        Text("Sign Out")
+//                    }
+//                default:
+//                    Text("Error")
+//                }
+//            }.ignoresSafeArea(.keyboard, edges: .bottom)
+//            
+            TabView {
+                Tab("Grades", systemImage: "books.vertical.fill") {
                     NavigationStack {
-                        gradesView(showSignInView: $showSignInView)
-                            .navigationTitle("grades")
-                            .navigationBarTitleDisplayMode(.automatic)
-                            .navigationBarTitleTextColor(.secCol)
+                        classesView(showSignInView: $showSignInView)
                     }
-                case 1:
+                }
+                
+                Tab("Settings", systemImage: "gear") {
                     Button {
                         try? authManager.shared.signOut()
                         showSignInView = true
                     } label: {
                         Text("Sign Out")
                     }
-                default:
-                    Text("Error")
-                }
-            }.ignoresSafeArea(.keyboard, edges: .bottom)
-            
-            // Custom capsule-shaped tab bar
-            HStack {
-                ForEach(0..<2) { index in
-                    TabBarItem(imageName: getImageName(for: index),
-                             title: getTitle(for: index),
-                             isSelected: selectedTab == index,
-                             action: { selectedTab = index })
                 }
             }
-            .padding(8)
+            .tint(.terCol)
             .background(Color(UIColor.systemBackground))
-            .clipShape(Capsule())
-            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
-            .padding(.horizontal)
+//            // Custom capsule-shaped tab bar
+//            HStack {
+//                ForEach(items) { item in
+//                    TabBarItem(imageName: item.image,
+//                               title: item.title,
+//                               isSelected: selectedTab == item.index,
+//                               action: { selectedTab = item.index })
+//                }
+//            }
+//            .padding(8)
+//            .background(Color(UIColor.systemBackground))
+//            .clipShape(Capsule())
+//            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+//            .padding(.horizontal)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.primaryCol)
+        .background(Color.primaryCol.ignoresSafeArea(.all))
         .ignoresSafeArea(.keyboard)
-    }
-        
-    func getImageName(for index: Int) -> String {
-        switch index {
-        case 0: return "books.vertical.fill"
-        case 1: return "gear"
-        default: return ""
-        }
-    }
-    
-    func getTitle(for index: Int) -> String {
-        switch index {
-        case 0: return "Grades"
-        case 1: return "Settings"
-        default: return ""
-        }
     }
 }
 
@@ -96,6 +95,13 @@ struct TabBarItem: View {
             .clipShape(Capsule())
         }
     }
+}
+
+struct ittabbar: Identifiable {
+    var id: String = UUID().uuidString
+    var image:String
+    var title:String
+    var index:Int
 }
 
 #Preview {

@@ -21,21 +21,24 @@ struct addCourseView: View {
     
     var body: some View {
         ZStack {
-            Color.bgBlue.edgesIgnoringSafeArea(.all)
+            Color.primaryCol.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 20) {
                 
                 VStack(spacing: 15) {
-                    TextField("", text: $courseName, prompt: Text("Course Name").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))
+                    TextField("", text: $courseName, prompt: Text("Course Name").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
                         .textFieldStyle(ModernTextFieldStyle())
                     
-                    TextField("", text: $courseTeacher, prompt: Text("Course Teacher").foregroundStyle(.white).font(.custom("ProductSans-Regular", size: 16)))
+                    TextField("", text: $courseTeacher, prompt: Text("Course Teacher").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
                         .textFieldStyle(ModernTextFieldStyle())
                     
-                    Toggle("Points-based Course", isOn: $isPointsBased)
-                        .font(.custom("ProductSans-Regular", size: 16))
-                        .foregroundColor(.white) // Darker blue
-                        .padding(.vertical, 8)
+                    Toggle(isOn: $isPointsBased) {
+                        Text("Points-based Course").foregroundStyle(.secCol)
+                    }
+                    .foregroundStyle(.terCol)
+                    .font(.custom("ProductSans-Regular", size: 16))
+                    .foregroundColor(.primaryCol) // Darker blue
+                    .padding(.vertical, 8)
                     
                     Button(action: {
                         Task {
@@ -55,10 +58,10 @@ struct addCourseView: View {
                     }) {
                         Text(isPressed ? "Adding..." : "Save Course")
                             .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(isPressed ? .gray : .white)
+                            .foregroundColor(isPressed ? .gray : .secCol)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color(red: 0.2, green: 0.5, blue: 0.8)) // Darker blue
+                            .background(.primaryCol) // Darker blue
                             .clipShape(Capsule())
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
@@ -68,6 +71,8 @@ struct addCourseView: View {
                 Spacer()
             }
         }
+        .navigationTitle("Add Course")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct gradesView: View {
+struct classesView: View {
     let backgroundColor = Color(red: 0.9, green: 0.95, blue: 1.0) // Lighter sky blue
     let accentColor = Color(red: 1.0, green: 0.8, blue: 0.0) // Gold accent
     @Binding var showSignInView: Bool
@@ -15,6 +15,8 @@ struct gradesView: View {
     @StateObject var viewModel = gradesViewModel()
     
     @State private var didAppear: Bool = false
+    
+    @State private var menuIsPresentedCourse: Bool = false
     
     var body: some View {
         ZStack {
@@ -27,30 +29,27 @@ struct gradesView: View {
                             NavigationLink {
                                 CourseDetailView(course: $course)
                             } label: {
-                                ClassGradeBlock(classGrade: course)
-                                    .environmentObject(viewModel)
+                                SwipeToDeleteView {
+                                    ClassGradeBlock(classGrade: course)
+                                        .environmentObject(viewModel)
+                                } onDelete: {
+                                        try? coursesManager.shared.removeCourse(data: $course.wrappedValue)
+                                }
                             }
                         }
                     }
                     .padding(.top, 10)
                 }
             }
+            .frame(maxWidth: .infinity)
             .ignoresSafeArea(.keyboard)
             .padding(.horizontal, 20)
+            
+            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
+                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
+                ]
+            )
         }
-        .toolbar(content: {
-            ToolbarItem {
-                NavigationLink {
-                    addCourseView()
-                        .environmentObject(viewModel)
-                        .navigationTitle("Add Course")
-                        .navigationBarTitleDisplayMode(.inline)
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(.secCol)
-                }
-            }
-        })
         .onAppear(perform: {
             if !didAppear {
                 Task {
@@ -75,6 +74,8 @@ struct gradesView: View {
                 }
             }
         })
+        .navigationTitle("Grades")
+        .navigationBarTitleTextColor(.secCol)
     }
 }
 
@@ -86,11 +87,11 @@ struct ClassGradeBlock: View {
         HStack {
             VStack {
                 Text(classGrade.name)
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .font(.custom("ProductSans-Bold", size: 22))
                     .foregroundColor(.secCol)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(classGrade.teacher)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .font(.custom("ProductSans-Regular", size: 13))
                     .foregroundColor(.secCol)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -98,10 +99,10 @@ struct ClassGradeBlock: View {
             Spacer()
             VStack {
                 Text(classGrade.averageToGrade())
-                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                    .font(.custom("ProductSans-Bold", size: 30))
                     .foregroundColor(.secCol)
                 Text("\(classGrade.average.roundedGrade())%")
-                    .font(.system(size: 15, weight: .regular, design: .rounded))
+                    .font(.custom("ProductSans-Regular", size: 16))
                     .foregroundColor(.secCol)
             }
             .padding(.horizontal, 16)
@@ -118,6 +119,6 @@ struct ClassGradeBlock: View {
 }
 
 #Preview {
-    gradesView(showSignInView: .constant(false))
+    classesView(showSignInView: .constant(false))
 }
 

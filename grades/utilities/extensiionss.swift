@@ -74,3 +74,12 @@ extension View {
         modifier(RemoveFocusOnTapModifier())
     }
 }
+
+struct Menu: AlignmentID {
+    static func defaultValue(in context: ViewDimensions) -> CGFloat {
+        return context.width / 2
+    }
+}
+extension HorizontalAlignment {
+    static let menu = Self(Menu.self)
+}

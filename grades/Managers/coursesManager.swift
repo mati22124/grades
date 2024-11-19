@@ -39,6 +39,11 @@ final class coursesManager {
         }
     }
     
+    func removeCourse(data: course) throws {
+        let x = try authManager.shared.getAuthUser()
+        usercollection.document(x.uid).collection("courses").document(data.id).delete()
+    }
+    
     func setCourses(data: [course]) throws {
         let x = try authManager.shared.getAuthUser()
         for i in data {

@@ -143,6 +143,7 @@
 				A4DEB8002CA222DA008EFE1A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				A4E704E32CA718FA006793E2 /* XCRemoteSwiftPackageReference "TabBar" */,
 				A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A48C272B2CE7C5E00032390D /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A46FAF442CA1D4CD00B9C882 /* Products */;
@@ -386,6 +387,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 11.3.0;
+			};
+		};
+		A48C272B2CE7C5E00032390D /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.6;
 			};
 		};
 		A4DEB8002CA222DA008EFE1A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
