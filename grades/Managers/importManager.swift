@@ -43,7 +43,6 @@ final class importManager {
         // Parse String from message
         var strList = ""
         if let data = message.content.first {
-            print("this is data: \(data)")
             switch(data) {
             case .text(let str):
                 strList = str
@@ -52,8 +51,6 @@ final class importManager {
                 throw importError.cantParse
             }
         }
-        print("string parsed: \(strList)"+"\n\n")
-        
         if strList.isEmpty || !strList.contains("#"){
             throw importError.nothingInImage
         }
