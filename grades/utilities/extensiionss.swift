@@ -83,3 +83,16 @@ struct Menu: AlignmentID {
 extension HorizontalAlignment {
     static let menu = Self(Menu.self)
 }
+
+extension UIImage {
+    
+    var base64: String? {
+        var resizedImageData = self.jpegData(compressionQuality: 0.7)
+        
+        while(resizedImageData!.count >= 5_242_880) {
+            resizedImageData = UIImage(data: resizedImageData!)?.jpegData(compressionQuality: 0.7)
+        }
+        
+        return resizedImageData!.base64EncodedString()
+    }
+}
