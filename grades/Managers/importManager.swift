@@ -29,20 +29,50 @@ final class importManager {
         }
         
         // Create image paramater based on anthropic
-        let imageSource: [MessageParameter.Message.Content.ContentObject] = [.image(.init(type: .base64, mediaType: .jpeg, data: base64Real))]
+        let imageSource: [MessageParameter.Message.Content.ContentObject] = [
+            .image(.init(type: .base64, mediaType: .jpeg, data: base64Real)),
+            .text("""
+You will be given an image of a grade report. Your task is to parse the information from this image and format it according to specific requirements.
+Analyze the image and extract the following information for each grade entry:
+- Title
+- Points earned
+- Points total
+- Date
+- Weight (default to 1 if not specified)
+
+Format each grade entry as follows: "Title,earned,total,date,weight"
+
+Follow these guidelines:
+1. The title is typically bolded in the image and resides under the category.
+2. Convert the date to the format dd/MM/yyyy.
+3. Ensure all fields are filled. Use 0 if a value is missing.
+4. The school year is 2024-2025. Adjust the year in the date to match this and ensure it corresponds to the correct day of the week shown in the image.
+5. Do not include the percentage in the output.
+6. Separate each grade entry with a # symbol.
+
+Important notes:
+- Do not use quotation marks around the title.
+- Do not include any new line breaks or spaces in the output.
+- If the image does not contain a clear list of grades or is unclear, return an empty string.
+
+Provide your output as a single line of text with no additional commentary. The output should only contain the formatted grade entries or be empty if no clear grades are present.
+""") //this is the long ahh prompt
+        ]
         let messagesParameter = [MessageParameter.Message(role: .user, content: .list(imageSource))]
 
         // Create prompt
-        let parameters = MessageParameter(model: .claude3Haiku, messages: messagesParameter, maxTokens: maxTokens, system: .list([.init(text: "can you take this image and parse the Title, points earned, points total, date, and weight (default 1) and separate each by a comma. The format should be \"Title,earned,total,date,weight\". Each seperate grade should be seperated by a # symbol. no square brackets. the date should be in the format dd/MM/yyyy. All places should be filled. That means to include 0's if they are missing. Make sure the day of the month conforms to the year it is supposed to be. it is important that the year matches the correct day of the week. PLEASE LOOK AT THE DAY OF THE WEEK ABOVE THE DATE AND MAKE SURE IT MATCHES WITH A FUTURE YEAR. The school year is 2024-2025 currently. the percentage is not required in the json AT ALL. ONLY RESPOND WITH THE LIST OF GRADES OBJECTS WITHOUT SQUARE BRACKETS. The name does not need double quotes around it. respond with no new line breaks and no spaces. if you do not understand the photo or there aren't a clear list of grades, return an empty list. If the photo does not contain a very obvious list of grades, return an empty string.", cacheControl: nil)]), temperature: 0)
+        let parameters = MessageParameter(model: .claude3Haiku, messages: messagesParameter, maxTokens: maxTokens, temperature: 0.2)
 
         // Ask Claude for prompt
         print("about to prompt")
         let message = try await service.createMessage(parameters)
         print("got prompt back and attempting to parse")
         
+        
         // Parse String from message
         var strList = ""
         if let data = message.content.first {
+            print(data)
             switch(data) {
             case .text(let str):
                 strList = str
