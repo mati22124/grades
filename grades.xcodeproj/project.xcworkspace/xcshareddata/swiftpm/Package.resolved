@@ -1,5 +1,5 @@
 {
-  "originHash" : "86686dc2b9518993de3a15f58a18483c2cef121a9e45f991fb32169100e0ae83",
+  "originHash" : "33c0da98aaeef2705ada709923e9c5f39107702c57d8f956fb00c64749bd3840",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -146,12 +146,12 @@
       }
     },
     {
-      "identity" : "swiftsoup",
+      "identity" : "swiftanthropic",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "location" : "https://github.com/jamesrochabrun/SwiftAnthropic",
       "state" : {
-        "revision" : "0837db354faf9c9deb710dc597046edaadf5360f",
-        "version" : "2.7.6"
+        "revision" : "f0c746648f0c393ebe7ae6349f35bf8dfde6a108",
+        "version" : "1.8.4"
       }
     },
     {
