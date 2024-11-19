@@ -22,7 +22,7 @@ struct menuButtonAdd: View {
                         .ignoresSafeArea(edges: .all)
                         .onTapGesture {
                             withAnimation {
-                                isMenuPresented.toggle()
+                                isMenuPresented = false
                             }
                         }
                 }

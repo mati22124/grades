@@ -102,8 +102,6 @@ struct grade: Codable, Identifiable, Equatable {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         let tempDate = dateFormatter.date(from: datee)
-        print("temp date is: \(tempDate)")
-        print("string date is: \(datee)")
         if let rdate = tempDate {
             self.date = rdate
         } else {
