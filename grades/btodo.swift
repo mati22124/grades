@@ -12,5 +12,6 @@
  fix animation for course plus button
  polish all ui features
  redesign new course button
+ test tags
  
  */
