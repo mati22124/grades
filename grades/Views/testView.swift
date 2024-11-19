@@ -36,6 +36,16 @@ struct testView: View {
                         }
                     }
                 }
+            Button("retry") {
+                Task {
+                    do {
+                        listOfGrades = try await importManager.shared.sendMessageFromImage(image: selectedImage)
+                    } catch {
+                        listOfGrades = []
+                        print("error with anthropic: \(error)")
+                    }
+                }
+            }
             ForEach(listOfGrades) { grade in
                 GradeCard(grade: grade, isPoints: true)
             }
