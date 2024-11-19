@@ -30,6 +30,7 @@ struct testView: View {
                             do {
                                 listOfGrades = try await importManager.shared.sendMessageFromImage(image: selectedImage)
                             } catch {
+                                listOfGrades = []
                                 print("error with anthropic: \(error)")
                             }
                         }
