@@ -13,5 +13,6 @@
  polish all ui features
  redesign new course button
  test tags
+ autodismiss menu after click
  
  */

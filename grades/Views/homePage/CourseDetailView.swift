@@ -134,7 +134,7 @@ struct GradeCard: View {
             
             VStack(alignment: .trailing) {
                 if isPoints {
-                    Text("\(Int(grade.earned))/\(Int(grade.points))")
+                    Text("\(grade.earned.removeZerosFromEnd())/\(grade.points.removeZerosFromEnd())")
                         .font(.custom("ProductSans-Bold", size: 18))
                         .foregroundColor(.secCol)
                 }

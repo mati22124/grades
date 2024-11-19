@@ -40,11 +40,14 @@ struct mainView: View {
                 }
                 
                 Tab("Settings", systemImage: "gear") {
-                    Button {
-                        try? authManager.shared.signOut()
-                        showSignInView = true
-                    } label: {
-                        Text("Sign Out")
+                    ZStack {
+                        Color.primaryCol.ignoresSafeArea(.all)
+                        Button {
+                            try? authManager.shared.signOut()
+                            showSignInView = true
+                        } label: {
+                            Text("Sign Out")
+                        }
                     }
                 }
             }
