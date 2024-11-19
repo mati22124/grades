@@ -39,6 +39,10 @@ struct mainView: View {
                     }
                 }
                 
+                Tab("Import", systemImage: "square.and.arrow.up") {
+                    testView()
+                }
+                
                 Tab("Settings", systemImage: "gear") {
                     ZStack {
                         Color.primaryCol.ignoresSafeArea(.all)

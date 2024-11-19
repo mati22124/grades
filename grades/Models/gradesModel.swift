@@ -85,6 +85,36 @@ struct grade: Codable, Identifiable, Equatable {
     var percentage: Double {
         return (earned/points)*100
     }
+    
+    init(name: String, points: Double, earned: Double, weight: Double, date: Date) {
+        self.name = name
+        self.points = points
+        self.earned = earned
+        self.weight = weight
+        self.date = date
+    }
+    
+    init(name: String, points: Double, earned: Double, weight: Double, datee: String) {
+        self.name = name
+        self.points = points
+        self.earned = earned
+        self.weight = weight
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        let tempDate = dateFormatter.date(from: datee)
+        print("temp date is: \(tempDate)")
+        print("string date is: \(datee)")
+        if let rdate = tempDate {
+            self.date = rdate
+        } else {
+            self.date = Date()
+        }
+    }
+    
+    
+//    enum CodingKeys: CodingKey {
+//        
+//    }
 }
 
 struct categoy: Codable, Identifiable {

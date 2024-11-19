@@ -14,5 +14,6 @@
  redesign new course button
  test tags
  autodismiss menu after click
+ handle error in extensions
  
  */
