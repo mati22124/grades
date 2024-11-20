@@ -42,7 +42,7 @@ struct classesView: View {
                 }
             }
             .onChange(of: courseToDelete, { _, newValue in
-                if let course = courseToDelete {
+                if let _ = courseToDelete {
                     showingAlert = true
                 }
             })
