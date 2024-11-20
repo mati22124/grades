@@ -37,6 +37,11 @@ struct menuButtonAdd: View {
                             ForEach(menuItems) { item in
                                 NavigationLink {
                                     AnyView(item.destination)
+                                        .onAppear {
+                                            withAnimation {
+                                                isMenuPresented = false
+                                            }
+                                        }
                                 } label: {
                                     HStack(spacing: 15) {
                                         Text(item.optionName)

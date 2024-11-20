@@ -7,7 +7,12 @@
 
 import Foundation
 
-class course: Codable, Identifiable {
+class course: Codable, Identifiable, Equatable {
+    static func == (lhs: course, rhs: course) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    
     var name: String
     var teacher: String
     var grades: [grade]
