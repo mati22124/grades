@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct classesView: View {
-    let backgroundColor = Color(red: 0.9, green: 0.95, blue: 1.0) // Lighter sky blue
-    let accentColor = Color(red: 1.0, green: 0.8, blue: 0.0) // Gold accent
     @Binding var showSignInView: Bool
     
     @StateObject var viewModel = gradesViewModel()
     
     @State private var didAppear: Bool = false
-    
     @State private var menuIsPresentedCourse: Bool = false
+    @State private var showingAlert: Bool = false
+    
+    @State private var courseToDelete: course? = nil
     
     var body: some View {
         ZStack {
@@ -33,13 +33,29 @@ struct classesView: View {
                                     ClassGradeBlock(classGrade: course)
                                         .environmentObject(viewModel)
                                 } onDelete: {
-                                        try? coursesManager.shared.removeCourse(data: $course.wrappedValue)
+                                    courseToDelete = $course.wrappedValue
                                 }
                             }
                         }
                     }
                     .padding(.top, 10)
                 }
+            }
+            .onChange(of: courseToDelete, { _, newValue in
+                if let course = courseToDelete {
+                    showingAlert = true
+                }
+            })
+            .alert("Confirm delete", isPresented: $showingAlert) {
+                Button("Delete", role: .destructive) {
+                    try? coursesManager.shared.removeCourse(data: courseToDelete!)
+                    courseToDelete = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    courseToDelete = nil
+                }
+            } message: {
+                Text("Are you sure you want to delete \(courseToDelete?.name ?? "NOT WORKING DONT DELETE")?")
             }
             .frame(maxWidth: .infinity)
             .ignoresSafeArea(.keyboard)
