@@ -61,10 +61,34 @@ struct classesView: View {
             .ignoresSafeArea(.keyboard)
             .padding(.horizontal, 20)
             
-            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
-                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
-                ]
-            )
+            HStack {
+                Spacer(minLength: 0)
+                VStack(alignment: .trailing, spacing: 0) {
+                    Spacer(minLength: 0)
+                    NavigationLink {
+                        addCourseView().environmentObject(viewModel)
+                    } label: {
+                        Circle()
+                            .frame(width: 50, height: 50,alignment: .trailing)
+                            .foregroundStyle(.terCol)
+                            .overlay {
+                                Image(systemName: "xmark")
+                                    .foregroundStyle(.white)
+                                    .fontWeight(.bold)
+                            }
+                            .rotationEffect(.degrees(45))
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    .padding(.top, 10)
+                }
+            }
+
+            
+//            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
+//                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
+//                ]
+//            )
         }
         .onAppear(perform: {
             if !didAppear {
@@ -90,7 +114,7 @@ struct classesView: View {
                 }
             }
         })
-        .navigationTitle("Grades")
+        .navigationTitle("Courses")
         .navigationBarTitleTextColor(.secCol)
     }
 }
