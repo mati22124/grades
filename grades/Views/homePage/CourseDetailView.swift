@@ -67,12 +67,13 @@ struct CourseHeaderCard: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(course.teacher)
-                        .font(.custom("ProductSans-Bold", size: 18))
+                        .font(.custom("ProductSans-Bold", size: 24))
                         .foregroundColor(.secCol)
-                    Text(course.isPoints ? "Points Based" : "Weighted Categories")
-                        .font(.custom("ProductSans-Regular", size: 18))
-                        .foregroundColor(.secCol.opacity(0.8))
+//                    Text(course.isPoints ? "Points Based" : "Weighted Categories")
+//                        .font(.custom("ProductSans-Regular", size: 18))
+//                        .foregroundColor(.secCol.opacity(0.8))
                 }
+                .frame(maxWidth: 140, maxHeight: .infinity, alignment: .leading)
                 
                 Spacer()
                 
@@ -130,7 +131,7 @@ struct GradeCard: View {
                     .foregroundColor(.secCol)
             }
             
-            Spacer()
+            Spacer(minLength: 0)
             
             VStack(alignment: .trailing) {
                 if isPoints {
@@ -181,7 +182,7 @@ struct GradeCard: View {
 #Preview {
     @Previewable @State var c = course(
         name: "AP Calculus BC",
-        teacher: "Ms. Coursen",
+        teacher: "Anatoly Fonarev",
         isPoints: true,
         grades: [
         grade(name: "Test grade", points: 100, earned: 95, weight: 1, date: Date()),
