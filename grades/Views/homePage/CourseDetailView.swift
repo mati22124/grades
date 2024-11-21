@@ -20,7 +20,7 @@ struct CourseDetailView: View {
             ScrollView {
                 VStack(spacing: 15) {
                     // Header Card
-                    CourseHeaderCard(course: course)
+                    CourseHeaderCard(course: $course)
                     Text(course.grades.isEmpty ? "No assignments" : "Assignments")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
@@ -60,7 +60,7 @@ struct CourseDetailView: View {
 
 // Header card showing course summary
 struct CourseHeaderCard: View {
-    let course: course
+    @Binding var course: course
     
     var body: some View {
         VStack(spacing: 12) {

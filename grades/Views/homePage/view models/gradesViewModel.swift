@@ -40,6 +40,7 @@ final class gradesViewModel: ObservableObject {
     func addcoursesListener(userId: String) {
         coursesManager.shared.addCoursesListener(userId: userId) { [weak self] courses in
             self?.courses = courses
+            print("courses pulled")
         }
     }
     

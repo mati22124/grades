@@ -30,7 +30,7 @@ struct classesView: View {
                                 CourseDetailView(course: $course)
                             } label: {
                                 SwipeToDeleteView {
-                                    ClassGradeBlock(classGrade: course)
+                                    ClassGradeBlock(classGrade: $course)
                                         .environmentObject(viewModel)
                                 } onDelete: {
                                     courseToDelete = $course.wrappedValue
@@ -120,7 +120,7 @@ struct classesView: View {
 }
 
 struct ClassGradeBlock: View {
-    let classGrade: course
+    @Binding var classGrade: course
     @EnvironmentObject var viewModel: gradesViewModel
     
     var body: some View {
