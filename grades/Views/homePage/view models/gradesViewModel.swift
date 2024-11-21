@@ -31,7 +31,6 @@ final class gradesViewModel: ObservableObject {
                     throw coursesError.noUserInFirebase
                 }
             }
-            // TODO: somehow add error handling within the listener if im unable to get somethhing yk.
             addcoursesListener(userId: u.uid)
         } else {
             throw authError.noUser
