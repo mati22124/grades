@@ -9,13 +9,15 @@ import SwiftUI
 struct SwipeToDeleteView<Content: View>: View {
     let content: Content
     let onDelete: () -> Void
+    let onEdit: any View
     @State private var offset: CGFloat = 0
     @State private var isSwiping = false
-    private let deleteThreshold: CGFloat = -75
+    private let deleteThreshold: CGFloat = -150
     
-    init(@ViewBuilder content: () -> Content, onDelete: @escaping () -> Void) {
+    init(@ViewBuilder content: () -> Content, onDelete: @escaping () -> Void, onEdit: any View) {
         self.content = content()
         self.onDelete = onDelete
+        self.onEdit = onEdit
     }
     
     var body: some View {
@@ -53,19 +55,40 @@ struct SwipeToDeleteView<Content: View>: View {
                         }
                 )
             Group {
-                Button(action: {
-                    onDelete()
-                }) {
-                    RoundedRectangle(cornerRadius: 8)
-                        .frame(width: 40, height: 40)
-                        .foregroundStyle(.terCol)
-                        .overlay {
-                            Image(systemName: "xmark")
-                                .foregroundStyle(.white)
-                        }
+                ZStack {
+                    Button(action: {
+                        onDelete()
+                    }) {
+                        RoundedRectangle(cornerRadius: 8)
+                            .frame(width: 40, height: 40)
+                            .foregroundStyle(.terCol)
+                            .overlay {
+                                Image(systemName: "xmark")
+                                    .foregroundStyle(.white)
+                            }
+                    }
+                    .offset(x: 40+offset)
+                    
+                    NavigationLink {
+                        AnyView(onEdit)
+                            .onAppear {
+                                withAnimation {
+                                    self.offset = 0
+                                }
+                            }
+                    } label: {
+                        RoundedRectangle(cornerRadius: 8)
+                            .frame(width: 40, height: 40)
+                            .foregroundStyle(.terCol)
+                            .overlay {
+                                Image(systemName: "pencil.line")//maybe do pencil no.line
+                                    .foregroundStyle(.white)
+                            }
+                    }
+                    .offset(x: 115+offset)
                 }
-                .offset(x: 40+offset)
-            }.frame(width: 0)
+                .frame(width: 0)
+            }
         }
     }
 }

@@ -25,8 +25,6 @@ class AddGradeViewModel: ObservableObject {
     
     
     func saveGrade(_ course: inout course) throws{
-        // Create new grade and add to course
-        // You'll need to implement this based on your data model
         let newGrade = grade(
             name: name,
             points: Double(totalPoints) ?? 0,
@@ -36,6 +34,35 @@ class AddGradeViewModel: ObservableObject {
         )
         
         course.grades.append(newGrade)
+        try coursesManager.shared.setCourse(data: course)
+    }
+}
+
+class editGradeViewModel: ObservableObject {
+    @Published var pointsEarned: String
+    @Published var totalPoints: String
+    
+    init(grade: grade) {
+        pointsEarned = String(grade.earned)
+        totalPoints = String(grade.points)
+    }
+    
+    var isValidInput: Bool {
+        !pointsEarned.isEmpty &&
+        !totalPoints.isEmpty &&
+        (Double(pointsEarned) ?? 0) >= 0 &&
+        (Double(totalPoints) ?? 0) > 0
+    }
+    
+    
+    func saveGrade(course: inout course, grade newGrade: grade) throws {
+        var accGrade = newGrade
+        let indop = course.grades.firstIndex(where: {$0.id == newGrade.id})
+        if let indop {
+            accGrade.earned = Double(pointsEarned) ?? 0
+            accGrade.points = Double(totalPoints) ?? 0
+            course.grades[indop] = accGrade
+        }
         try coursesManager.shared.setCourse(data: course)
     }
 }

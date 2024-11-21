@@ -31,14 +31,14 @@ struct CourseDetailView: View {
                     VStack(alignment: .leading, spacing: 12) {
 
                         ForEach(course.grades) { grade in
-                            SwipeToDeleteView {
+                            SwipeToDeleteView(content: {
                                 GradeCard(grade: grade, isPoints: course.isPoints)
-                            } onDelete: {
+                            }, onDelete: {
                                 if let index = course.grades.firstIndex(of: grade) {
                                     course.grades.remove(at: index)
                                 }
                                 try? coursesManager.shared.setCourse(data: course)
-                            }
+                            }, onEdit: editGradeView(grade: grade, course: $course))
                         }
                     }
                 }

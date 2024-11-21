@@ -29,12 +29,12 @@ struct classesView: View {
                             NavigationLink {
                                 CourseDetailView(course: $course)
                             } label: {
-                                SwipeToDeleteView {
+                                SwipeToDeleteView(content: {
                                     ClassGradeBlock(classGrade: $course)
                                         .environmentObject(viewModel)
-                                } onDelete: {
+                                }, onDelete: {
                                     courseToDelete = $course.wrappedValue
-                                }
+                                }, onEdit: editCourseView(originalCourse: $course).environmentObject(viewModel))
                             }
                         }
                     }
