@@ -85,10 +85,21 @@ struct grade: Codable, Identifiable, Equatable {
     var earned: Double
     var weight: Double
     var date: Date
+    var isPhantom: Bool
     var id: UUID = UUID()
     
     var percentage: Double {
         return (earned/points)*100
+    }
+    
+    init(name: String, points: Double, earned: Double, weight: Double, date: Date, isPhantom: Bool = false) {
+        self.name = name
+        self.points = points
+        self.earned = earned
+        self.weight = weight
+        self.date = date
+        self.isPhantom = isPhantom
+        self.id = UUID()
     }
 }
 
