@@ -24,13 +24,14 @@ class AddGradeViewModel: ObservableObject {
     }
     
     
-    func saveGrade(_ course: inout course) throws{
+    func saveGrade(_ course: inout course, isPhan: Bool = false) throws{
         let newGrade = grade(
             name: name,
             points: Double(totalPoints) ?? 0,
             earned: Double(pointsEarned) ?? 0,
             weight: 1,
-            date: date
+            date: date,
+            isPhantom: isPhan
         )
         
         course.grades.append(newGrade)

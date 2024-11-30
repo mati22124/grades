@@ -35,26 +35,55 @@ struct menuButtonAdd: View {
                     if isMenuPresented {
                         VStack(alignment: .trailing, spacing: 25) {
                             ForEach(menuItems) { item in
-                                NavigationLink {
-                                    AnyView(item.destination)
-                                        .onAppear {
-                                            withAnimation {
-                                                isMenuPresented = false
+                                if let dest = item.destination {
+                                    NavigationLink {
+                                        AnyView(dest)
+                                            .onAppear {
+                                                withAnimation(Animation.linear.delay(0.5)) {
+                                                    isMenuPresented = false
+                                                }
                                             }
+                                    } label: {
+                                        HStack(spacing: 15) {
+                                            Text(item.optionName)
+                                                .foregroundStyle(.secCol)
+                                                .font(.custom("ProductSans-Regular", size: 32))
+                                            Image(systemName: item.icon)
+                                                .resizable()
+                                                .frame(width: 25, height: 25)
+                                                .alignmentGuide(.menu) { dim in
+                                                    dim.width / 2
+                                                }
                                         }
-                                } label: {
-                                    HStack(spacing: 15) {
-                                        Text(item.optionName)
-                                            .foregroundStyle(.secCol)
-                                            .font(.custom("ProductSans-Regular", size: 32))
-                                        Image(systemName: item.icon)
-                                            .resizable()
-                                            .frame(width: 25, height: 25)
-                                            .alignmentGuide(.menu) { dim in
-                                                dim.width / 2
-                                            }
                                     }
                                 }
+                                
+                                if let act = item.action {
+                                    Button {
+                                        if !item.isAnimated {
+                                            act()
+                                        }
+                                        withAnimation {
+                                            if item.isAnimated {
+                                                act()
+                                            }
+                                            isMenuPresented = false
+                                        }
+                                    } label: {
+                                        HStack(spacing: 15) {
+                                            Text(item.optionName)
+                                                .foregroundStyle(.secCol)
+                                                .font(.custom("ProductSans-Regular", size: 32))
+                                            Image(systemName: item.icon)
+                                                .resizable()
+                                                .frame(width: 25, height: 25)
+                                                .alignmentGuide(.menu) { dim in
+                                                    dim.width / 2
+                                                }
+                                        }
+                                    }
+                                }
+                              
                             }
                         }
                         .padding()
@@ -86,9 +115,25 @@ struct menuButtonAdd: View {
 
 struct menuItem: Identifiable {
     var id: String = UUID().uuidString
-    var destination: any View
+    var destination: (any View)?
+    var action: (() -> Void)?
     var optionName: String
     var icon: String
+    
+    var isAnimated: Bool = false
+    
+    init(destination: any View, optionName: String, icon: String) {
+        self.destination = destination
+        self.optionName = optionName
+        self.icon = icon
+    }
+    
+    init(action: @escaping () -> Void, optionName: String, icon: String, isAnimated: Bool = false) {
+        self.action = action
+        self.optionName = optionName
+        self.icon = icon
+        self.isAnimated = isAnimated
+    }
 }
 
 #Preview {

@@ -33,12 +33,16 @@ struct SwipeToDeleteView<Content: View>: View {
                             let newOffset = gesture.translation.width
                             
                             let toff = min(0, max(deleteThreshold, newOffset))
-                            if(toff == 0 && offset < 0) {
-                                if newOffset+deleteThreshold > 0 {
+                            if(offset <= deleteThreshold && newOffset < 0) { // if u try to swipe left when ur swiped out it will snap back
+                                offset = deleteThreshold
+                                return
+                            }
+                            if(toff == 0 && offset < 0) { // if it wants to return and ur already swiped out
+                                if newOffset+deleteThreshold > 0 { // if u have swiped past the end point, then just snap back to 0. dont allow swipe more right.
                                     self.offset = 0
                                     return
                                 }
-                                self.offset = newOffset+deleteThreshold
+                                self.offset = newOffset+deleteThreshold //start going back
                                 return
                             }
                             self.offset = min(0, max(deleteThreshold, newOffset))

@@ -58,6 +58,36 @@ extension Double {
     func roundedGrade() -> String {
         return String(format: "%.2f", self.round(to: 2))
     }
+    
+    
+    func averageToGrade() -> String {
+        if (self >= 93) {
+            return "A";
+        } else if (self >= 90) {
+            return "A-";
+        } else if (self >= 87) {
+            return "B+";
+        } else if (self >= 83) {
+            return "B";
+        } else if (self >= 80) {
+            return "B-";
+        } else if (self >= 77) {
+            return "C+";
+        } else if (self >= 73) {
+            return "C";
+        } else if (self >= 70) {
+            return "C-";
+        } else if (self >= 67) {
+            return "D+";
+        } else if (self >= 63) {
+            return "D";
+        } else if (self >= 60) {
+            return "D-";
+        } else {
+            return "F";
+        }
+    }
+
 }
 
 public struct RemoveFocusOnTapModifier: ViewModifier {
