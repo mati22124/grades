@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>108657214658-ub3bq4a7am2s38mcpbor02la51f89n0p.apps.googleusercontent.com</string>
+	<string>108657214658-b874vkouuprkvnncg8m8vsj1jg293caf.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.108657214658-ub3bq4a7am2s38mcpbor02la51f89n0p</string>
+	<string>com.googleusercontent.apps.108657214658-b874vkouuprkvnncg8m8vsj1jg293caf</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDi4x5LIluKf2GG9fJH778k8cc85PQnibY</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,11 +13,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.iseefun.grades</string>
+	<string>com.0xmanku.grades</string>
 	<key>PROJECT_ID</key>
 	<string>grades-f5044</string>
 	<key>STORAGE_BUCKET</key>
-	<string>grades-f5044.appspot.com</string>
+	<string>grades-f5044.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:108657214658:ios:3cd49f1b9f432202c6e75b</string>
+	<string>1:108657214658:ios:abc9362d5f34119fc6e75b</string>
 </dict>
 </plist>

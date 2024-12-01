@@ -44,6 +44,7 @@ struct mainView: View {
                         Color.primaryCol.ignoresSafeArea(.all)
                         Button {
                             try? authManager.shared.signOut()
+                            coursesManager.shared.removeListener()
                             showSignInView = true
                         } label: {
                             Text("Sign Out")

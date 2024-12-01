@@ -103,7 +103,7 @@ struct classesView: View {
             }
         })
         .onChange(of: showSignInView, { _, newValue in
-            if !didAppear && newValue == false {
+            if !didAppear && !newValue {
                 Task {
                     do {
                         try await viewModel.loadCurrentUser()
@@ -112,6 +112,9 @@ struct classesView: View {
                         print("error: \(error)")
                     }
                 }
+            } else if newValue {
+                didAppear = false
+                viewModel.courses = []
             }
         })
         .navigationTitle("Courses")

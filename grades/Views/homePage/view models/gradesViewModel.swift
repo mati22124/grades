@@ -27,6 +27,7 @@ final class gradesViewModel: ObservableObject {
                     user = DBUser(uid: u.uid, name: "", email: u.email ?? "")
                     print("Set user ran")
                 } else {
+                    print("real error \(error)")
                     throw coursesError.noUserInFirebase
                 }
             }
