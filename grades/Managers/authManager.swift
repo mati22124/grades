@@ -61,6 +61,15 @@ final class authManager {
         return authResult(user: authResultt.user)
     }
     
+    // user management
+    
+    func deleteAccount() throws {
+        if let cus = Auth.auth().currentUser {
+            cus.delete()
+        } else {
+            throw authError.noUser
+        }
+    }
 }
 
 

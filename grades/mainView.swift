@@ -11,6 +11,8 @@ struct mainView: View {
     @Binding var showSignInView: Bool
     @State private var selectedTab: Int = 0
     
+    @State private var deleteAcc: Bool = false
+    
     var items = [ittabbar(image: "books.vertical.fill", title: "Grades", index: 0), ittabbar(image: "gear", title: "Settings", index: 1)]
     
     var body: some View {
@@ -42,12 +44,30 @@ struct mainView: View {
                 Tab("Settings", systemImage: "gear") {
                     ZStack {
                         Color.primaryCol.ignoresSafeArea(.all)
-                        Button {
-                            try? authManager.shared.signOut()
-                            coursesManager.shared.removeListener()
-                            showSignInView = true
-                        } label: {
-                            Text("Sign Out")
+                        VStack {
+                            Button {
+                                try? authManager.shared.signOut()
+                                coursesManager.shared.removeListener()
+                                showSignInView = true
+                            } label: {
+                                Text("Sign Out")
+                            }
+                            
+                            Button {
+                                deleteAcc = true
+                            } label: {
+                                Text("delete account")
+                            }
+                        }
+                        .alert("Delete Account", isPresented: $deleteAcc) { 
+                            Button("Delete", role: .destructive) {
+                                try? authManager.shared.deleteAccount()
+                                coursesManager.shared.removeListener()
+                                showSignInView = true
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        } message: {
+                            Text("Are you sure you want to delete your account?")
                         }
                     }
                 }
