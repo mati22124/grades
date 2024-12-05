@@ -27,63 +27,28 @@ struct SwipeToDeleteView<Content: View>: View {
                 .gesture(
                     DragGesture()
                         .onChanged { gesture in
-                            // Prevent swipe to the right in default position
-                            if offset == 0 && gesture.translation.width > 0 {
-                                return
-                            }
+                            // Allow dragging between 0 and deleteThreshold
+                            let newOffset = gesture.translation.width
                             
-                            // Prevent drag more than deleteThreshold points
-                            if gesture.translation.width < deleteThreshold {
-                                return
-                            }
-                            
-                            // Prevent swipe againt to the left if it's already swiped
-                            if offset == deleteThreshold && gesture.translation.width < 0 {
-                                return
-                            }
-                            
-                            // If view already swiped to the left and we start dragging to the right
-                            // Firstly will check if it's swiped left
-                            if offset >= deleteThreshold {
-                                // And here checking if swiped to the right more than swipeRightLimit points
-                                // If more - need to set the view to zero position
-                                if gesture.translation.width > 0 {
+                            let toff = min(0, max(deleteThreshold, newOffset))
+                            if(toff == 0 && offset < 0) {
+                                if newOffset+deleteThreshold > 0 {
                                     self.offset = 0
                                     return
                                 }
-                                
-                                // Check if only swiping to the right - update distance by minus deleteThreshold points
-                                if offset != 0 && gesture.translation.width > 0 {
-                                    self.offset = deleteThreshold + gesture.translation.width
-                                    return
-                                }
+                                self.offset = newOffset+deleteThreshold
+                                return
                             }
-                                
-                            self.offset = gesture.translation.width
+                            self.offset = min(0, max(deleteThreshold, newOffset))
                         }
                         .onEnded { gesture in
                             withAnimation {
-                                // Left swipe handle:
-                                if self.offset < -30 {
+                                // If dragged more than halfway to threshold, snap to threshold
+                                if offset < deleteThreshold/2 {
                                     self.offset = deleteThreshold
-                                    return
-                                }
-                                if self.offset < deleteThreshold {
-                                    self.offset = deleteThreshold
-                                    return
-                                }
-                                
-                                // Right swipe handle:
-                                if gesture.translation.width > 30 {
+                                } else {
                                     self.offset = 0
-                                    return
                                 }
-                                if gesture.translation.width < 30 {
-                                    self.offset = deleteThreshold
-                                    return
-                                }
-                                
-                                self.offset = 0
                             }
                         }
                 )

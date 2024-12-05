@@ -20,7 +20,7 @@ struct CourseDetailView: View {
             ScrollView {
                 VStack(spacing: 15) {
                     // Header Card
-                    CourseHeaderCard(course: course)
+                    CourseHeaderCard(course: $course)
                     Text(course.grades.isEmpty ? "No assignments" : "Assignments")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
@@ -60,19 +60,20 @@ struct CourseDetailView: View {
 
 // Header card showing course summary
 struct CourseHeaderCard: View {
-    let course: course
+    @Binding var course: course
     
     var body: some View {
         VStack(spacing: 12) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(course.teacher)
-                        .font(.custom("ProductSans-Bold", size: 18))
+                        .font(.custom("ProductSans-Bold", size: 24))
                         .foregroundColor(.secCol)
-                    Text(course.isPoints ? "Points Based" : "Weighted Categories")
-                        .font(.custom("ProductSans-Regular", size: 18))
-                        .foregroundColor(.secCol.opacity(0.8))
+//                    Text(course.isPoints ? "Points Based" : "Weighted Categories")
+//                        .font(.custom("ProductSans-Regular", size: 18))
+//                        .foregroundColor(.secCol.opacity(0.8))
                 }
+                .frame(maxWidth: 140, maxHeight: .infinity, alignment: .leading)
                 
                 Spacer()
                 
@@ -130,7 +131,7 @@ struct GradeCard: View {
                     .foregroundColor(.secCol)
             }
             
-            Spacer()
+            Spacer(minLength: 0)
             
             VStack(alignment: .trailing) {
                 if isPoints {
@@ -181,7 +182,7 @@ struct GradeCard: View {
 #Preview {
     @Previewable @State var c = course(
         name: "AP Calculus BC",
-        teacher: "Ms. Coursen",
+        teacher: "Anatoly Fonarev",
         isPoints: true,
         grades: [
         grade(name: "Test grade", points: 100, earned: 95, weight: 1, date: Date()),

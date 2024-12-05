@@ -30,7 +30,7 @@ struct classesView: View {
                                 CourseDetailView(course: $course)
                             } label: {
                                 SwipeToDeleteView {
-                                    ClassGradeBlock(classGrade: course)
+                                    ClassGradeBlock(classGrade: $course)
                                         .environmentObject(viewModel)
                                 } onDelete: {
                                     courseToDelete = $course.wrappedValue
@@ -42,7 +42,7 @@ struct classesView: View {
                 }
             }
             .onChange(of: courseToDelete, { _, newValue in
-                if let course = courseToDelete {
+                if let _ = courseToDelete {
                     showingAlert = true
                 }
             })
@@ -103,7 +103,7 @@ struct classesView: View {
             }
         })
         .onChange(of: showSignInView, { _, newValue in
-            if !didAppear && newValue == false {
+            if !didAppear && !newValue {
                 Task {
                     do {
                         try await viewModel.loadCurrentUser()
@@ -112,6 +112,9 @@ struct classesView: View {
                         print("error: \(error)")
                     }
                 }
+            } else if newValue {
+                didAppear = false
+                viewModel.courses = []
             }
         })
         .navigationTitle("Courses")
@@ -120,7 +123,7 @@ struct classesView: View {
 }
 
 struct ClassGradeBlock: View {
-    let classGrade: course
+    @Binding var classGrade: course
     @EnvironmentObject var viewModel: gradesViewModel
     
     var body: some View {

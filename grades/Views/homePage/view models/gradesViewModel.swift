@@ -27,6 +27,7 @@ final class gradesViewModel: ObservableObject {
                     user = DBUser(uid: u.uid, name: "", email: u.email ?? "")
                     print("Set user ran")
                 } else {
+                    print("real error \(error)")
                     throw coursesError.noUserInFirebase
                 }
             }
@@ -40,6 +41,7 @@ final class gradesViewModel: ObservableObject {
     func addcoursesListener(userId: String) {
         coursesManager.shared.addCoursesListener(userId: userId) { [weak self] courses in
             self?.courses = courses
+            print("courses pulled")
         }
     }
     

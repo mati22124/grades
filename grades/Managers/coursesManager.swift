@@ -13,6 +13,8 @@ final class coursesManager {
     
     private let db = Firestore.firestore()
     private let usercollection = Firestore.firestore().collection("users")
+    
+    var currentListener: (any ListenerRegistration)?
 
     
     func getCourses(userId: String) async throws -> [course] {
@@ -26,7 +28,7 @@ final class coursesManager {
     }
     
     func addCoursesListener(userId: String, completion: @escaping (_ courses: [course]) -> Void)  {
-        usercollection.document(userId).collection("courses").addSnapshotListener { querySnapshot, error in
+        currentListener = usercollection.document(userId).collection("courses").addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
@@ -36,6 +38,15 @@ final class coursesManager {
                 return try? documentSnapshot.data(as: course.self)
             }
             completion(courses)
+        }
+    }
+    
+    func removeListener() {
+        if let x = currentListener {
+            x.remove()
+            print("removed lsitener")
+        } else {
+            print("didnt remove listener")
         }
     }
     

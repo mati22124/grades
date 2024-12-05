@@ -85,18 +85,21 @@ struct grade: Codable, Identifiable, Equatable {
     var earned: Double
     var weight: Double
     var date: Date
+    var isPhantom: Bool
     var id: UUID = UUID()
     
     var percentage: Double {
         return (earned/points)*100
     }
     
-    init(name: String, points: Double, earned: Double, weight: Double, date: Date) {
+    init(name: String, points: Double, earned: Double, weight: Double, date: Date, isPhantom: Bool = false) {
         self.name = name
         self.points = points
         self.earned = earned
         self.weight = weight
         self.date = date
+        self.isPhantom = isPhantom
+        self.id = UUID()
     }
     
     init(name: String, points: Double, earned: Double, weight: Double, datee: String) {
@@ -104,6 +107,7 @@ struct grade: Codable, Identifiable, Equatable {
         self.points = points
         self.earned = earned
         self.weight = weight
+        self.isPhantom = false
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         let tempDate = dateFormatter.date(from: datee)
@@ -113,11 +117,6 @@ struct grade: Codable, Identifiable, Equatable {
             self.date = Date()
         }
     }
-    
-    
-//    enum CodingKeys: CodingKey {
-//        
-//    }
 }
 
 struct categoy: Codable, Identifiable {
