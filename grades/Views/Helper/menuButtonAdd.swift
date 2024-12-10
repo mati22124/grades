@@ -19,6 +19,7 @@ struct menuButtonAdd: View {
                     Rectangle()
                         .fill(.primaryCol.opacity(0.2))
                         .background(.ultraThinMaterial)  // This creates the frosted glass effect
+                        .environment(\.colorScheme, .dark)
                         .ignoresSafeArea(edges: .all)
                         .onTapGesture {
                             withAnimation {
@@ -138,8 +139,12 @@ struct menuItem: Identifiable {
 
 #Preview {
     @Previewable @State var isPresentedd: Bool = true
-    menuButtonAdd(isMenuPresented: $isPresentedd, menuItems: [
-        menuItem(destination: Text("hold on"), optionName: "test", icon: "gear"),
-        menuItem(destination: Text("wait a minute"), optionName: "Add post", icon: "camera.aperture")
+    ZStack {
+        Color.primaryCol.ignoresSafeArea()
+        Text("hello")
+        menuButtonAdd(isMenuPresented: $isPresentedd, menuItems: [
+            menuItem(destination: Text("hold on"), optionName: "test", icon: "gear"),
+            menuItem(destination: Text("wait a minute"), optionName: "Add post", icon: "camera.aperture")
         ])
+    }
 }

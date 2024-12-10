@@ -78,7 +78,7 @@ struct CourseDetailView: View {
 
             menuButtonAdd(isMenuPresented: $menuIsVisible, menuItems: [
                 menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill"),
-                menuItem(destination: addPhantomGradeView(course: $course), optionName: "Add Phantom Grade", icon: "books.vertical"),
+                menuItem(destination: addPhantomGradeView(course: $course, showPhantom: $isShowingPhantom), optionName: "Add Phantom Grade", icon: "books.vertical"),
                 menuItem(action: {
                         isShowingPhantom.toggle()
                 }, optionName: isShowingPhantom ? "Hide Phantom Grades" : "Show Phantom Grades", icon: "arrow.right", isAnimated: true)

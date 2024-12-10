@@ -23,6 +23,8 @@ struct addPhantomGradeView: View {
     @State private var isPressed = false
     @Binding var course: course
     
+    @Binding var showPhantom: Bool
+    
     var body: some View {
         GeometryReader { _ in
             ZStack {
@@ -93,6 +95,9 @@ struct addPhantomGradeView: View {
                         do {
                             isPressed = true
                             try viewModel.saveGrade(&course, isPhan: true)
+                            withAnimation {
+                                showPhantom = true
+                            }
                             dismiss()
                             isPressed = false
                         } catch {
