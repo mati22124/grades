@@ -13,6 +13,8 @@ struct CourseDetailView: View {
     
     @State var menuIsVisible: Bool = false
     
+    @State var isShowingPhantom: Bool = false
+    
     var body: some View {
         ZStack {
             Color.primaryCol.edgesIgnoringSafeArea(.all)
@@ -20,24 +22,52 @@ struct CourseDetailView: View {
             ScrollView {
                 VStack(spacing: 15) {
                     // Header Card
-                    CourseHeaderCard(course: $course)
-                    Text(course.grades.isEmpty ? "No assignments" : "Assignments")
+                    CourseHeaderCard(course: $course, isShowingPhantom: $isShowingPhantom)
+                    
+                    // phantom assignments
+                    if isShowingPhantom && course.grades.contains( where: { $0.isPhantom } ) {
+                        Text("Phantom Grades")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
+                        
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            ForEach(course.grades) { grade in
+                                if grade.isPhantom {
+                                    SwipeToDeleteView(content: {
+                                        GradeCard(grade: grade, isPoints: course.isPoints)
+                                    }, onDelete: {
+                                        if let index = course.grades.firstIndex(of: grade) {
+                                            course.grades.remove(at: index)
+                                        }
+                                        try? coursesManager.shared.setCourse(data: course)
+                                    }, onEdit: editGradeView(grade: grade, course: $course))
+                                }
+                            }
+                        }
+                    }
+                    
+                    // normal assignments
+                    Text(course.grades.isEmpty ? "No Grades" : "Grades")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
                     
                         .foregroundColor(.white)
                         .padding(.horizontal)
-              
                     VStack(alignment: .leading, spacing: 12) {
 
                         ForEach(course.grades) { grade in
-                            SwipeToDeleteView {
-                                GradeCard(grade: grade, isPoints: course.isPoints)
-                            } onDelete: {
-                                if let index = course.grades.firstIndex(of: grade) {
-                                    course.grades.remove(at: index)
-                                }
-                                try? coursesManager.shared.setCourse(data: course)
+                            if !grade.isPhantom {
+                                SwipeToDeleteView(content: {
+                                    GradeCard(grade: grade, isPoints: course.isPoints)
+                                }, onDelete: {
+                                    if let index = course.grades.firstIndex(of: grade) {
+                                        course.grades.remove(at: index)
+                                    }
+                                    try? coursesManager.shared.setCourse(data: course)
+                                }, onEdit: editGradeView(grade: grade, course: $course))
                             }
                         }
                     }
@@ -47,7 +77,11 @@ struct CourseDetailView: View {
             }
 
             menuButtonAdd(isMenuPresented: $menuIsVisible, menuItems: [
-                menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill")
+                menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill"),
+                menuItem(destination: addPhantomGradeView(course: $course), optionName: "Add Phantom Grade", icon: "books.vertical"),
+                menuItem(action: {
+                        isShowingPhantom.toggle()
+                }, optionName: isShowingPhantom ? "Hide Phantom Grades" : "Show Phantom Grades", icon: "arrow.right", isAnimated: true)
                 ]
             )
         }
@@ -61,6 +95,7 @@ struct CourseDetailView: View {
 // Header card showing course summary
 struct CourseHeaderCard: View {
     @Binding var course: course
+    @Binding var isShowingPhantom: Bool
     
     var body: some View {
         VStack(spacing: 12) {
@@ -69,21 +104,37 @@ struct CourseHeaderCard: View {
                     Text(course.teacher)
                         .font(.custom("ProductSans-Bold", size: 24))
                         .foregroundColor(.secCol)
-//                    Text(course.isPoints ? "Points Based" : "Weighted Categories")
-//                        .font(.custom("ProductSans-Regular", size: 18))
-//                        .foregroundColor(.secCol.opacity(0.8))
                 }
                 .frame(maxWidth: 140, maxHeight: .infinity, alignment: .leading)
                 
                 Spacer()
                 
                 VStack(alignment: .trailing) {
-                    Text(course.averageToGrade())
-                        .font(.custom("ProductSans-Bold", size: 36))
-                        .foregroundColor(.secCol)
-                    Text("\(course.average.roundedGrade())%")
-                        .font(.custom("ProductSans-Regular", size: 18))
-                        .foregroundColor(.secCol)
+                    HStack {
+                        VStack(alignment: isShowingPhantom ? .center : .trailing) {
+                            Text(course.average.averageToGrade())
+                                .font(.custom("ProductSans-Bold", size: 36))
+                                .foregroundColor(.secCol)
+                            Text("\(course.average.roundedGrade())%")
+                                .font(.custom("ProductSans-Regular", size: 18))
+                                .foregroundColor(.secCol)
+                        }
+                        if isShowingPhantom {
+                            Image(systemName: "arrow.right")
+                                .foregroundStyle(.secCol)
+                                .fontWeight(.bold)
+                                .transition(.move(edge: .trailing).combined(with: .opacity))
+                            VStack {
+                                Text(course.phantomAverage.averageToGrade())
+                                    .font(.custom("ProductSans-Bold", size: 36))
+                                    .foregroundColor(.secCol)
+                                Text("\(course.phantomAverage.roundedGrade())%")
+                                    .font(.custom("ProductSans-Regular", size: 18))
+                                    .foregroundColor(.secCol)
+                            }
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                        }
+                    }
                 }
             }
         }

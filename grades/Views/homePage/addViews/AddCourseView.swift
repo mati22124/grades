@@ -56,7 +56,7 @@ struct addCourseView: View {
                             }
                         }
                     }) {
-                        Text(isPressed ? "Adding..." : "Save Course")
+                        Text(isPressed ? "Adding..." : "Add Course")
                             .font(.custom("ProductSans-Bold", size: 18))
                             .foregroundColor(isPressed ? .gray : .secCol)
                             .frame(maxWidth: .infinity)
