@@ -17,14 +17,55 @@ struct mainView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TabView {
-                Tab("Grades", systemImage: "books.vertical.fill") {
+            if #available(iOS 18.0, *) {
+                TabView {
+                    Tab("Grades", systemImage: "books.vertical.fill") {
+                        NavigationStack {
+                            classesView(showSignInView: $showSignInView)
+                        }
+                    }
+                    Tab("Settings", systemImage: "gear") {
+                        ZStack {
+                            Color.primaryCol.ignoresSafeArea(.all)
+                            VStack {
+                                Button {
+                                    try? authManager.shared.signOut()
+                                    coursesManager.shared.removeListener()
+                                    showSignInView = true
+                                } label: {
+                                    Text("Sign Out")
+                                }
+                                
+                                Button {
+                                    deleteAcc = true
+                                } label: {
+                                    Text("delete account")
+                                }
+                            }
+                            .alert("Delete Account", isPresented: $deleteAcc) {
+                                Button("Delete", role: .destructive) {
+                                    try? authManager.shared.deleteAccount()
+                                    coursesManager.shared.removeListener()
+                                    showSignInView = true
+                                }
+                                Button("Cancel", role: .cancel) { }
+                            } message: {
+                                Text("Are you sure you want to delete your account?")
+                            }
+                        }
+                    }
+                }
+                .tint(.terCol)
+            } else {
+                TabView(selection: $selectedTab) {
                     NavigationStack {
                         classesView(showSignInView: $showSignInView)
                     }
-                }
-                
-                Tab("Settings", systemImage: "gear") {
+                    .tabItem {
+                        Label("Grades", systemImage: "books.vertical.fill")
+                    }
+                    .tag(0)
+                    
                     ZStack {
                         Color.primaryCol.ignoresSafeArea(.all)
                         VStack {
@@ -42,7 +83,7 @@ struct mainView: View {
                                 Text("delete account")
                             }
                         }
-                        .alert("Delete Account", isPresented: $deleteAcc) { 
+                        .alert("Delete Account", isPresented: $deleteAcc) {
                             Button("Delete", role: .destructive) {
                                 try? authManager.shared.deleteAccount()
                                 coursesManager.shared.removeListener()
@@ -53,9 +94,14 @@ struct mainView: View {
                             Text("Are you sure you want to delete your account?")
                         }
                     }
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(1)
                 }
+                .tint(.terCol)
             }
-            .tint(.terCol)
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.primaryCol.ignoresSafeArea(.all))
