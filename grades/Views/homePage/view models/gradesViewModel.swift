@@ -31,7 +31,6 @@ final class gradesViewModel: ObservableObject {
                     throw coursesError.noUserInFirebase
                 }
             }
-            // TODO: somehow add error handling within the listener if im unable to get somethhing yk.
             addcoursesListener(userId: u.uid)
         } else {
             throw authError.noUser
@@ -49,9 +48,18 @@ final class gradesViewModel: ObservableObject {
         if name.isEmpty || teacher.isEmpty { throw coursesError.courseEmpty }
         guard let _ = user else { throw authError.noUser }
         let newCourse = course(name: name, teacher: teacher, isPoints: isPoints)
-        guard let _ = user else { throw authError.noUser }
         courses.append(newCourse)
         try? publishCourses()
+    }
+    
+    func saveCourse(name: String, teacher: String, isPoints: Bool, ocourse: course) throws {
+        if name.isEmpty || teacher.isEmpty { throw coursesError.courseEmpty }
+        guard let _ = user else { throw authError.noUser }
+        ocourse.name = name
+        ocourse.teacher = teacher
+        ocourse.isPoints = isPoints
+        
+        try coursesManager.shared.setCourse(data: ocourse)
     }
     
     func publishCourses() throws {
@@ -66,4 +74,5 @@ final class gradesViewModel: ObservableObject {
 enum coursesError: Error {
     case courseEmpty
     case noUserInFirebase
+    case courseNotInFirebase
 }

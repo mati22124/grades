@@ -29,12 +29,12 @@ struct classesView: View {
                             NavigationLink {
                                 CourseDetailView(course: $course)
                             } label: {
-                                SwipeToDeleteView {
+                                SwipeToDeleteView(content: {
                                     ClassGradeBlock(classGrade: $course)
                                         .environmentObject(viewModel)
-                                } onDelete: {
+                                }, onDelete: {
                                     courseToDelete = $course.wrappedValue
-                                }
+                                }, onEdit: editCourseView(originalCourse: $course).environmentObject(viewModel))
                             }
                         }
                     }
@@ -141,7 +141,7 @@ struct ClassGradeBlock: View {
             
             Spacer()
             VStack {
-                Text(classGrade.averageToGrade())
+                Text(classGrade.average.averageToGrade())
                     .font(.custom("ProductSans-Bold", size: 30))
                     .foregroundColor(.secCol)
                 Text("\(classGrade.average.roundedGrade())%")

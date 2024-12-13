@@ -70,6 +70,10 @@ final class authManager {
             throw authError.noUser
         }
     }
+    
+    func resetPassword(email: String) {
+        Auth.auth().sendPasswordReset(withEmail: email)
+    }
 }
 
 

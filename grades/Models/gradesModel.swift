@@ -24,7 +24,7 @@ class course: Codable, Identifiable, Equatable {
     var average: Double {
         if isPoints {
             if grades.isEmpty { return 0 }
-            let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
+            let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) }) // add ternary operator for calculations.
             return x*100
         } else {
             //figure out logic later
@@ -32,33 +32,16 @@ class course: Codable, Identifiable, Equatable {
         }
     }
     
-    func averageToGrade() -> String {
-    if (self.average >= 93) {
-        return "A";
-    } else if (self.average >= 90) {
-        return "A-";
-    } else if (self.average >= 87) {
-        return "B+";
-    } else if (self.average >= 83) {
-        return "B";
-    } else if (self.average >= 80) {
-        return "B-";
-    } else if (self.average >= 77) {
-        return "C+";
-    } else if (self.average >= 73) {
-        return "C";
-    } else if (self.average >= 70) {
-        return "C-";
-    } else if (self.average >= 67) {
-        return "D+";
-    } else if (self.average >= 63) {
-        return "D";
-    } else if (self.average >= 60) {
-        return "D-";
-    } else {
-        return "F";
+    var phantomAverage: Double {
+        if isPoints {
+            if grades.isEmpty { return 0 }
+            let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points }) // add ternary operator for calculations.
+            return x*100
+        } else {
+            //figure out logic later
+            return 0
+        }
     }
-}
     
     init(name: String, teacher: String, isPoints: Bool) {
         self.name = name
