@@ -50,6 +50,10 @@ struct testView: View {
                 GradeCard(grade: grade, isPoints: true)
             }
         }
+        .frame(maxWidth: .infinity)
+        .background {
+            Color.primaryCol.ignoresSafeArea(.all)
+        }
     }
 }
 
