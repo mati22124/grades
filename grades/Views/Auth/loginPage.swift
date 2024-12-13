@@ -10,153 +10,157 @@ struct LoginView: View {
     @StateObject private var viewModel = signInViewModel()
     
     var body: some View {
-        ZStack {
-            Color.white.ignoresSafeArea(.all)
-            Color.primaryCol.edgesIgnoringSafeArea(.all).opacity(0.95)
-            
-            VStack(spacing: 15) {
-                VStack(spacing: 10) {
-                    Image(systemName: "books.vertical.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.terCol)
-                    
-                    Text("GradePoint")
-                        .font(.custom("ProductSans-Bold", size: 40))
-                        .foregroundColor(.secCol)
-                }
+        NavigationStack {
+            ZStack {
+                Color.white.ignoresSafeArea(.all)
+                Color.primaryCol.edgesIgnoringSafeArea(.all).opacity(0.95)
                 
-                
-                VStack(spacing: 20) {
-                    TextField("", text: $viewModel.email, prompt: Text("Email").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
-                        .textFieldStyle(ModernTextFieldStyle())
-                    VStack {
-                        SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
-                        HStack {
-                            Button {
-                                // place here
-                            } label: {
-                                Text("Forgot password?")
-                                    .padding(.leading, 15)
-                                    .font(.custom("ProductSans-Regular", size: 13))
-                                    .foregroundColor(.secCol)
-                            }
-                            
-                            Spacer()
-                        }
-                    }
-                }
-                .padding(.top, 5)
                 VStack(spacing: 15) {
-                    Button(action: {
-                        Task {
-                            do {
-                                try await viewModel.signIn()
-                                showLoginView = false
-                            } catch {
-                                print("error \(error)")
-                            }
-                        }
-                    }) {
-                        Text("Log In")
-                            .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(.primaryCol)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.secCol)
-                            .clipShape(Capsule())
-                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-                    }
-                    HStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.secCol)
-                            .frame(width: 100, height: 1, alignment: .leading)
-                        Text("or")
-                            .foregroundStyle(.secCol)
-                            .font(.custom("ProductSans-Regular", size: 16))
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.secCol)
-                            .frame(width: 100, height: 1, alignment: .leading)
+                    VStack(spacing: 10) {
+                        Image(systemName: "books.vertical.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.terCol)
+                        
+                        Text("GradePoint")
+                            .font(.custom("ProductSans-Bold", size: 40))
+                            .foregroundColor(.secCol)
                     }
                     
-                    Button(action: {
-                        isSigningUp.toggle()
-                    }) {
-                        Text("Sign Up")
-                            .font(.custom("ProductSans-Bold", size: 18))
+                    
+                    VStack(spacing: 20) {
+                        TextField("", text: $viewModel.email, prompt: Text("Email").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                            .textFieldStyle(ModernTextFieldStyle())
+                        VStack {
+                            SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
+                            HStack {
+                                NavigationLink {
+                                    
+                                    forgotPasswordView()
+                                    //                                print("was pressed")
+                                } label: {
+                                    Text("Forgot password?")
+                                        .padding(.leading, 15)
+                                        .font(.custom("ProductSans-Regular", size: 13))
+                                        .foregroundColor(.secCol)
+                                }
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.top, 5)
+                    VStack(spacing: 15) {
+                        Button(action: {
+                            Task {
+                                do {
+                                    try await viewModel.signIn()
+                                    showLoginView = false
+                                } catch {
+                                    print("error \(error)")
+                                }
+                            }
+                        }) {
+                            Text("Log In")
+                                .font(.custom("ProductSans-Bold", size: 18))
+                                .foregroundColor(.primaryCol)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.secCol)
+                                .clipShape(Capsule())
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                        }
+                        HStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(.secCol)
+                                .frame(width: 100, height: 1, alignment: .leading)
+                            Text("or")
+                                .foregroundStyle(.secCol)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(.secCol)
+                                .frame(width: 100, height: 1, alignment: .leading)
+                        }
+                        
+                        Button(action: {
+                            isSigningUp.toggle()
+                        }) {
+                            Text("Sign Up")
+                                .font(.custom("ProductSans-Bold", size: 18))
+                                .foregroundColor(.primaryCol)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.secCol)
+                                .clipShape(Capsule())
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                        }
+                        
+                        Button(action: {
+                            Task {
+                                do {
+                                    try await viewModel.signInGoogle()
+                                    showLoginView = false
+                                } catch {
+                                    print("error \(error)")
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Image("googleLogo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                Text("Sign in with Google")
+                                    .font(.custom("ProductSans-Bold", size: 18))
+                            }
                             .foregroundColor(.primaryCol)
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(.secCol)
                             .clipShape(Capsule())
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-                    }
-                    
-                    Button(action: {
-                        Task {
-                            do {
-                                try await viewModel.signInGoogle()
+                        }
+                        Button {
+                            Task {
+                                do {
+                                    try await viewModel.signInApple()
+                                } catch {
+                                    print("error \(error)")
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image("appleLogo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                Text("Sign in with Apple")
+                                    .font(.custom("ProductSans-Bold", size: 18))
+                            }
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.secCol)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                        }
+                        .clipShape(Capsule())
+                        .frame(height: 60)
+                        .onChange(of: viewModel.signedInWithApple) { oldValue, newValue in
+                            if newValue {
                                 showLoginView = false
-                            } catch {
-                                print("error \(error)")
                             }
                         }
-                    }) {
-                        HStack {
-                            Image("googleLogo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                            Text("Sign in with Google")
-                                .font(.custom("ProductSans-Bold", size: 18))
-                        }
-                        .foregroundColor(.primaryCol)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.secCol)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-                    }
-                    Button {
-                        Task {
-                            do {
-                                try await viewModel.signInApple()
-                            } catch {
-                                print("error \(error)")
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Image("appleLogo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                            Text("Sign in with Apple")
-                                .font(.custom("ProductSans-Bold", size: 18))
-                        }
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.secCol)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-                    }
-                    .clipShape(Capsule())
-                    .frame(height: 60)
-                    .onChange(of: viewModel.signedInWithApple) { oldValue, newValue in
-                        if newValue {
-                            showLoginView = false
-                        }
-                    }
-                    
                         
+                        
+                    }
                 }
+                .padding(.horizontal, 30)
             }
-            .padding(.horizontal, 30)
-        }
-        .fullScreenCover(isPresented: $isSigningUp) {
-            SignUpView(showSignUpView: $isSigningUp, showLoginView: $showLoginView)
+            .fullScreenCover(isPresented: $isSigningUp) {
+                SignUpView(showSignUpView: $isSigningUp, showLoginView: $showLoginView)
+            }
         }
     }
 }
