@@ -132,4 +132,17 @@ extension String {
         let pattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         return NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: self)
     }
+    
+    func strTodowNum() -> Int {
+        switch self {
+        case "Mon": return 2
+        case "Tue": return 3
+        case "Wed": return 4
+        case "Thu": return 5
+        case "Fri": return 6
+        case "Sat": return 7
+        case "Sun": return 1
+        default: return 0  // or throw an error if you prefer
+        }
+    }
 }

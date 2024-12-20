@@ -10,6 +10,7 @@
 		A4318D0B2CACE3CE004FF11C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0A2CACE3CE004FF11C /* FirebaseAnalytics */; };
 		A4318D0D2CACE3CE004FF11C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0C2CACE3CE004FF11C /* FirebaseAuth */; };
 		A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0E2CACE3CE004FF11C /* FirebaseFirestore */; };
+		A476BD792D13DA47003FC8B0 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = A476BD782D13DA47003FC8B0 /* SwiftSoup */; };
 		A4B5BC762CED54D200060FEF /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = A4B5BC752CED54D200060FEF /* SwiftAnthropic */; };
 		A4C6267A2CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A4C626792CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community */; };
 		A4DEB8022CA222DA008EFE1A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A4DEB8012CA222DA008EFE1A /* GoogleSignIn */; };
@@ -55,6 +56,7 @@
 				A4DEB8042CA222DA008EFE1A /* GoogleSignInSwift in Frameworks */,
 				A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */,
 				A4C6267A2CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community in Frameworks */,
+				A476BD792D13DA47003FC8B0 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +115,7 @@
 				A4318D0E2CACE3CE004FF11C /* FirebaseFirestore */,
 				A4C626792CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community */,
 				A4B5BC752CED54D200060FEF /* SwiftAnthropic */,
+				A476BD782D13DA47003FC8B0 /* SwiftSoup */,
 			);
 			productName = grades;
 			productReference = A46FAF432CA1D4CD00B9C882 /* grades.app */;
@@ -147,6 +150,7 @@
 				A4E704E32CA718FA006793E2 /* XCRemoteSwiftPackageReference "TabBar" */,
 				A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A4B5BC742CED54D200060FEF /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
+				A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A46FAF442CA1D4CD00B9C882 /* Products */;
@@ -394,6 +398,14 @@
 				minimumVersion = 11.3.0;
 			};
 		};
+		A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.6;
+			};
+		};
 		A4B5BC742CED54D200060FEF /* XCRemoteSwiftPackageReference "SwiftAnthropic" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jamesrochabrun/SwiftAnthropic";
@@ -435,6 +447,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		A476BD782D13DA47003FC8B0 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 		A4B5BC752CED54D200060FEF /* SwiftAnthropic */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -69,6 +69,7 @@ struct grade: Codable, Identifiable, Equatable {
     var weight: Double
     var date: Date
     var isPhantom: Bool
+    var category: String?
     var id: UUID = UUID()
     
     var percentage: Double {
@@ -85,6 +86,18 @@ struct grade: Codable, Identifiable, Equatable {
         self.id = UUID()
     }
     
+    init(name: String, points: Double, earned: Double, weight: Double, date: Date, category: String, isPhantom: Bool = false) {
+        self.name = name
+        self.points = points
+        self.earned = earned
+        self.weight = weight
+        self.date = date
+        self.isPhantom = isPhantom
+        self.category = category
+        self.id = UUID()
+    }
+    
+    // init for camera
     init(name: String, points: Double, earned: Double, weight: Double, datee: String) {
         self.name = name
         self.points = points
