@@ -142,6 +142,7 @@ struct genesisImportView: View {
                         gradesVm.courses.append(contentsOf: webVM.ccc)
                         try gradesVm.publishCourses()
                         showAlert = true
+                        webVM.ccc.removeAll()
                     } catch {
                         print(error)
                     }

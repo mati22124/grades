@@ -32,7 +32,7 @@ struct importView: View {
                             textColor: .primaryCol,
                             imageName: "camera.aperture",
                             textName: "Camera",
-                            destination: testView()
+                            destination: photoImportView()
                         )
                     }
                     .padding()
