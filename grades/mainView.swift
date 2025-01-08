@@ -11,6 +11,8 @@ struct mainView: View {
     @Binding var showSignInView: Bool
     @State private var selectedTab: Int = 0
     
+    @StateObject var gradesVm = gradesViewModel()
+    
     @State private var deleteAcc: Bool = false
     
     var items = [ittabbar(image: "books.vertical.fill", title: "Grades", index: 0), ittabbar(image: "gear", title: "Settings", index: 1)]
@@ -22,11 +24,13 @@ struct mainView: View {
                     Tab("Grades", systemImage: "books.vertical.fill") {
                         NavigationStack {
                             classesView(showSignInView: $showSignInView)
+                                .environmentObject(gradesVm)
                         }
                     }
                     
                     Tab("Import", systemImage: "square.and.arrow.up") {
-                        testView()
+                        importView()
+                            .environmentObject(gradesVm)
                     }
                     
                     Tab("Settings", systemImage: "gear") {
@@ -65,13 +69,15 @@ struct mainView: View {
                 TabView(selection: $selectedTab) {
                     NavigationStack {
                         classesView(showSignInView: $showSignInView)
+                            .environmentObject(gradesVm)
                     }
                     .tabItem {
                         Label("Grades", systemImage: "books.vertical.fill")
                     }
                     .tag(0)
                     
-                    testView()
+                    importView()
+                        .environmentObject(gradesVm)
                     .tabItem {
                         Label("Import", systemImage: "square.and.arrow.up")
 

@@ -97,11 +97,13 @@ struct CourseHeaderCard: View {
     @Binding var course: course
     @Binding var isShowingPhantom: Bool
     
+    var isPreview: Bool = false
+    
     var body: some View {
         VStack(spacing: 12) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text(course.teacher)
+                    Text(isPreview ? course.name : course.teacher)
                         .font(.custom("ProductSans-Bold", size: 24))
                         .foregroundColor(.secCol)
                 }

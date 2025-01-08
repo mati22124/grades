@@ -10,7 +10,7 @@ import SwiftUI
 struct classesView: View {
     @Binding var showSignInView: Bool
     
-    @StateObject var viewModel = gradesViewModel()
+    @EnvironmentObject var viewModel: gradesViewModel
     
     @State private var didAppear: Bool = false
     @State private var menuIsPresentedCourse: Bool = false
@@ -60,35 +60,14 @@ struct classesView: View {
             .frame(maxWidth: .infinity)
             .ignoresSafeArea(.keyboard)
             .padding(.horizontal, 20)
-            
-            HStack {
-                Spacer(minLength: 0)
-                VStack(alignment: .trailing, spacing: 0) {
-                    Spacer(minLength: 0)
-                    NavigationLink {
-                        addCourseView().environmentObject(viewModel)
-                    } label: {
-                        Circle()
-                            .frame(width: 50, height: 50,alignment: .trailing)
-                            .foregroundStyle(.terCol)
-                            .overlay {
-                                Image(systemName: "xmark")
-                                    .foregroundStyle(.white)
-                                    .fontWeight(.bold)
-                            }
-                            .rotationEffect(.degrees(45))
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .padding(.top, 10)
-                }
-            }
 
             
-//            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
-//                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
-//                ]
-//            )
+            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
+                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
+//                ,
+//                menuItem(destination: importView(), optionName: "Import", icon: "square.and.arrow.up")
+                ]
+            )
         }
         .onAppear(perform: {
             if !didAppear {

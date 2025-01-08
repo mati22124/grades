@@ -118,7 +118,7 @@ struct WebView: UIViewRepresentable {
 @MainActor
 class WebViewModel: ObservableObject {
     let webView: WKWebView
-    let url: URL
+    var url: URL
     let delegate = MyWKDelegate()
     
     @Published var anim: Bool = false

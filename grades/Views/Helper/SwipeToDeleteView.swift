@@ -27,7 +27,7 @@ struct SwipeToDeleteView<Content: View>: View {
             content
                 .offset(x: offset)
                 .gesture(
-                    DragGesture()
+                    DragGesture(minimumDistance: 20, coordinateSpace: .local)
                         .onChanged { gesture in
                             // Allow dragging between 0 and deleteThreshold
                             let newOffset = gesture.translation.width

@@ -20,9 +20,7 @@ struct courseImportPreviewView: View {
     @Binding var course: course
     
     @State var menuIsVisible: Bool = false
-    
-    @State var isShowingPhantom: Bool = false
-    
+        
     var body: some View {
         ZStack {
             Color.primaryCol.edgesIgnoringSafeArea(.all)
@@ -30,7 +28,7 @@ struct courseImportPreviewView: View {
             ScrollView {
                 VStack(spacing: 15) {
                     // Header Card
-                    CourseHeaderCard(course: $course, isShowingPhantom: $isShowingPhantom)
+                    CourseHeaderCard(course: $course, isShowingPhantom: .constant(false), isPreview: true)
                     
                     // phantom assignments
                     // normal assignments
