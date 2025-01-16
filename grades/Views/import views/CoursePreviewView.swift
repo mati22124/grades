@@ -32,7 +32,7 @@ struct courseImportPreviewView: View {
                     
                     // phantom assignments
                     // normal assignments
-                    Text(course.grades.isEmpty ? "No Grades" : "Grades")
+                    Text(course.grades.isEmpty ? "No Grades" : "Grades (Sorted by Date)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
                     

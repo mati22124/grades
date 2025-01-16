@@ -15,6 +15,10 @@ struct CourseDetailView: View {
     
     @State var isShowingPhantom: Bool = false
     
+    var sortedArray: [grade] {
+        return course.grades.sorted { $0.date < $1.date }
+    }
+    
     var body: some View {
         ZStack {
             Color.primaryCol.edgesIgnoringSafeArea(.all)
@@ -34,7 +38,7 @@ struct CourseDetailView: View {
                             .padding(.horizontal)
                         VStack(alignment: .leading, spacing: 12) {
                             
-                            ForEach(course.grades) { grade in
+                            ForEach(sortedArray) { grade in
                                 if grade.isPhantom {
                                     SwipeToDeleteView(content: {
                                         GradeCard(grade: grade, isPoints: course.isPoints)
@@ -50,7 +54,7 @@ struct CourseDetailView: View {
                     }
                     
                     // normal assignments
-                    Text(course.grades.isEmpty ? "No Grades" : "Grades")
+                    Text(course.grades.isEmpty ? "No Grades" : "Grades (Sorted by Date)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.custom(course.grades.isEmpty ? "ProductSans-Regular" : "ProductSans-Bold", size: 20))
                     

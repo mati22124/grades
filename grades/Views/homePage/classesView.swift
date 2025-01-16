@@ -25,6 +25,11 @@ struct classesView: View {
             VStack(spacing: 20) {
                 ScrollView {
                     VStack(spacing: 12) {
+                        if (viewModel.courses.isEmpty) {
+                            Text("No Courses")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .font(.custom("ProductSans-Regular", size: 25))
+                        }
                         ForEach($viewModel.courses) { $course in
                             NavigationLink {
                                 CourseDetailView(course: $course)

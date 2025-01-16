@@ -58,12 +58,14 @@ final class coursesManager {
     func setCourses(data: [course]) throws {
         let x = try authManager.shared.getAuthUser()
         for i in data {
+            i.grades.sort { $0.date > $1.date }
             try usercollection.document(x.uid).collection("courses").document(i.id).setData(from: i)
         }
     }
     
     func setCourse(data: course) throws {
         let x = try authManager.shared.getAuthUser()
+        data.grades.sort { $0.date > $1.date }
         
         try usercollection.document(x.uid).collection("courses").document(data.id).setData(from: data)
     }
