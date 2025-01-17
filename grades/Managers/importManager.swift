@@ -104,3 +104,18 @@ enum importError: Error {
     case noImage
     case nothingInImage
 }
+
+extension importError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .cantParse:
+            return NSLocalizedString("Couldn't parse the data. Try again.", comment: "Import Error")
+        case .noGrades:
+            return NSLocalizedString("No grades found. Try again.", comment: "Import Error")
+        case .noImage:
+            return NSLocalizedString("No Image provided. Try again.", comment: "Import Error")
+        case .nothingInImage:
+            return NSLocalizedString("Couldn't find any grades in the image provided. Try taking a different photo.", comment: "Import Error")
+        }
+    }
+}

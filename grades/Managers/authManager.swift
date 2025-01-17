@@ -6,6 +6,7 @@
 //
 
 import FirebaseAuth
+import Foundation
 
 struct authResult {
     let email: String?
@@ -83,4 +84,21 @@ enum authError: Error {
     case noUser
     case noEmailOrPassword
     case passwordsNoMatch
+}
+
+extension authError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidEmail:
+            return NSLocalizedString("Invalid email!", comment: "Auth Error")
+        case .invalidPassword:
+            return NSLocalizedString("Wrong password!", comment: "Auth Error")
+        case .noUser:
+            return NSLocalizedString("You are not authenticated! Try signing out and signing in again.", comment: "Auth Error")
+        case .noEmailOrPassword:
+            return NSLocalizedString("Missing email or password. Make sure the fields are filled.", comment: "Auth Error")
+        case .passwordsNoMatch:
+            return NSLocalizedString("Password don't match! Make sure you typed the password again correctly.", comment: "Auth Error")
+        }
+    }
 }

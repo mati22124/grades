@@ -76,3 +76,16 @@ enum coursesError: Error {
     case noUserInFirebase
     case courseNotInFirebase
 }
+
+extension coursesError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .courseEmpty:
+            return NSLocalizedString("The course is empty!", comment: "Courses Error")
+        case .noUserInFirebase:
+            return NSLocalizedString("Couldn't find a user in firebase. Contact mayanktiku04@gmail.com", comment: "Courses Error")
+        case .courseNotInFirebase:
+            return NSLocalizedString("Course not found in firebase.", comment: "Courses Error")
+        }
+    }
+}
