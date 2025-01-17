@@ -9,6 +9,10 @@ struct LoginView: View {
     
     @StateObject private var viewModel = signInViewModel()
     
+    //error handlign
+    @State private var errorMessage: String?
+    @State private var showError = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -58,7 +62,8 @@ struct LoginView: View {
                                     try await viewModel.signIn()
                                     showLoginView = false
                                 } catch {
-                                    print("error \(error)")
+                                    errorMessage = "An error occurred while signing in: \(error.localizedDescription)"
+                                    showError = true
                                 }
                             }
                         }) {
@@ -102,7 +107,8 @@ struct LoginView: View {
                                     try await viewModel.signInGoogle()
                                     showLoginView = false
                                 } catch {
-                                    print("error \(error)")
+                                    errorMessage = "An error occurred while signing in: \(error.localizedDescription)"
+                                    showError = true
                                 }
                             }
                         }) {
@@ -126,7 +132,8 @@ struct LoginView: View {
                                 do {
                                     try await viewModel.signInApple()
                                 } catch {
-                                    print("error \(error)")
+                                    errorMessage = "An error occurred while signing in: \(error.localizedDescription)"
+                                    showError = true
                                 }
                             }
                         } label: {
@@ -161,6 +168,12 @@ struct LoginView: View {
             .fullScreenCover(isPresented: $isSigningUp) {
                 SignUpView(showSignUpView: $isSigningUp, showLoginView: $showLoginView)
             }
+            //error handlign
+            .alert("Error", isPresented: $showError, actions: {
+                Button("OK") { showError = false }
+            }, message: {
+                Text(errorMessage ?? "An unknown error occurred")
+            })
         }
     }
 }

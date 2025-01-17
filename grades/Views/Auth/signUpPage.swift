@@ -19,6 +19,10 @@ struct SignUpView: View {
     
     @StateObject var viewModel = signUpViewModel()
     
+    //error handlign
+    @State private var errorMessage: String?
+    @State private var showError = false
+    
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
@@ -55,7 +59,8 @@ struct SignUpView: View {
                                 showLoginView = false
                                 showSignUpView = false
                             } catch {
-                                print("error \(error)")
+                                errorMessage = "An error occurred while signing up: \(error.localizedDescription)"
+                                showError = true
                             }
                         }
                     }) {
@@ -92,6 +97,12 @@ struct SignUpView: View {
                             .clipShape(Capsule())
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
+                    //error handlign
+                    .alert("Error", isPresented: $showError, actions: {
+                        Button("OK") { showError = false }
+                    }, message: {
+                        Text(errorMessage ?? "An unknown error occurred")
+                    })
                 }
             }
             .padding(.horizontal, 30)
