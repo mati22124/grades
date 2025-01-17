@@ -22,10 +22,8 @@ struct mainView: View {
             if #available(iOS 18.0, *) {
                 TabView {
                     Tab("Grades", systemImage: "books.vertical.fill") {
-                        NavigationStack {
-                            classesView(showSignInView: $showSignInView)
-                                .environmentObject(gradesVm)
-                        }
+                        classesView(showSignInView: $showSignInView)
+                            .environmentObject(gradesVm)
                     }
                     
                     Tab("Import", systemImage: "square.and.arrow.up") {
@@ -34,43 +32,14 @@ struct mainView: View {
                     }
                     
                     Tab("Settings", systemImage: "gear") {
-                        ZStack {
-                            Color.primaryCol.ignoresSafeArea(.all)
-                            VStack {
-                                Button {
-                                    try? authManager.shared.signOut()
-                                    coursesManager.shared.removeListener()
-                                    showSignInView = true
-                                } label: {
-                                    Text("Sign Out")
-                                }
-                                
-                                Button {
-                                    deleteAcc = true
-                                } label: {
-                                    Text("delete account")
-                                }
-                            }
-                            .alert("Delete Account", isPresented: $deleteAcc) {
-                                Button("Delete", role: .destructive) {
-                                    try? authManager.shared.deleteAccount()
-                                    coursesManager.shared.removeListener()
-                                    showSignInView = true
-                                }
-                                Button("Cancel", role: .cancel) { }
-                            } message: {
-                                Text("Are you sure you want to delete your account?")
-                            }
-                        }
+                        SettingsView(showSignInView: $showSignInView)
                     }
                 }
                 .tint(.terCol)
             } else {
                 TabView(selection: $selectedTab) {
-                    NavigationStack {
-                        classesView(showSignInView: $showSignInView)
-                            .environmentObject(gradesVm)
-                    }
+                    classesView(showSignInView: $showSignInView)
+                    .environmentObject(gradesVm)
                     .tabItem {
                         Label("Grades", systemImage: "books.vertical.fill")
                     }
@@ -78,43 +47,15 @@ struct mainView: View {
                     
                     importView()
                         .environmentObject(gradesVm)
-                    .tabItem {
-                        Label("Import", systemImage: "square.and.arrow.up")
-
-                    }
+                        .tabItem {
+                            Label("Import", systemImage: "square.and.arrow.up")
+                        }
                     .tag(1)
 
-                    ZStack {
-                        Color.primaryCol.ignoresSafeArea(.all)
-                        VStack {
-                            Button {
-                                try? authManager.shared.signOut()
-                                coursesManager.shared.removeListener()
-                                showSignInView = true
-                            } label: {
-                                Text("Sign Out")
-                            }
-                            
-                            Button {
-                                deleteAcc = true
-                            } label: {
-                                Text("delete account")
-                            }
+                    SettingsView(showSignInView: $showSignInView)
+                        .tabItem {
+                            Label("Settings", systemImage: "gear")
                         }
-                        .alert("Delete Account", isPresented: $deleteAcc) {
-                            Button("Delete", role: .destructive) {
-                                try? authManager.shared.deleteAccount()
-                                coursesManager.shared.removeListener()
-                                showSignInView = true
-                            }
-                            Button("Cancel", role: .cancel) { }
-                        } message: {
-                            Text("Are you sure you want to delete your account?")
-                        }
-                    }
-                    .tabItem {
-                        Label("Settings", systemImage: "gear")
-                    }
                     .tag(2)
                 }
                 .tint(.terCol)

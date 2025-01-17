@@ -46,58 +46,77 @@ class importGenesisViewModel: ObservableObject {
     }
     
     private func parseDate(_ cells: [Element]) throws -> Date {
-        let dateDiv = try cells[0].select("div").array()
-        var comps = DateComponents()
-        if dateDiv.count >= 2 {
-            let dayOfWeek =  "\(try dateDiv[0].text())"
-            let dateTot = "\(try dateDiv[1].text())"
-            
-            let datearr = dateTot.split(separator: "/")
-            if datearr.count >= 2 {
-                comps.month = Int(datearr[0])
-                comps.day = Int(datearr[1])
-                comps.year = self.findClosestYear(month: comps.month!, day: comps.day!, dayOfWeek: dayOfWeek.strTodowNum())
+        do {
+            let dateDiv = try cells[0].select("div").array()
+            var comps = DateComponents()
+            if dateDiv.count >= 2 {
+                let dayOfWeek =  "\(try dateDiv[0].text())"
+                let dateTot = "\(try dateDiv[1].text())"
+                
+                let datearr = dateTot.split(separator: "/")
+                if datearr.count >= 2 {
+                    comps.month = Int(datearr[0])
+                    comps.day = Int(datearr[1])
+                    comps.year = self.findClosestYear(month: comps.month!, day: comps.day!, dayOfWeek: dayOfWeek.strTodowNum())
+                }
             }
+            return Calendar.current.date(from: comps)!
+        } catch {
+            print("some error happeded when tryna find the date: \(error)")
+            return Date()
         }
-        return Calendar.current.date(from: comps)!
     }
     
     private func parseTitle(_ doc: Document) throws -> String {
         let courseSelect = try doc.select("select#fldCourse").first()
         let selectedCourse = try courseSelect?.select("option[selected]").first()
-        let courseName = try selectedCourse?.text() ?? ""
+        let courseName = try selectedCourse?.text().capitalized ?? ""
         return courseName
     }
     
     private func parseNameCateg(_ cells: [Element]) throws -> (String, String) {
         // Extract name info from second cell
-        let name = try cells[3].text()
+        var name = "Unknown"
+        do {
+            name = try cells[3].text()
+        } catch {
+            print("error parsing name: \(error)")
+        }
         
         // Extract assignment info from second cell
-        var categoryCell = try cells[1].text()
-        categoryCell = "teouh"+categoryCell
+        var category = "Default Category"
+        do {
+            var categoryCell = try cells[1].text()
+            categoryCell = "teouh"+categoryCell
+            let category = categoryCell.components(separatedBy: name)[1].trimmingCharacters(in: .whitespaces)
+        } catch {
+            print("error parsing category: \(error)")
+        }
         
-        let category = categoryCell.components(separatedBy: name)[1].trimmingCharacters(in: .whitespaces)
         return (name, category)
     }
     
     private func parsePoints(_ cells: [Element]) throws -> (Double, Double) {
         var score = 0.0
         var toal = 0.0
-        let gradeText = try cells[6].text()
-        let trimmedArray = String(gradeText).split(separator: "/")
-        if trimmedArray.count>=2 {
-            let earn = trimmedArray[0]
-            let total = trimmedArray[1].trimmingCharacters(in: .whitespaces)
-            print(earn)
-            
-            if let range = earn.range(of: #"\S+\s*\z"#, options: .regularExpression) {
-                score = Double(earn[range].trimmingCharacters(in: .whitespaces)) ?? 0.0
+        do {
+            let gradeText = try cells[6].text()
+            let trimmedArray = String(gradeText).split(separator: "/")
+            if trimmedArray.count>=2 {
+                let earn = trimmedArray[0]
+                let total = trimmedArray[1].trimmingCharacters(in: .whitespaces)
+                print(earn)
+                
+                if let range = earn.range(of: #"\S+\s*\z"#, options: .regularExpression) {
+                    score = Double(earn[range].trimmingCharacters(in: .whitespaces)) ?? 0.0
+                }
+                
+                if let r = total.range(of: #"\A\d+(\.*\d+)?"#, options: .regularExpression) {
+                    toal = Double(total[r]) ?? 0.0
+                }
             }
-            
-            if let r = total.range(of: #"\A\d+(\.*\d+)?"#, options: .regularExpression) {
-                toal = Double(total[r]) ?? 0.0
-            }
+        } catch {
+            print("error parsing points/earned: \(error)")
         }
         
         return (score, toal)

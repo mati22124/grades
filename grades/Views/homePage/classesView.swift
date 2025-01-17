@@ -19,90 +19,93 @@ struct classesView: View {
     @State private var courseToDelete: course? = nil
     
     var body: some View {
-        ZStack {
-            Color.primaryCol.edgesIgnoringSafeArea(.all)
-            
-            VStack(spacing: 20) {
-                ScrollView {
-                    VStack(spacing: 12) {
-                        if (viewModel.courses.isEmpty) {
-                            Text("No Courses")
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .font(.custom("ProductSans-Regular", size: 25))
-                        }
-                        ForEach($viewModel.courses) { $course in
-                            NavigationLink {
-                                CourseDetailView(course: $course)
-                            } label: {
-                                SwipeToDeleteView(content: {
-                                    ClassGradeBlock(classGrade: $course)
-                                        .environmentObject(viewModel)
-                                }, onDelete: {
-                                    courseToDelete = $course.wrappedValue
-                                }, onEdit: editCourseView(originalCourse: $course).environmentObject(viewModel))
+        NavigationStack {
+            ZStack {
+                Color.primaryCol.edgesIgnoringSafeArea(.all)
+                
+                VStack(spacing: 20) {
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            if (viewModel.courses.isEmpty) {
+                                Text("No Courses")
+                                    .tint(.secCol)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .font(.custom("ProductSans-Regular", size: 25))
+                            }
+                            ForEach($viewModel.courses) { $course in
+                                NavigationLink {
+                                    CourseDetailView(course: $course)
+                                } label: {
+                                    SwipeToDeleteView(content: {
+                                        ClassGradeBlock(classGrade: $course)
+                                            .environmentObject(viewModel)
+                                    }, onDelete: {
+                                        courseToDelete = $course.wrappedValue
+                                    }, onEdit: editCourseView(originalCourse: $course).environmentObject(viewModel))
+                                }
                             }
                         }
+                        .padding(.top, 10)
                     }
-                    .padding(.top, 10)
                 }
+                .onChange(of: courseToDelete, { _, newValue in
+                    if let _ = courseToDelete {
+                        showingAlert = true
+                    }
+                })
+                .alert("Confirm delete", isPresented: $showingAlert) {
+                    Button("Delete", role: .destructive) {
+                        try? coursesManager.shared.removeCourse(data: courseToDelete!)
+                        courseToDelete = nil
+                    }
+                    Button("Cancel", role: .cancel) {
+                        courseToDelete = nil
+                    }
+                } message: {
+                    Text("Are you sure you want to delete \(courseToDelete?.name ?? "NOT WORKING DONT DELETE")?")
+                }
+                .frame(maxWidth: .infinity)
+                .ignoresSafeArea(.keyboard)
+                .padding(.horizontal, 20)
+                
+                
+                menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
+                    menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
+                    //                ,
+                    //                menuItem(destination: importView(), optionName: "Import", icon: "square.and.arrow.up")
+                ]
+                )
             }
-            .onChange(of: courseToDelete, { _, newValue in
-                if let _ = courseToDelete {
-                    showingAlert = true
+            .onAppear(perform: {
+                if !didAppear {
+                    Task {
+                        do {
+                            try await viewModel.loadCurrentUser()
+                            didAppear = true
+                        } catch {
+                            print("error: \(error)")
+                        }
+                    }
                 }
             })
-            .alert("Confirm delete", isPresented: $showingAlert) {
-                Button("Delete", role: .destructive) {
-                    try? coursesManager.shared.removeCourse(data: courseToDelete!)
-                    courseToDelete = nil
+            .onChange(of: showSignInView, { _, newValue in
+                if !didAppear && !newValue {
+                    Task {
+                        do {
+                            try await viewModel.loadCurrentUser()
+                            didAppear = true
+                        } catch {
+                            print("error: \(error)")
+                        }
+                    }
+                } else if newValue {
+                    didAppear = false
+                    viewModel.courses = []
                 }
-                Button("Cancel", role: .cancel) {
-                    courseToDelete = nil
-                }
-            } message: {
-                Text("Are you sure you want to delete \(courseToDelete?.name ?? "NOT WORKING DONT DELETE")?")
-            }
-            .frame(maxWidth: .infinity)
-            .ignoresSafeArea(.keyboard)
-            .padding(.horizontal, 20)
-
-            
-            menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
-                menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
-//                ,
-//                menuItem(destination: importView(), optionName: "Import", icon: "square.and.arrow.up")
-                ]
-            )
+            })
+            .navigationTitle("Courses")
+            .navigationBarTitleTextColor(.secCol)
         }
-        .onAppear(perform: {
-            if !didAppear {
-                Task {
-                    do {
-                        try await viewModel.loadCurrentUser()
-                        didAppear = true
-                    } catch {
-                        print("error: \(error)")
-                    }
-                }
-            }
-        })
-        .onChange(of: showSignInView, { _, newValue in
-            if !didAppear && !newValue {
-                Task {
-                    do {
-                        try await viewModel.loadCurrentUser()
-                        didAppear = true
-                    } catch {
-                        print("error: \(error)")
-                    }
-                }
-            } else if newValue {
-                didAppear = false
-                viewModel.courses = []
-            }
-        })
-        .navigationTitle("Courses")
-        .navigationBarTitleTextColor(.secCol)
     }
 }
 
