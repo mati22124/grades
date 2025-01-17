@@ -35,6 +35,7 @@ struct addCourseView: View {
         }
         .navigationTitle("Add Course")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleTextColor(.secCol)
         .alert("Error", isPresented: $showError, actions: {
             Button("OK") { showError = false }
         }, message: {
