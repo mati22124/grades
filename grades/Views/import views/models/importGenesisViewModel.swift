@@ -54,13 +54,17 @@ class importGenesisViewModel: ObservableObject {
                 let dateTot = "\(try dateDiv[1].text())"
                 
                 let datearr = dateTot.split(separator: "/")
+                print(datearr)
                 if datearr.count >= 2 {
                     comps.month = Int(datearr[0])
                     comps.day = Int(datearr[1])
                     comps.year = self.findClosestYear(month: comps.month!, day: comps.day!, dayOfWeek: dayOfWeek.strTodowNum())
+                } else {
+                    return Date()
                 }
             }
             return Calendar.current.date(from: comps)!
+            
         } catch {
             print("some error happeded when tryna find the date: \(error)")
             return Date()
@@ -88,7 +92,7 @@ class importGenesisViewModel: ObservableObject {
         do {
             var categoryCell = try cells[1].text()
             categoryCell = "teouh"+categoryCell
-            let category = categoryCell.components(separatedBy: name)[1].trimmingCharacters(in: .whitespaces)
+            category = categoryCell.components(separatedBy: name)[1].trimmingCharacters(in: .whitespaces)
         } catch {
             print("error parsing category: \(error)")
         }
