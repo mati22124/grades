@@ -44,8 +44,8 @@ class editGradeViewModel: ObservableObject {
     @Published var totalPoints: String
     
     init(grade: grade) {
-        pointsEarned = String(grade.earned)
-        totalPoints = String(grade.points)
+        pointsEarned = grade.earned.removeZerosFromEnd()
+        totalPoints = grade.points.removeZerosFromEnd()
     }
     
     var isValidInput: Bool {
