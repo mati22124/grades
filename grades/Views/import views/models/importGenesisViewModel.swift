@@ -111,12 +111,21 @@ class importGenesisViewModel: ObservableObject {
                 let total = trimmedArray[1].trimmingCharacters(in: .whitespaces)
                 print(earn)
                 
-                if let range = earn.range(of: #"\S+\s*\z"#, options: .regularExpression) {
-                    score = Double(earn[range].trimmingCharacters(in: .whitespaces)) ?? 0.0
-                }
-                
                 if let r = total.range(of: #"\A\d+(\.*\d+)?"#, options: .regularExpression) {
                     toal = Double(total[r]) ?? 0.0
+                }
+                
+                if let range = earn.range(of: #"\S+\s*\z"#, options: .regularExpression) {
+                    let tstr = earn[range].trimmingCharacters(in: .whitespaces)
+                    if let s = Double(tstr) {
+                        score = s
+                    } else if tstr == "CHECKPLUSPLUS" {
+                        score = toal
+                    } else if tstr == "CHECKPLUS" {
+                        score = 0.85*toal
+                    } else {
+                        score = 0.7*toal
+                    }
                 }
             }
         } catch {
