@@ -26,45 +26,52 @@ struct genesisImportView: View {
             
             VStack(spacing: 20) {
                 if webVM.ccc.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("After you log in:")
                             .font(.custom("ProductSans-Bold", size: 22))
                             .foregroundColor(.secCol)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "hand.tap.fill")
-                                    .foregroundColor(.mainBlue)
-                                Text("Click on to each one of your points based courses.")
-                                    .font(.custom("ProductSans-Regular", size: 18))
-                                    .foregroundColor(.secCol)
-                            }
-                            
-                            HStack(spacing: 8) {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.secCol)
-                                Text("A checkmark appears when a course is succesfully imported")
-                                    .font(.custom("ProductSans-Regular", size: 18))
-                                    .foregroundColor(.secCol)
-                            }
-                            
-                            HStack(spacing: 8) {
-                                Image(systemName: "person.fill.checkmark")
-                                    .foregroundColor(.green)
-                                Text("When finished, swipe the browser down to review the courses")
-                                    .font(.custom("ProductSans-Regular", size: 18))
-                                    .foregroundColor(.secCol)
-                            }
-                            
-                            
-                            
-                            Text("All information is processed locally on your device. Your password and sensitive data are never transmitted or stored by our servers.")
-                                .font(.custom("ProductSans-Regular", size: 14))
+                            .padding(.bottom, 6)
+                        HStack(spacing: 8) {
+                            Image(systemName: "hand.tap.fill")
+                                .foregroundColor(.mainBlue)
+                            Text("Click on to each one of your points based courses.")
+                                .font(.custom("ProductSans-Regular", size: 18))
                                 .foregroundColor(.secCol)
-                                .multilineTextAlignment(.leading)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
+                        
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.secCol)
+                            Text("A checkmark appears when a course is succesfully imported")
+                                .font(.custom("ProductSans-Regular", size: 18))
+                                .foregroundColor(.secCol)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                        }
+                        
+                        HStack(spacing: 8) {
+                            Image(systemName: "person.fill.checkmark")
+                                .foregroundColor(.green)
+                            Text("When finished, swipe the browser down to review the courses")
+                                .font(.custom("ProductSans-Regular", size: 18))
+                                .foregroundColor(.secCol)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        
+                        
+                        
+                        Text("All information is processed locally on your device. Your password and sensitive data are never transmitted or stored by our servers.")
+                            .font(.custom("ProductSans-Regular", size: 14))
+                            .foregroundColor(.secCol)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
+                    
                 }
                 Button {
                     url = "https://"
@@ -177,6 +184,8 @@ struct genesisImportView: View {
 }
 
 #Preview {
-    genesisImportView()
-        .environmentObject(gradesViewModel())
+    NavigationStack {
+        genesisImportView()
+            .environmentObject(gradesViewModel())
+    }
 }
