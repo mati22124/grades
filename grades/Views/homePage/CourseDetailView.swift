@@ -74,6 +74,9 @@ struct CourseDetailView: View {
                                 }, onEdit: editGradeView(grade: grade, course: $course))
                             }
                         }
+                        .onAppear {
+                            isShowingPhantom = course.grades.contains( where: { $0.isPhantom } )
+                        } 
                     }
                 }
                 .ignoresSafeArea(.keyboard)
@@ -179,12 +182,16 @@ struct CourseHeaderCard: View {
 struct GradeCard: View {
     let grade: grade
     let isPoints: Bool
-    
+    let dateFormatter: DateFormatter
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(grade.name)
                     .font(.custom("ProductSans-Regular", size: 18))
+                    .foregroundColor(.secCol)
+                Text(dateFormatter.string(from: grade.date))
+                    .font(.custom("ProductSans-Regular", size: 14))
                     .foregroundColor(.secCol)
             }
             
@@ -204,6 +211,9 @@ struct GradeCard: View {
         .padding()
         .background(gradeBackgroundColor(percentage: grade.percentage))
         .cornerRadius(12)
+        .onAppear {
+            dateFormatter.dateFormat = "YY/MM/dd"
+        }
     }
     
     private func gradeBackgroundColor(percentage: Double) -> Color {
@@ -218,6 +228,13 @@ struct GradeCard: View {
         } else {
             return Color.red.opacity(0.3)
         }
+    }
+    
+    init(grade: grade, isPoints: Bool) {
+        self.grade = grade
+        self.isPoints = isPoints
+        dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/YY"
     }
 }
 
@@ -247,5 +264,7 @@ struct GradeCard: View {
         grade(name: "Test grade 3", points: 100, earned: 75, weight: 1, date: Date())
         ]
     )
-    CourseDetailView(course: $c)
+    NavigationStack {
+        CourseDetailView(course: $c)
+    }
 }

@@ -98,6 +98,7 @@ final class signInViewModel: NSObject, ObservableObject {
     }
 }
 
+// MARK: Apple sign in handling
 extension signInViewModel: ASAuthorizationControllerDelegate {
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
