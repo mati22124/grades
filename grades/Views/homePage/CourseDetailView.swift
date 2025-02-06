@@ -190,7 +190,7 @@ struct GradeCard: View {
                 Text(grade.name)
                     .font(.custom("ProductSans-Regular", size: 18))
                     .foregroundColor(.secCol)
-                Text(dateFormatter.string(from: grade.date))
+                Text(dateFormatter.string(from: grade.date)+" - "+(grade.category ?? "No Category"))
                     .font(.custom("ProductSans-Regular", size: 14))
                     .foregroundColor(.secCol)
             }

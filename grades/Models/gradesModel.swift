@@ -16,30 +16,36 @@ class course: Codable, Identifiable, Equatable {
     var name: String
     var teacher: String
     var grades: [grade]
-    var categories: [categoy]
+    var categories: [category]
     var isPoints: Bool
     var id: String
     
     // add func vars for average
     var average: Double {
+        if grades.isEmpty { return 0 }
         if isPoints {
-            if grades.isEmpty { return 0 }
-            let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) }) // add ternary operator for calculations.
+            let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) })
             return x*100
         } else {
-            //figure out logic later
-            return 0
+            var total: Double = 0
+            for i in categories {
+                total += i.average
+            }
+            return total
         }
     }
     
     var phantomAverage: Double {
+        if grades.isEmpty { return 0 }
         if isPoints {
-            if grades.isEmpty { return 0 }
-            let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points }) // add ternary operator for calculations.
+            let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
             return x*100
         } else {
-            //figure out logic later
-            return 0
+            var total: Double = 0
+            for i in categories {
+                total += i.average
+            }
+            return total
         }
     }
     
@@ -57,6 +63,15 @@ class course: Codable, Identifiable, Equatable {
         self.grades = grades
         self.categories = []
         self.isPoints = isPoints
+        self.teacher = teacher
+        self.id = UUID().uuidString
+    }
+    
+    init(name: String, teacher: String, grades: [grade], categories: [category]) {
+        self.name = name
+        self.grades = grades
+        self.categories = categories
+        self.isPoints = false
         self.teacher = teacher
         self.id = UUID().uuidString
     }
@@ -115,8 +130,21 @@ struct grade: Codable, Identifiable, Equatable {
     }
 }
 
-struct categoy: Codable, Identifiable {
+struct category: Codable, Identifiable {
+    var name: String
     var grades: [grade]
     var weight: Double
     var id: UUID = UUID()
+    
+    var average: Double {
+        if grades.isEmpty { return 0 }
+        let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) })
+        return x*weight*100
+    }
+    
+    var phantomAverage: Double {
+        if grades.isEmpty { return 0 }
+        let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
+        return x*weight*100
+    }
 }
