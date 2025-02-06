@@ -110,3 +110,10 @@ struct addGradeView: View {
         }
     }
 }
+
+#Preview {
+    @Previewable @State var c = course(name: "test", teacher: "test", isPoints: true, grades: [])
+    NavigationStack {
+        addGradeView(course: $c)
+    }
+}

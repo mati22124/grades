@@ -137,13 +137,13 @@ struct category: Codable, Identifiable {
     var id: UUID = UUID()
     
     var average: Double {
-        if grades.isEmpty { return 0 }
+        if grades.isEmpty { return weight*100 }
         let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) })
         return x*weight*100
     }
     
     var phantomAverage: Double {
-        if grades.isEmpty { return 0 }
+        if grades.isEmpty { return weight*100 }
         let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
         return x*weight*100
     }

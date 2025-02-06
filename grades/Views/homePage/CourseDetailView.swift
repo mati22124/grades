@@ -198,11 +198,10 @@ struct GradeCard: View {
             Spacer(minLength: 0)
             
             VStack(alignment: .trailing) {
-                if isPoints {
-                    Text("\(grade.earned.removeZerosFromEnd())/\(grade.points.removeZerosFromEnd())")
-                        .font(.custom("ProductSans-Bold", size: 18))
-                        .foregroundColor(.secCol)
-                }
+                Text("\(grade.earned.removeZerosFromEnd())/\(grade.points.removeZerosFromEnd())")
+                    .font(.custom("ProductSans-Bold", size: 18))
+                    .foregroundColor(.secCol)
+
                 Text("\(grade.percentage.roundedGrade())%")
                     .font(.custom("ProductSans-Regular", size: 16))
                     .foregroundColor(.secCol.opacity(0.9))
