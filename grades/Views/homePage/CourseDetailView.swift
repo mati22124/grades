@@ -46,6 +46,13 @@ struct CourseDetailView: View {
                                         if let index = course.grades.firstIndex(of: grade) {
                                             course.grades.remove(at: index)
                                         }
+                                        if !course.isPoints {
+                                            for i in course.categories.indices {
+                                                if course.categories[i].grades.contains(grade) {
+                                                    course.categories[i].grades.removeAll(where: { $0 == grade})
+                                                }
+                                            }
+                                        }
                                         try? coursesManager.shared.setCourse(data: course)
                                     }, onEdit: editGradeView(grade: grade, course: $course))
                                 }
