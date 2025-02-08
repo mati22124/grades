@@ -66,11 +66,13 @@ struct addGradeView: View {
                         Text("Date")
                             .font(.custom("ProductSans-Regular", size: 16))
                             .foregroundColor(.secCol)
-                        
-                        DatePicker("Assignment Date",
-                                   selection: $viewModel.date,
-                                   displayedComponents: .date)
-                        .datePickerStyle(.graphical)
+                        DatePicker(selection: $viewModel.date,
+                                   displayedComponents: .date, label: {
+                            Text("Assignment Date")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                        })
+                        .datePickerStyle(.compact)
                         .padding()
                         .background(Color.white.opacity(0.1))
                         .cornerRadius(10)
@@ -78,7 +80,36 @@ struct addGradeView: View {
                         .colorScheme(.dark)
                     }
                     
-                    //            Spacer(minLength: 0)
+                    //category picker for category courses
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Category")
+                            .font(.custom("ProductSans-Regular", size: 16))
+                            .foregroundColor(.secCol)
+                        LabeledContent {
+                            Picker("", selection: $viewModel.category) {
+                                ForEach(0..<(course.categories.count+1)) {
+                                    if $0 == course.categories.count {
+                                        Text("No Category")
+                                            .tag("No Category")
+                                    } else {
+                                        Text(course.categories[$0].name)
+                                            .tag(course.categories[$0].name)
+                                    }
+                                }
+                            }
+                            .tint(.terCol)
+                        } label: {
+                            Text("Category")
+                        }
+                        .padding()
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(10)
+                        .accentColor(.terCol)
+                        .colorScheme(.dark)
+                    }
+                    
+                    Spacer()
+                    
                     
                     // Save Button
                     Button(action: {

@@ -14,6 +14,7 @@ class AddGradeViewModel: ObservableObject {
     @Published var totalPoints = ""
     @Published var selectedCategory = ""
     @Published var date = Date()
+    @Published var category: String = "No Category"
     
     var isValidInput: Bool {
         !name.isEmpty &&
@@ -24,17 +25,28 @@ class AddGradeViewModel: ObservableObject {
     }
     
     
-    func saveGrade(_ course: inout course, isPhan: Bool = false) throws{
+    func saveGrade(_ course: inout course, isPhan: Bool = false) throws {
         let newGrade = grade(
             name: name,
             points: Double(totalPoints) ?? 0,
             earned: Double(pointsEarned) ?? 0,
             weight: 1,
             date: date,
+            category: category,
             isPhantom: isPhan
         )
         
+        if !course.isPoints {
+            if let ind = course.categories.firstIndex(where: { $0.name == category }) {
+                course.categories[ind].grades.append(newGrade)
+            } else {
+                print("couldnt find category")
+            }
+        }
+                
         course.grades.append(newGrade)
+        
+        
         try coursesManager.shared.setCourse(data: course)
     }
 }
