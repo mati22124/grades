@@ -161,30 +161,6 @@ struct CourseHeaderCard: View {
     }
 }
 
-//// Individual category card
-//struct CategoryCard: View {
-//    let category: categoy
-//    
-//    var body: some View {
-//        HStack {
-//            VStack(alignment: .leading) {
-//                Text(category.name)
-//                    .font(.system(size: 16, weight: .semibold, design: .rounded))
-//                    .foregroundColor(.white)
-//            }
-//            
-//            Spacer()
-//            
-//            Text("\(Int(category.weight))%")
-//                .font(.system(size: 16, weight: .bold, design: .rounded))
-//                .foregroundColor(.white)
-//        }
-//        .padding()
-//        .background(Color.bgBlue.brightness(-0.04))
-//        .cornerRadius(12)
-//    }
-//}
-
 // Individual grade card
 struct GradeCard: View {
     let grade: grade
