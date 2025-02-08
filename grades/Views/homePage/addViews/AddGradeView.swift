@@ -133,6 +133,7 @@ struct addGradeView: View {
                     }
                     .disabled(!viewModel.isValidInput)
                 }
+                .ignoresSafeArea(.keyboard)
                 .padding()
                 .navigationTitle("Add Grade")
                 .navigationBarTitleDisplayMode(.inline)
