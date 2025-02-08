@@ -91,7 +91,16 @@ class importGenesisViewModel: ObservableObject {
         let courseSelect = try doc.select("select#fldCourse").first()
         let selectedCourse = try courseSelect?.select("option[selected]").first()
         let courseName = try selectedCourse?.text().capitalized ?? ""
-        return courseName
+        let tempList = courseName.split(separator: " ")
+        var cname = ""
+        for i in tempList {
+            if i.count <= 2 {
+                cname+=i.uppercased()+" "
+            } else {
+                cname+=i+" "
+            }
+        }
+        return cname
     }
     
     private func parseNameCateg(_ cells: [Element]) throws -> (String, String) {
