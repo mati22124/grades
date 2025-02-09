@@ -79,15 +79,52 @@ struct editGradeView: View {
                         DatePicker("Assignment Date",
                                    selection: $gradee.date,
                                    displayedComponents: .date)
-                        .datePickerStyle(.graphical)
+                        .datePickerStyle(.compact)
                         .padding()
                         .background(Color.white.opacity(0.1))
-                        .cornerRadius(10)
+                        .clipShape(Capsule())
                         .accentColor(.terCol)
                         .colorScheme(.dark)
                     }
                     
-                    //            Spacer(minLength: 0)
+                    if !course.isPoints {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            LabeledContent {
+                                Picker("", selection: $viewModel.category) {
+                                    ForEach(0..<(course.categories.count+1)) {
+                                        if $0 == course.categories.count {
+                                            Text("No Category")
+                                                .tag("No Category")
+                                        } else {
+                                            Text(course.categories[$0].name)
+                                                .tag(course.categories[$0].name)
+                                        }
+                                    }
+                                }
+                                .tint(.terCol)
+                            } label: {
+                                Text("Category")
+                            }
+                            .padding()
+                            .background(Color.white.opacity(0.1))
+                            .clipShape(Capsule())
+                            .accentColor(.terCol)
+                            .colorScheme(.dark)
+                        }
+                    } else {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            TextField("", text: $viewModel.category, prompt: Text("Enter Category").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                                .textFieldStyle(ModernTextFieldStyle())
+                        }
+                    }
+                    
+                    Spacer()
                     
                     // Save Button
                     Button(action: {

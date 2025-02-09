@@ -54,10 +54,12 @@ class AddGradeViewModel: ObservableObject {
 class editGradeViewModel: ObservableObject {
     @Published var pointsEarned: String
     @Published var totalPoints: String
+    @Published var category: String = "No Category"
     
     init(grade: grade) {
         pointsEarned = grade.earned.removeZerosFromEnd()
         totalPoints = grade.points.removeZerosFromEnd()
+        category = grade.category ?? "No Category"
     }
     
     var isValidInput: Bool {
@@ -74,8 +76,18 @@ class editGradeViewModel: ObservableObject {
         if let indop {
             accGrade.earned = Double(pointsEarned) ?? 0
             accGrade.points = Double(totalPoints) ?? 0
+            accGrade.category = category
             course.grades[indop] = accGrade
         }
+        if !course.isPoints {
+            for i in course.categories.indices {
+                course.categories[i].grades.removeAll(where: {$0.id == newGrade.id})
+                if course.categories[i].name == category {
+                    course.categories[i].grades.append(accGrade)
+                }
+            }
+        }
+        
         try coursesManager.shared.setCourse(data: course)
     }
 }

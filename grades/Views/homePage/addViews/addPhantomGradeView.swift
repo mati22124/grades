@@ -115,9 +115,8 @@ struct addPhantomGradeView: View {
                             Text("Category")
                                 .font(.custom("ProductSans-Regular", size: 16))
                                 .foregroundColor(.secCol)
-                            TextField("100", text: $viewModel.totalPoints, prompt: Text("Enter Category").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                            TextField("100", text: $viewModel.category, prompt: Text("Enter Category").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
                                 .textFieldStyle(ModernTextFieldStyle())
-                                .keyboardType(.decimalPad)
                         }
                     }
                     

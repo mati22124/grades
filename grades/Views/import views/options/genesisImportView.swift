@@ -34,7 +34,7 @@ struct genesisImportView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "hand.tap.fill")
                                 .foregroundColor(.mainBlue)
-                            Text("Click on to each one of your points based courses.")
+                            Text("Click on to each one of your courses.")
                                 .font(.custom("ProductSans-Regular", size: 18))
                                 .foregroundColor(.secCol)
                                 .lineLimit(nil)
