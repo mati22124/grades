@@ -1,12 +1,4 @@
 //
-//  addGradeView 2.swift
-//  grades
-//
-//  Created by Mayank Tiku on 11/29/24.
-//
-
-
-//
 //  AddGradeView.swift
 //  grades
 //
@@ -76,19 +68,61 @@ struct addPhantomGradeView: View {
                         Text("Date")
                             .font(.custom("ProductSans-Regular", size: 16))
                             .foregroundColor(.secCol)
-                        
-                        DatePicker("Assignment Date",
-                                   selection: $viewModel.date,
-                                   displayedComponents: .date)
-                        .datePickerStyle(.graphical)
+                        DatePicker(selection: $viewModel.date,
+                                   displayedComponents: .date, label: {
+                            Text("Assignment Date")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                        })
+                        .datePickerStyle(.compact)
                         .padding()
                         .background(Color.white.opacity(0.1))
-                        .cornerRadius(10)
+                        .clipShape(Capsule())
                         .accentColor(.terCol)
                         .colorScheme(.dark)
                     }
                     
-                    //            Spacer(minLength: 0)
+                    //category picker for category courses
+                    if !course.isPoints {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            LabeledContent {
+                                Picker("", selection: $viewModel.category) {
+                                    ForEach(0..<(course.categories.count+1)) {
+                                        if $0 == course.categories.count {
+                                            Text("No Category")
+                                                .tag("No Category")
+                                        } else {
+                                            Text(course.categories[$0].name)
+                                                .tag(course.categories[$0].name)
+                                        }
+                                    }
+                                }
+                                .tint(.terCol)
+                            } label: {
+                                Text("Category")
+                            }
+                            .padding()
+                            .background(Color.white.opacity(0.1))
+                            .clipShape(Capsule())
+                            .accentColor(.terCol)
+                            .colorScheme(.dark)
+                        }
+                    } else {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            TextField("100", text: $viewModel.totalPoints, prompt: Text("Enter Category").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                                .textFieldStyle(ModernTextFieldStyle())
+                                .keyboardType(.decimalPad)
+                        }
+                    }
+                    
+                    Spacer()
+                    
                     
                     // Save Button
                     Button(action: {
@@ -121,5 +155,12 @@ struct addPhantomGradeView: View {
                 .navigationBarTitleTextColor(.secCol)
             }
         }
+    }
+}
+
+#Preview {
+    @Previewable @State var c = course(name: "test", teacher: "test", isPoints: true, grades: [])
+    NavigationStack {
+        addPhantomGradeView(course: $c, showPhantom: .constant(true))
     }
 }

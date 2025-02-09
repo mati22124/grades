@@ -75,37 +75,48 @@ struct addGradeView: View {
                         .datePickerStyle(.compact)
                         .padding()
                         .background(Color.white.opacity(0.1))
-                        .cornerRadius(10)
+                        .clipShape(Capsule())
                         .accentColor(.terCol)
                         .colorScheme(.dark)
                     }
                     
                     //category picker for category courses
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Category")
-                            .font(.custom("ProductSans-Regular", size: 16))
-                            .foregroundColor(.secCol)
-                        LabeledContent {
-                            Picker("", selection: $viewModel.category) {
-                                ForEach(0..<(course.categories.count+1)) {
-                                    if $0 == course.categories.count {
-                                        Text("No Category")
-                                            .tag("No Category")
-                                    } else {
-                                        Text(course.categories[$0].name)
-                                            .tag(course.categories[$0].name)
+                    if !course.isPoints {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            LabeledContent {
+                                Picker("", selection: $viewModel.category) {
+                                    ForEach(0..<(course.categories.count+1)) {
+                                        if $0 == course.categories.count {
+                                            Text("No Category")
+                                                .tag("No Category")
+                                        } else {
+                                            Text(course.categories[$0].name)
+                                                .tag(course.categories[$0].name)
+                                        }
                                     }
                                 }
+                                .tint(.terCol)
+                            } label: {
+                                Text("Category")
                             }
-                            .tint(.terCol)
-                        } label: {
-                            Text("Category")
+                            .padding()
+                            .background(Color.white.opacity(0.1))
+                            .clipShape(Capsule())
+                            .accentColor(.terCol)
+                            .colorScheme(.dark)
                         }
-                        .padding()
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(10)
-                        .accentColor(.terCol)
-                        .colorScheme(.dark)
+                    } else {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .foregroundColor(.secCol)
+                            TextField("100", text: $viewModel.totalPoints, prompt: Text("Enter Category").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                                .textFieldStyle(ModernTextFieldStyle())
+                                .keyboardType(.decimalPad)
+                        }
                     }
                     
                     Spacer()
