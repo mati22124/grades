@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import Shake
 
 struct SettingsView: View {
     @Binding var showSignInView: Bool
@@ -39,6 +40,37 @@ struct SettingsView: View {
                                 foregroundColor: .red
                             )
                         }
+                        
+                   
+                        VStack(spacing: 10) {
+                            Text("Bug Reporting")
+                                .modifier(textStyle(size: 20))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal)
+                            Button {
+                                Shake.show(.new)
+                            } label: {
+                                SettingsButtonView(
+                                    title: "Report a Bug",
+                                    icon: "trash.fill",
+                                    foregroundColor: .red
+                                )
+                            }
+                            Button {
+                                Shake.configuration.tags = ["feature"]
+                                Shake.show(.new)
+                                Shake.configuration.tags = ["bug"]
+                            } label: {
+                                SettingsButtonView(
+                                    title: "Feature Request",
+                                    icon: "plus"
+                                )
+                            }
+                            
+                            Text("Shake to report a bug!")
+                                .modifier(textStyle(size: 15))
+                        }
+                        .padding(.vertical, 10)
                     }
                     .padding(.horizontal, 20)
                     

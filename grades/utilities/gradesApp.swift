@@ -14,6 +14,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
       Shake.start(apiKey: "Myf0sDjz5icJ7HiHO90aQK09xytoD7vfRqSrAkuX71v7qRrA8SsFrXr")
       Shake.configuration.isCrashReportingEnabled = true
+      Shake.configuration.isAskForCrashDescriptionEnabled = true
+      Shake.configuration.shakingThreshold = 300
+      Shake.configuration.tags = ["bug"]
       FirebaseApp.configure()
       return true
   }
