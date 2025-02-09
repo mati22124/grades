@@ -10,6 +10,7 @@
 		A4318D0B2CACE3CE004FF11C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0A2CACE3CE004FF11C /* FirebaseAnalytics */; };
 		A4318D0D2CACE3CE004FF11C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0C2CACE3CE004FF11C /* FirebaseAuth */; };
 		A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0E2CACE3CE004FF11C /* FirebaseFirestore */; };
+		A45196252D582CE8003BA79A /* Shake in Frameworks */ = {isa = PBXBuildFile; productRef = A45196242D582CE8003BA79A /* Shake */; };
 		A476BD792D13DA47003FC8B0 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = A476BD782D13DA47003FC8B0 /* SwiftSoup */; };
 		A4B5BC762CED54D200060FEF /* SwiftAnthropic in Frameworks */ = {isa = PBXBuildFile; productRef = A4B5BC752CED54D200060FEF /* SwiftAnthropic */; };
 		A4C6267A2CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A4C626792CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community */; };
@@ -57,6 +58,7 @@
 				A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */,
 				A4C6267A2CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community in Frameworks */,
 				A476BD792D13DA47003FC8B0 /* SwiftSoup in Frameworks */,
+				A45196252D582CE8003BA79A /* Shake in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +118,7 @@
 				A4C626792CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community */,
 				A4B5BC752CED54D200060FEF /* SwiftAnthropic */,
 				A476BD782D13DA47003FC8B0 /* SwiftSoup */,
+				A45196242D582CE8003BA79A /* Shake */,
 			);
 			productName = grades;
 			productReference = A46FAF432CA1D4CD00B9C882 /* grades.app */;
@@ -151,6 +154,7 @@
 				A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A4B5BC742CED54D200060FEF /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
 				A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				A45196232D582CE8003BA79A /* XCRemoteSwiftPackageReference "shake-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A46FAF442CA1D4CD00B9C882 /* Products */;
@@ -310,6 +314,7 @@
 				CODE_SIGN_ENTITLEMENTS = grades/grades.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.2;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"grades/Preview Content\"";
 				DEVELOPMENT_TEAM = J6M67VCJ6W;
 				ENABLE_PREVIEWS = YES;
@@ -398,6 +403,14 @@
 				minimumVersion = 11.3.0;
 			};
 		};
+		A45196232D582CE8003BA79A /* XCRemoteSwiftPackageReference "shake-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/shakebugs/shake-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 17.1.0;
+			};
+		};
 		A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
@@ -447,6 +460,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		A45196242D582CE8003BA79A /* Shake */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A45196232D582CE8003BA79A /* XCRemoteSwiftPackageReference "shake-ios" */;
+			productName = Shake;
 		};
 		A476BD782D13DA47003FC8B0 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
