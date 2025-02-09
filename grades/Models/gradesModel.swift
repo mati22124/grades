@@ -77,7 +77,7 @@ class course: Codable, Identifiable, Equatable {
     }
 }
 
-struct grade: Codable, Identifiable, Equatable {
+struct grade: Codable, Identifiable, Equatable, Hashable {
     var name: String
     var points: Double
     var earned: Double
@@ -130,7 +130,7 @@ struct grade: Codable, Identifiable, Equatable {
     }
 }
 
-struct category: Codable, Identifiable {
+struct category: Codable, Identifiable, Equatable, Hashable {
     var name: String
     var grades: [grade]
     var weight: Double

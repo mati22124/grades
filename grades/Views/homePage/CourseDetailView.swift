@@ -96,15 +96,26 @@ struct CourseDetailView: View {
                 .ignoresSafeArea(.keyboard)
                 .padding()
             }
-
-            menuButtonAdd(isMenuPresented: $menuIsVisible, menuItems: [
-                menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill"),
-                menuItem(destination: addPhantomGradeView(course: $course, showPhantom: $isShowingPhantom), optionName: "Add Phantom Grade", icon: "books.vertical"),
-                menuItem(action: {
+            if course.isPoints {
+                menuButtonAdd(isMenuPresented: $menuIsVisible, menuItems: [
+                    menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill"),
+                    menuItem(destination: addPhantomGradeView(course: $course, showPhantom: $isShowingPhantom), optionName: "Add Phantom Grade", icon: "books.vertical"),
+                    menuItem(action: {
                         isShowingPhantom.toggle()
-                }, optionName: isShowingPhantom ? "Hide Phantom Grades" : "Show Phantom Grades", icon: "arrow.right", isAnimated: true)
-                ]
-            )
+                    }, optionName: isShowingPhantom ? "Hide Phantom Grades" : "Show Phantom Grades", icon: "arrow.right.circle", isAnimated: true)
+                    ]
+                )
+            } else {
+                menuButtonAdd(isMenuPresented: $menuIsVisible, menuItems: [
+                    menuItem(destination: addGradeView(course: $course), optionName: "Add Grade", icon: "books.vertical.fill"),
+                    menuItem(destination: addPhantomGradeView(course: $course, showPhantom: $isShowingPhantom), optionName: "Add Phantom Grade", icon: "books.vertical"),
+                    menuItem(action: {
+                        isShowingPhantom.toggle()
+                    }, optionName: isShowingPhantom ? "Hide Phantom Grades" : "Show Phantom Grades", icon: "arrow.right.circle", isAnimated: true),
+                    menuItem(destination: editCategoriesView(course: course), optionName: "Edit Categories", icon: "tray.2.fill")
+                    ]
+                )
+            }
         }
         .navigationTitle(course.name)
         .navigationBarBackButtonHidden(menuIsVisible)
