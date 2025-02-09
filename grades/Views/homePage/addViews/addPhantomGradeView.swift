@@ -149,6 +149,7 @@ struct addPhantomGradeView: View {
                     }
                     .disabled(!viewModel.isValidInput)
                 }
+                .ignoresSafeArea(.keyboard)
                 .padding()
                 .navigationTitle("Add Phantom Grade")
                 .navigationBarTitleDisplayMode(.inline)

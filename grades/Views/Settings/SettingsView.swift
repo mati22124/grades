@@ -52,8 +52,8 @@ struct SettingsView: View {
                             } label: {
                                 SettingsButtonView(
                                     title: "Report a Bug",
-                                    icon: "trash.fill",
-                                    foregroundColor: .red
+                                    icon: "ladybug.fill",
+                                    foregroundColor: .gray
                                 )
                             }
                             Button {
