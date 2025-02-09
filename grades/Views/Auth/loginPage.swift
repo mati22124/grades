@@ -182,8 +182,9 @@ struct ModernTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding()
-            .background(.primaryCol)
+            .background(Color.white.opacity(0.1))
             .clipShape(Capsule())
+//            .cornerRadius(10)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
             .autocapitalization(.none)
             .autocorrectionDisabled()
