@@ -184,6 +184,9 @@ struct GradeCard: View {
     let grade: grade
     let isPoints: Bool
     let dateFormatter: DateFormatter
+    let gradeCat: String
+    let dateString: String
+    let gradeWeightString: String
 
     var body: some View {
         HStack {
@@ -191,7 +194,7 @@ struct GradeCard: View {
                 Text(grade.name)
                     .font(.custom("ProductSans-Regular", size: 18))
                     .foregroundColor(.secCol)
-                Text(dateFormatter.string(from: grade.date)+" - "+(grade.category ?? "No Category"))
+                Text("\(dateString)"+" - "+"\(gradeCat)"+"\(gradeWeightString)")
                     .font(.custom("ProductSans-Regular", size: 14))
                     .foregroundColor(.secCol)
             }
@@ -235,6 +238,10 @@ struct GradeCard: View {
         self.isPoints = isPoints
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YY"
+        
+        self.dateString = dateFormatter.string(from: grade.date)
+        self.gradeCat = grade.category ?? "No Category"
+        self.gradeWeightString = grade.weight != 1 ? " - \(grade.weight)x" : ""
     }
 }
 
@@ -259,7 +266,7 @@ struct GradeCard: View {
         teacher: "Anatoly Fonarev",
         isPoints: true,
         grades: [
-        grade(name: "Test grade", points: 100, earned: 95, weight: 1, date: Date()),
+            grade(name: "Test grade", points: 100, earned: 95, weight: 1.5, date: Date()),
         grade(name: "Test grade 2", points: 100, earned: 85, weight: 1, date: Date()),
         grade(name: "Test grade 3", points: 100, earned: 75, weight: 1, date: Date())
         ]
