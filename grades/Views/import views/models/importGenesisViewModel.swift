@@ -150,7 +150,7 @@ class importGenesisViewModel: ObservableObject {
                     } else if tstr == "CHECKPLUS" {
                         score = 0.85*toal
                     } else if tstr == "CHECK" {
-                        score = 0.7*toal
+                        score = 0.78*toal
                     } else if tstr == "A+" {
                         score = 0.975*toal
                     } else if tstr == "A" {
