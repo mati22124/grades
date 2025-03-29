@@ -43,7 +43,7 @@ class course: Codable, Identifiable, Equatable {
         } else {
             var total: Double = 0
             for i in categories {
-                total += i.average
+                total += i.phantomAverage
             }
             return total
         }
