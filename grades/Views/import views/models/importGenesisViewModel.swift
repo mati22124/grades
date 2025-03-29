@@ -30,11 +30,11 @@ class importGenesisViewModel: ObservableObject {
             if cells.count >= 7 {
                 
                 let date = try parseDate(cells)
-                let (name, category) = try parseNameCateg(cells)
+                let (name, category, weight) = try parseNameCateg(cells)
                 let (earned, total) = try parsePoints(cells)
                 
                 // add to list
-                let grade = grade(name: name, points: total, earned: earned, weight: 1, date: date, category: category)
+                let grade = grade(name: name, points: total, earned: earned, weight: weight, date: date, category: category)
                 grades.append(grade)
             }
         }
@@ -103,7 +103,7 @@ class importGenesisViewModel: ObservableObject {
         return cname
     }
     
-    private func parseNameCateg(_ cells: [Element]) throws -> (String, String) {
+    private func parseNameCateg(_ cells: [Element]) throws -> (String, String, Double) {
         // Extract name info from second cell
         var name = "Unknown"
         do {
@@ -122,7 +122,20 @@ class importGenesisViewModel: ObservableObject {
             print("error parsing category: \(error)")
         }
         
-        return (name, category)
+        var weight = 1.0
+        do {
+            if let weightDiv = try cells[2].select("div[title*='Assignment Weight']").first() {
+                let weightText = try weightDiv.text()
+                if weightText.hasPrefix("x") {
+                    let numberText = weightText.dropFirst() // Remove the 'x'
+                    weight = Double(numberText) ?? 1.0
+                }
+            }
+        } catch {
+            print("error parsing weight: \(error)")
+        }
+        
+        return (name, category, weight)
     }
     
     private func parsePoints(_ cells: [Element]) throws -> (Double, Double) {

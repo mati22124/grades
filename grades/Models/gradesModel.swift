@@ -24,7 +24,7 @@ class course: Codable, Identifiable, Equatable {
     var average: Double {
         if grades.isEmpty { return 0 }
         if isPoints {
-            let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) })
+            let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : ($1.earned * $1.weight)) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : ($1.points * $1.weight)) })
             return x*100
         } else {
             var total: Double = 0
@@ -38,7 +38,7 @@ class course: Codable, Identifiable, Equatable {
     var phantomAverage: Double {
         if grades.isEmpty { return 0 }
         if isPoints {
-            let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
+            let x = grades.reduce(0, { $0 + ($1.earned * $1.weight) }) / grades.reduce(0, { $0 + ($1.points * $1.weight) })
             return x*100
         } else {
             var total: Double = 0
@@ -136,15 +136,18 @@ struct category: Codable, Identifiable, Equatable, Hashable {
     var weight: Double
     var id: UUID = UUID()
     
+    // MARK: some schools either temporarily change the weights or return it as 100. rn do temp change weights but ur gunna need to inc both.
     var average: Double {
         if grades.isEmpty { return weight*100 }
-        let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.earned) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : $1.points) })
+        let x = grades.reduce(0, { $0 + ($1.isPhantom ? 0 : ($1.earned * $1.weight)) }) / grades.reduce(0, { $0 + ($1.isPhantom ? 0 : ($1.points * $1.weight)) })
+        if x.isNaN { return 0 }
         return x*weight*100
     }
     
     var phantomAverage: Double {
         if grades.isEmpty { return weight*100 }
-        let x = grades.reduce(0, { $0 + $1.earned }) / grades.reduce(0, { $0 + $1.points })
+        let x = grades.reduce(0, { $0 + ($1.earned * $1.weight) }) / grades.reduce(0, { $0 + ($1.points * $1.weight) })
+        if x.isNaN { return 0 }
         return x*weight*100
     }
 }
