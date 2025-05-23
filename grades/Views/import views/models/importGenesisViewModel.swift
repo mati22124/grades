@@ -46,7 +46,7 @@ class importGenesisViewModel: ObservableObject {
             return nil
         }
         
-        //if its caregoy weighted
+        //if its not caregoy weighted
         if cat.isEmpty {
             return course(name: courseName, teacher: "", isPoints: true, grades: grades)
         }
@@ -124,7 +124,7 @@ class importGenesisViewModel: ObservableObject {
         
         var weight = 1.0
         do {
-            if let weightDiv = try cells[2].select("div[title*='Assignment Weight']").first() {
+            if let weightDiv = try cells[6].select("div[title*='Assignment Weight']").first() {
                 let weightText = try weightDiv.text()
                 if weightText.hasPrefix("x") {
                     let numberText = weightText.dropFirst() // Remove the 'x'
