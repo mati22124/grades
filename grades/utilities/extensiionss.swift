@@ -60,31 +60,36 @@ extension Double {
     }
     
     
-    func averageToGrade() -> String {
-        if (self >= 93) {
-            return "A";
-        } else if (self >= 90) {
-            return "A-";
-        } else if (self >= 87) {
-            return "B+";
-        } else if (self >= 83) {
-            return "B";
-        } else if (self >= 80) {
-            return "B-";
-        } else if (self >= 77) {
-            return "C+";
-        } else if (self >= 73) {
-            return "C";
-        } else if (self >= 70) {
-            return "C-";
-        } else if (self >= 67) {
-            return "D+";
-        } else if (self >= 63) {
-            return "D";
-        } else if (self >= 60) {
-            return "D-";
+    func averageToGrade(settings: UserSettings? = nil) -> String {
+        let gradingScale = settings?.gradingScale ?? GradingScale.defaultScale
+        let score = settings?.roundForLetterGrade == true ? self.rounded() : self
+        
+        if score >= gradingScale.aPlus {
+            return "A+"
+        } else if score >= gradingScale.a {
+            return "A"
+        } else if score >= gradingScale.aMinus {
+            return "A-"
+        } else if score >= gradingScale.bPlus {
+            return "B+"
+        } else if score >= gradingScale.b {
+            return "B"
+        } else if score >= gradingScale.bMinus {
+            return "B-"
+        } else if score >= gradingScale.cPlus {
+            return "C+"
+        } else if score >= gradingScale.c {
+            return "C"
+        } else if score >= gradingScale.cMinus {
+            return "C-"
+        } else if score >= gradingScale.dPlus {
+            return "D+"
+        } else if score >= gradingScale.d {
+            return "D"
+        } else if score >= gradingScale.dMinus {
+            return "D-"
         } else {
-            return "F";
+            return "F"
         }
     }
 

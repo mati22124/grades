@@ -143,7 +143,7 @@ struct ClassGradeBlock: View {
             
             Spacer()
             VStack {
-                Text(classGrade.average.averageToGrade())
+                Text(classGrade.average.averageToGrade(settings: viewModel.userSettings))
                     .font(.custom("ProductSans-Bold", size: 30))
                     .foregroundColor(.secCol)
                 Text("\(classGrade.average.roundedGrade())%")

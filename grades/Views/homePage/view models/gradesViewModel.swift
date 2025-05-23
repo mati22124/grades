@@ -16,6 +16,8 @@ final class gradesViewModel: ObservableObject {
     @Published private(set) var currentUser: authResult? = nil
     
     @Published var showDeleteAllConfirmation: Bool = false
+    
+    @Published var userSettings: UserSettings? = nil
 
     func loadCurrentUser() async throws {
         currentUser = try authManager.shared.getAuthUser()
@@ -34,6 +36,7 @@ final class gradesViewModel: ObservableObject {
                 }
             }
             addcoursesListener(userId: u.uid)
+            addSettingsListener()
         } else {
             throw authError.noUser
         }
@@ -79,6 +82,13 @@ final class gradesViewModel: ObservableObject {
             try coursesManager.shared.removeCourse(data: course)
         }
         courses.removeAll()
+    }
+    
+    func addSettingsListener() {
+        settingsManager.shared.addSettingsListener { [weak self] settings in
+            self?.userSettings = settings
+            print("settings pulled")
+        }
     }
 }
 

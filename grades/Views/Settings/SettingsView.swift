@@ -20,9 +20,19 @@ struct SettingsView: View {
                 
                 VStack(spacing: 24) {
                     VStack(spacing: 16) {
+                        NavigationLink {
+                            GradingScaleSettingsView()
+                        } label: {
+                            SettingsButtonView(
+                                title: "Grading Scale",
+                                icon: "percent"
+                            )
+                        }
+                        
                         Button {
                             try? authManager.shared.signOut()
                             coursesManager.shared.removeListener()
+                            settingsManager.shared.removeListener()
                             showSignInView = true
                         } label: {
                             SettingsButtonView(
@@ -85,6 +95,7 @@ struct SettingsView: View {
             Button("Delete", role: .destructive) {
                 try? authManager.shared.deleteAccount()
                 coursesManager.shared.removeListener()
+                settingsManager.shared.removeListener()
                 showSignInView = true
             }
             Button("Cancel", role: .cancel) { }
