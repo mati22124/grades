@@ -51,7 +51,8 @@ struct menuButtonAdd: View {
                                                 .font(.custom("ProductSans-Regular", size: 32))
                                             Image(systemName: item.icon)
                                                 .resizable()
-                                                .frame(width: 25, height: 25)
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(height: 25)
                                                 .alignmentGuide(.menu) { dim in
                                                     dim.width / 2
                                                 }
@@ -77,7 +78,8 @@ struct menuButtonAdd: View {
                                                 .font(.custom("ProductSans-Regular", size: 32))
                                             Image(systemName: item.icon)
                                                 .resizable()
-                                                .frame(width: 25, height: 25)
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(height: 25)
                                                 .alignmentGuide(.menu) { dim in
                                                     dim.width / 2
                                                 }

@@ -14,6 +14,8 @@ final class gradesViewModel: ObservableObject {
     @Published var courses: [course] = []
     
     @Published private(set) var currentUser: authResult? = nil
+    
+    @Published var showDeleteAllConfirmation: Bool = false
 
     func loadCurrentUser() async throws {
         currentUser = try authManager.shared.getAuthUser()
@@ -68,6 +70,15 @@ final class gradesViewModel: ObservableObject {
         } else {
             throw authError.noUser
         }
+    }
+    
+    func deleteAllCourses() throws {
+        guard let _ = currentUser else { throw authError.noUser }
+        
+        for course in courses {
+            try coursesManager.shared.removeCourse(data: course)
+        }
+        courses.removeAll()
     }
 }
 

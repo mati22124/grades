@@ -64,13 +64,28 @@ struct classesView: View {
                 } message: {
                     Text("Are you sure you want to delete \(courseToDelete?.name ?? "NOT WORKING DONT DELETE")?")
                 }
+                .alert("Delete All Courses", isPresented: $viewModel.showDeleteAllConfirmation) {
+                    Button("Delete All", role: .destructive) {
+                        do {
+                            try viewModel.deleteAllCourses()
+                        } catch {
+                            print("Error deleting all courses: \(error)")
+                        }
+                    }
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("Are you sure you want to delete all \(viewModel.courses.count) courses? This action cannot be undone.")
+                }
                 .frame(maxWidth: .infinity)
                 .ignoresSafeArea(.keyboard)
                 .padding(.horizontal, 20)
                 
                 
                 menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
-                    menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill")
+                    menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill"),
+                    menuItem(action: {
+                        viewModel.showDeleteAllConfirmation = true
+                    }, optionName: "Delete All", icon: "trash.fill")
                     //                ,
                     //                menuItem(destination: importView(), optionName: "Import", icon: "square.and.arrow.up")
                 ]
