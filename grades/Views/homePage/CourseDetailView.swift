@@ -173,9 +173,8 @@ struct CourseHeaderCard: View {
             }
         }
         .padding()
-        .background(.primaryCol)
+        .background(Color.black.opacity(0.3))
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
 

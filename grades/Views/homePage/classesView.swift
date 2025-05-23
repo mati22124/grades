@@ -129,16 +129,18 @@ struct ClassGradeBlock: View {
     @EnvironmentObject var viewModel: gradesViewModel
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             VStack {
                 Text(classGrade.name)
                     .font(.custom("ProductSans-Bold", size: 22))
                     .foregroundColor(.secCol)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(classGrade.teacher)
-                    .font(.custom("ProductSans-Regular", size: 13))
-                    .foregroundColor(.secCol)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if classGrade.teacher != "" {
+                    Text(classGrade.teacher)
+                        .font(.custom("ProductSans-Regular", size: 13))
+                        .foregroundColor(.secCol)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             
             Spacer()
@@ -157,13 +159,13 @@ struct ClassGradeBlock: View {
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         }
         .padding()
-        .background(Color.primaryCol) //Color.bgBlue.opacity(0.75)
+        .background(Color.black.opacity(0.3)) //Color.bgBlue.opacity(0.75)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
 
 #Preview {
     classesView(showSignInView: .constant(false))
+        .environmentObject(gradesViewModel())
 }
 

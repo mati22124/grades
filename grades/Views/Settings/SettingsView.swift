@@ -63,7 +63,7 @@ struct SettingsView: View {
                                 SettingsButtonView(
                                     title: "Report a Bug",
                                     icon: "ladybug.fill",
-                                    foregroundColor: .gray
+                                    foregroundColor: .white
                                 )
                             }
                             Button {
@@ -125,7 +125,7 @@ struct SettingsButtonView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity)
-        .background(Color.secCol)
+        .background(Color.black.opacity(0.3))
         .cornerRadius(16)
     }
 }
