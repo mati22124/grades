@@ -92,6 +92,8 @@ struct classesView: View {
                     Button("Delete All", role: .destructive) {
                         do {
                             try viewModel.deleteAllCourses(filteredCourses)
+                            selectedYear = nil
+                            selectedMarkingPeriod = nil
                         } catch {
                             print("Error deleting all courses: \(error)")
                         }
