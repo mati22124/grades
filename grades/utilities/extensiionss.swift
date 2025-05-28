@@ -110,13 +110,13 @@ extension View {
     }
 }
 
-struct Menu: AlignmentID {
+struct Menuu: AlignmentID {
     static func defaultValue(in context: ViewDimensions) -> CGFloat {
         return context.width / 2
     }
 }
 extension HorizontalAlignment {
-    static let menu = Self(Menu.self)
+    static let menu = Self(Menuu.self)
 }
 
 extension UIImage {
