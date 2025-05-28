@@ -19,6 +19,8 @@ class course: Codable, Identifiable, Equatable {
     var categories: [category]
     var isPoints: Bool
     var id: String
+    var markingPeriod: Int?
+    var year: Int?
     
     // add func vars for average
     var average: Double {

@@ -14,6 +14,7 @@ struct genesisImportView: View {
     @State private var url: String = ""
 
     @State var showAlert: Bool = false
+    @State private var showCourseDetails: Bool = false
     
     @StateObject var webVM = WebViewModel()
     @EnvironmentObject var gradesVm: gradesViewModel
@@ -145,18 +146,11 @@ struct genesisImportView: View {
                 Spacer()
                 
                 Button(action: {
-                    do {
-                        gradesVm.courses.append(contentsOf: webVM.ccc)
-                        try gradesVm.publishCourses()
-                        showAlert = true
-                        webVM.ccc.removeAll()
-                    } catch {
-                        print(error)
-                    }
+                    showCourseDetails = true
                 }) {
                     HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                        Text("Done")
+                        Image(systemName: "arrow.right.circle.fill")
+                        Text("Next")
                             .font(.custom("ProductSans-Bold", size: 16))
                     }
                     .foregroundColor(.white)
@@ -166,6 +160,21 @@ struct genesisImportView: View {
                 }
                 .padding(.bottom)
                 .disabled(webVM.ccc.isEmpty)
+                .sheet(isPresented: $showCourseDetails) {
+                    NavigationStack {
+                        CourseDetailsInputView(courses: $webVM.ccc) {
+                            showCourseDetails = false
+                            do {
+                                gradesVm.courses.append(contentsOf: webVM.ccc)
+                                try gradesVm.publishCourses()
+                                showAlert = true
+                                webVM.ccc.removeAll()
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+                }
                 .alert("Import Successful", isPresented: $showAlert) {
                     Button("OK") {
                         dismiss()
