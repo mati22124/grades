@@ -17,6 +17,29 @@ struct classesView: View {
     @State private var showingAlert: Bool = false
     
     @State private var courseToDelete: course? = nil
+    @State private var selectedMarkingPeriod: Int? = nil
+    @State private var selectedYear: Int? = nil
+    
+    // Get unique marking periods from courses
+    var availableMarkingPeriods: [Int] {
+        let periods = viewModel.courses.compactMap { $0.markingPeriod }
+        return Array(Set(periods)).sorted()
+    }
+    
+    // Get unique years from courses
+    var availableYears: [Int] {
+        let years = viewModel.courses.compactMap { $0.year }
+        return Array(Set(years)).sorted()
+    }
+    
+    // Filter courses based on selected marking period and year
+    var filteredCourses: [course] {
+        viewModel.courses.filter { course in
+            let matchesMP = selectedMarkingPeriod == nil || course.markingPeriod == selectedMarkingPeriod
+            let matchesYear = selectedYear == nil || course.year == selectedYear
+            return matchesMP && matchesYear
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -26,22 +49,23 @@ struct classesView: View {
                 VStack(spacing: 20) {
                     ScrollView {
                         VStack(spacing: 12) {
-                            if (viewModel.courses.isEmpty) {
+                            if (filteredCourses.isEmpty) {
                                 Text("No Courses")
                                     .tint(.secCol)
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .font(.custom("ProductSans-Regular", size: 25))
                             }
-                            ForEach($viewModel.courses) { $course in
+                            ForEach(filteredCourses) { course in
+                                let index = viewModel.courses.firstIndex(where: { $0.id == course.id })!
                                 NavigationLink {
-                                    CourseDetailView(course: $course)
+                                    CourseDetailView(course: $viewModel.courses[index])
                                 } label: {
                                     SwipeToDeleteView(content: {
-                                        ClassGradeBlock(classGrade: $course)
+                                        ClassGradeBlock(classGrade: $viewModel.courses[index])
                                             .environmentObject(viewModel)
                                     }, onDelete: {
-                                        courseToDelete = $course.wrappedValue
-                                    }, onEdit: editCourseView(originalCourse: $course).environmentObject(viewModel))
+                                        courseToDelete = viewModel.courses[index]
+                                    }, onEdit: editCourseView(originalCourse: $viewModel.courses[index]).environmentObject(viewModel))
                                 }
                             }
                         }
@@ -67,14 +91,14 @@ struct classesView: View {
                 .alert("Delete All Courses", isPresented: $viewModel.showDeleteAllConfirmation) {
                     Button("Delete All", role: .destructive) {
                         do {
-                            try viewModel.deleteAllCourses()
+                            try viewModel.deleteAllCourses(filteredCourses)
                         } catch {
                             print("Error deleting all courses: \(error)")
                         }
                     }
                     Button("Cancel", role: .cancel) { }
                 } message: {
-                    Text("Are you sure you want to delete all \(viewModel.courses.count) courses? This action cannot be undone.")
+                    Text("Are you sure you want to delete all \(filteredCourses.count) courses? This action cannot be undone.")
                 }
                 .frame(maxWidth: .infinity)
                 .ignoresSafeArea(.keyboard)
@@ -120,6 +144,16 @@ struct classesView: View {
             })
             .navigationTitle("Courses")
             .navigationBarTitleTextColor(.secCol)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    CourseFilterMenu(
+                        availableMarkingPeriods: availableMarkingPeriods,
+                        availableYears: availableYears,
+                        selectedMarkingPeriod: $selectedMarkingPeriod,
+                        selectedYear: $selectedYear
+                    )
+                }
+            }
         }
     }
 }
@@ -161,6 +195,77 @@ struct ClassGradeBlock: View {
         .padding()
         .background(Color.black.opacity(0.3)) //Color.bgBlue.opacity(0.75)
         .cornerRadius(16)
+    }
+}
+
+struct CourseFilterMenu: View {
+    let availableMarkingPeriods: [Int]
+    let availableYears: [Int]
+    @Binding var selectedMarkingPeriod: Int?
+    @Binding var selectedYear: Int?
+    
+    var body: some View {
+        Menu {
+            Section("Marking Period") {
+                Button {
+                    selectedMarkingPeriod = nil
+                } label: {
+                    HStack {
+                        Text("All")
+                        Spacer()
+                        if selectedMarkingPeriod == nil {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                
+                ForEach(availableMarkingPeriods, id: \.self) { period in
+                    Button {
+                        selectedMarkingPeriod = period
+                    } label: {
+                        HStack {
+                            Text("MP \(period)")
+                            Spacer()
+                            if selectedMarkingPeriod == period {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            }
+            
+            Section("Academic Year") {
+                Button {
+                    selectedYear = nil
+                } label: {
+                    HStack {
+                        Text("All")
+                        Spacer()
+                        if selectedYear == nil {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                
+                ForEach(availableYears, id: \.self) { year in
+                    Button {
+                        selectedYear = year
+                    } label: {
+                        HStack {
+                            Text("\(year)")
+                            Spacer()
+                            if selectedYear == year {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            }
+        } label: {
+            Image(systemName: "line.3.horizontal.decrease.circle")
+                .foregroundColor(.terCol)
+                .font(.system(size: 18))
+        }
     }
 }
 

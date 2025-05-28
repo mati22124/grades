@@ -75,13 +75,13 @@ final class gradesViewModel: ObservableObject {
         }
     }
     
-    func deleteAllCourses() throws {
+    func deleteAllCourses(_ coursess: [course]) throws {
         guard let _ = currentUser else { throw authError.noUser }
         
-        for course in courses {
+        for course in coursess {
+            courses.remove(at: courses.firstIndex(of: course)!)
             try coursesManager.shared.removeCourse(data: course)
         }
-        courses.removeAll()
     }
     
     func addSettingsListener() {
