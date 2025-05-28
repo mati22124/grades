@@ -23,10 +23,6 @@ struct editCategoriesView: View {
     var body: some View {
         ZStack {
             Color.primaryCol.ignoresSafeArea()
-                .onAppear {
-                    var test = []
-                    print(test[3])
-                }
             ScrollView {
                 VStack {
                     ForEach($vm.categories, id: \.self) { $cat in
