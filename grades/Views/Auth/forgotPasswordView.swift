@@ -21,8 +21,7 @@ struct forgotPasswordView: View {
     
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea(.all)
-            Color.primaryCol.ignoresSafeArea(.all).opacity(0.95)
+            Color.primaryCol.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 VStack(spacing: 15) {
@@ -33,13 +32,19 @@ struct forgotPasswordView: View {
                     
                     Text("Enter your email address and we'll send you instructions to reset your password.")
                         .font(.custom("ProductSans-Regular", size: 16))
-                        .foregroundColor(.secCol)
+                        .foregroundColor(.secCol.opacity(0.8))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.bottom, 10)
                     
                     TextField("", text: $email, prompt: Text("Email").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
-                        .textFieldStyle(ModernTextFieldStyle())
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(16)
+                        .foregroundColor(.white)
                         .autocapitalization(.none)
+                        .autocorrectionDisabled()
+                        .font(.custom("ProductSans-Regular", size: 16))
+                        .tint(.white)
                         .keyboardType(.emailAddress)
                         .textContentType(.emailAddress)
                         
@@ -58,11 +63,11 @@ struct forgotPasswordView: View {
                     }) {
                         Text("Reset Password")
                             .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(.secCol)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.terCol)
-                            .clipShape(Capsule())
+                            .background(Color.terCol)
+                            .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
                     .disabled(email.isEmpty)
@@ -72,11 +77,11 @@ struct forgotPasswordView: View {
                     }) {
                         Text("Back to Login")
                             .font(.custom("ProductSans-Regular", size: 16))
-                            .foregroundColor(.secCol)
+                            .foregroundColor(.secCol.opacity(0.8))
                             .padding(.top, 10)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 30)
                 
                 Spacer()
             }

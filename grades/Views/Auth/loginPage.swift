@@ -16,8 +16,7 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.white.ignoresSafeArea(.all)
-                Color.primaryCol.edgesIgnoringSafeArea(.all).opacity(0.95)
+                Color.primaryCol.ignoresSafeArea()
                 
                 VStack(spacing: 15) {
                     VStack(spacing: 10) {
@@ -31,13 +30,28 @@ struct LoginView: View {
                             .font(.custom("ProductSans-Bold", size: 40))
                             .foregroundColor(.secCol)
                     }
+                    .padding(.top, 40)
                     
                     
                     VStack(spacing: 20) {
                         TextField("", text: $viewModel.email, prompt: Text("Email").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
-                            .textFieldStyle(ModernTextFieldStyle())
+                            .padding()
+                            .background(Color.black.opacity(0.3))
+                            .cornerRadius(16)
+                            .foregroundColor(.white)
+                            .autocapitalization(.none)
+                            .autocorrectionDisabled()
+                            .font(.custom("ProductSans-Regular", size: 16))
+                            .tint(.white)
+                            
                         VStack {
-                            SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
+                            SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(16)
+                                .foregroundColor(.white)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .tint(.white)
                             HStack {
                                 NavigationLink {
                                     
@@ -47,14 +61,15 @@ struct LoginView: View {
                                     Text("Forgot password?")
                                         .padding(.leading, 15)
                                         .font(.custom("ProductSans-Regular", size: 13))
-                                        .foregroundColor(.secCol)
+                                        .foregroundColor(.secCol.opacity(0.8))
                                 }
                                 
                                 Spacer()
                             }
                         }
                     }
-                    .padding(.top, 5)
+                    .padding(.top, 20)
+                    
                     VStack(spacing: 15) {
                         Button(action: {
                             Task {
@@ -69,22 +84,23 @@ struct LoginView: View {
                         }) {
                             Text("Log In")
                                 .font(.custom("ProductSans-Bold", size: 18))
-                                .foregroundColor(.primaryCol)
+                                .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.secCol)
-                                .clipShape(Capsule())
+                                .background(Color.terCol)
+                                .cornerRadius(16)
                                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                         }
+                        
                         HStack {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.secCol)
+                                .foregroundStyle(.secCol.opacity(0.5))
                                 .frame(width: 100, height: 1, alignment: .leading)
                             Text("or")
-                                .foregroundStyle(.secCol)
+                                .foregroundStyle(.secCol.opacity(0.8))
                                 .font(.custom("ProductSans-Regular", size: 16))
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(.secCol)
+                                .foregroundStyle(.secCol.opacity(0.5))
                                 .frame(width: 100, height: 1, alignment: .leading)
                         }
                         
@@ -93,11 +109,11 @@ struct LoginView: View {
                         }) {
                             Text("Sign Up")
                                 .font(.custom("ProductSans-Bold", size: 18))
-                                .foregroundColor(.primaryCol)
+                                .foregroundColor(.secCol)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(.secCol)
-                                .clipShape(Capsule())
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(16)
                                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                         }
                         
@@ -120,13 +136,14 @@ struct LoginView: View {
                                 Text("Sign in with Google")
                                     .font(.custom("ProductSans-Bold", size: 18))
                             }
-                            .foregroundColor(.primaryCol)
+                            .foregroundColor(.black)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.secCol)
-                            .clipShape(Capsule())
+                            .background(.white)
+                            .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                         }
+                        
                         Button {
                             Task {
                                 do {
@@ -148,20 +165,18 @@ struct LoginView: View {
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.secCol)
-                            .clipShape(Capsule())
+                            .background(.white)
+                            .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                         }
-                        .clipShape(Capsule())
                         .frame(height: 60)
                         .onChange(of: viewModel.signedInWithApple) { oldValue, newValue in
                             if newValue {
                                 showLoginView = false
                             }
                         }
-                        
-                        
                     }
+                    .padding(.bottom, 30)
                 }
                 .padding(.horizontal, 30)
             }
@@ -208,6 +223,6 @@ struct SignInWithAppleButtonViewRepresentable: UIViewRepresentable {
     }
 }
 
-#Preview {
-    LoginView(showLoginView: .constant(true))
-}
+//#Preview {
+//    LoginView()
+//}

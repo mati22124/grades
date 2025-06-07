@@ -25,8 +25,7 @@ struct SignUpView: View {
     
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
-            Color.primaryCol.edgesIgnoringSafeArea(.all).opacity(0.95)
+            Color.primaryCol.ignoresSafeArea()
             
             VStack(spacing: 15) {
                 VStack(spacing: 10) {
@@ -40,17 +39,39 @@ struct SignUpView: View {
                         .font(.custom("ProductSans-Bold", size: 40))
                         .foregroundColor(.secCol)
                 }
+                .padding(.top, 40)
                 
                 
                 VStack(spacing: 15) {
                     TextField("", text: $viewModel.email, prompt: Text("Email").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
-                        .textFieldStyle(ModernTextFieldStyle())
-                    SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
-                    SecureField("", text: $viewModel.confirmPassword, prompt: Text("Confirm Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))                        .textFieldStyle(ModernTextFieldStyle())
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(16)
+                        .foregroundColor(.white)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
+                        .font(.custom("ProductSans-Regular", size: 16))
+                        .tint(.white)
+                        
+                    SecureField("", text: $viewModel.password, prompt: Text("Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(16)
+                        .foregroundColor(.white)
+                        .font(.custom("ProductSans-Regular", size: 16))
+                        .tint(.white)
+                        
+                    SecureField("", text: $viewModel.confirmPassword, prompt: Text("Confirm Password").foregroundStyle(.secCol).font(.custom("ProductSans-Regular", size: 16)))
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(16)
+                        .foregroundColor(.white)
+                        .font(.custom("ProductSans-Regular", size: 16))
+                        .tint(.white)
                        
                 }
-                .padding(.top, 5)
-                .padding(.bottom,5)
+                .padding(.top, 20)
+                
                 VStack(spacing: 15) {
                     Button(action: {
                         Task {
@@ -66,22 +87,23 @@ struct SignUpView: View {
                     }) {
                         Text("Sign Up")
                             .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(.primaryCol)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.secCol)
-                            .clipShape(Capsule())
+                            .background(Color.terCol)
+                            .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
+                    
                     HStack {
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.secCol)
+                            .foregroundStyle(.secCol.opacity(0.5))
                             .frame(width: 100, height: 1, alignment: .leading)
                         Text("or")
-                            .foregroundStyle(.secCol)
+                            .foregroundStyle(.secCol.opacity(0.8))
                             .font(.custom("ProductSans-Regular", size: 16))
                         RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.secCol)
+                            .foregroundStyle(.secCol.opacity(0.5))
                             .frame(width: 100, height: 1, alignment: .leading)
                     }
                     
@@ -90,11 +112,11 @@ struct SignUpView: View {
                     }) {
                         Text("Log In")
                             .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(.primaryCol)
+                            .foregroundColor(.secCol)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.secCol)
-                            .clipShape(Capsule())
+                            .background(Color.black.opacity(0.3))
+                            .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                     }
                     //error handlign
@@ -104,6 +126,7 @@ struct SignUpView: View {
                         Text(errorMessage ?? "An unknown error occurred")
                     })
                 }
+                .padding(.bottom, 30)
             }
             .padding(.horizontal, 30)
         }
