@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CourseDetailView: View {
     @Binding var course: course
+    @EnvironmentObject var viewModel: gradesViewModel
     
     @State var menuIsVisible: Bool = false
     
@@ -27,6 +28,7 @@ struct CourseDetailView: View {
                 VStack(spacing: 15) {
                     // Header Card
                     CourseHeaderCard(course: $course, isShowingPhantom: $isShowingPhantom)
+                        .environmentObject(viewModel)
                     
                     // phantom assignments
                     if isShowingPhantom && course.grades.contains( where: { $0.isPhantom } ) {
@@ -128,6 +130,7 @@ struct CourseDetailView: View {
 struct CourseHeaderCard: View {
     @Binding var course: course
     @Binding var isShowingPhantom: Bool
+    @EnvironmentObject var viewModel: gradesViewModel
     
     var isPreview: Bool = false
     
@@ -146,7 +149,7 @@ struct CourseHeaderCard: View {
                 VStack(alignment: .trailing) {
                     HStack {
                         VStack(alignment: isShowingPhantom ? .center : .trailing) {
-                            Text(course.average.averageToGrade())
+                            Text(course.average.averageToGrade(settings: viewModel.userSettings))
                                 .font(.custom("ProductSans-Bold", size: 36))
                                 .foregroundColor(.secCol)
                             Text("\(course.average.roundedGrade())%")
@@ -159,7 +162,7 @@ struct CourseHeaderCard: View {
                                 .fontWeight(.bold)
                                 .transition(.move(edge: .trailing).combined(with: .opacity))
                             VStack {
-                                Text(course.phantomAverage.averageToGrade())
+                                Text(course.phantomAverage.averageToGrade(settings: viewModel.userSettings))
                                     .font(.custom("ProductSans-Bold", size: 36))
                                     .foregroundColor(.secCol)
                                 Text("\(course.phantomAverage.roundedGrade())%")
@@ -272,5 +275,6 @@ struct GradeCard: View {
     )
     NavigationStack {
         CourseDetailView(course: $c)
+            .environmentObject(gradesViewModel())
     }
 }

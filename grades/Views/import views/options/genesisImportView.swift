@@ -135,9 +135,10 @@ struct genesisImportView: View {
                     ForEach($webVM.ccc) { $course in
                         NavigationLink {
                             courseImportPreviewView(course: $course)
+                                .environmentObject(gradesVm)
                         } label: {
                             ClassGradeBlock(classGrade: $course)
-                                .environmentObject(gradesViewModel())
+                                .environmentObject(gradesVm)
                         }
                         .padding()
                     }

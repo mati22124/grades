@@ -49,6 +49,31 @@ class AddGradeViewModel: ObservableObject {
         
         try coursesManager.shared.setCourse(data: course)
     }
+    
+    func saveGradeWithWeight(_ course: inout course, weight: Double, isPhan: Bool = false) throws {
+        let newGrade = grade(
+            name: name,
+            points: Double(totalPoints) ?? 0,
+            earned: Double(pointsEarned) ?? 0,
+            weight: weight,
+            date: date,
+            category: category,
+            isPhantom: isPhan
+        )
+        
+        if !course.isPoints {
+            if let ind = course.categories.firstIndex(where: { $0.name == category }) {
+                course.categories[ind].grades.append(newGrade)
+            } else {
+                print("couldnt find category")
+            }
+        }
+                
+        course.grades.append(newGrade)
+        
+        
+        try coursesManager.shared.setCourse(data: course)
+    }
 }
 
 class editGradeViewModel: ObservableObject {

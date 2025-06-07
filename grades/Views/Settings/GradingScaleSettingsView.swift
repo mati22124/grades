@@ -23,7 +23,8 @@ struct GradingScaleSettingsView: View {
                         // Grading Options Section
                         VStack(spacing: 16) {
                             Text("Grading Options")
-                                .modifier(textStyle(size: 20))
+                                .font(.custom("ProductSans-Regular", size: 20))
+                                .foregroundColor(.secCol)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                             
@@ -36,7 +37,8 @@ struct GradingScaleSettingsView: View {
                             .padding(.horizontal)
                             
                             Text("When enabled, percentages will be rounded to the nearest whole number before calculating letter grades")
-                                .modifier(textStyle(size: 14))
+                                .font(.custom("ProductSans-Regular", size: 14))
+                                .foregroundColor(.secCol)
                                 .opacity(0.7)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
@@ -45,7 +47,8 @@ struct GradingScaleSettingsView: View {
                         // Grade Scale Section
                         VStack(spacing: 16) {
                             Text("Grade Scale (Minimum Percentage)")
-                                .modifier(textStyle(size: 20))
+                                .font(.custom("ProductSans-Regular", size: 20))
+                                .foregroundColor(.secCol)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                             
@@ -66,7 +69,8 @@ struct GradingScaleSettingsView: View {
                             .padding(.horizontal)
                             
                             Text("Enter the minimum percentage required for each letter grade. Grades below D- will be F.")
-                                .modifier(textStyle(size: 14))
+                                .font(.custom("ProductSans-Regular", size: 14))
+                                .foregroundColor(.secCol)
                                 .opacity(0.7)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)

@@ -11,6 +11,7 @@ struct CourseDetailsInputView: View {
     @Binding var courses: [course]
     @State private var markingPeriod: String = ""
     @State private var year: String = ""
+    @State private var credits: String = ""
     @State private var teacherNames: [String: String] = [:]
     @Environment(\.dismiss) private var dismiss
     
@@ -23,7 +24,7 @@ struct CourseDetailsInputView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Enter the marking period number (1-4) and course start year")
+                        Text("Enter the marking period number (1-4), course start year, and credits")
                             .font(.custom("ProductSans-Bold", size: 16))
                             .foregroundColor(.secCol)
                             .padding(.bottom, 8)
@@ -59,6 +60,25 @@ struct CourseDetailsInputView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(.white)
                                 .keyboardType(.numberPad)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Credits")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            TextField("e.g. 1.0", text: $credits)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
+                                .foregroundColor(.white)
+                                .keyboardType(.decimalPad)
+                            
+                            Text("Note: Individual course credits can be edited later for science courses with more credits")
+                                .font(.custom("ProductSans-Regular", size: 12))
+                                .foregroundColor(.secCol.opacity(0.6))
+                                .padding(.top, 4)
                         }
                     }
                     .padding(.horizontal)
@@ -127,9 +147,12 @@ struct CourseDetailsInputView: View {
     private func updateCoursesAndComplete() {
         guard let mp = Int(markingPeriod), let yr = Int(year) else { return }
         
+        let courseCredits = Double(credits)
+        
         for index in courses.indices {
             courses[index].markingPeriod = mp
             courses[index].year = yr
+            courses[index].credits = courseCredits
             if let teacherName = teacherNames[courses[index].id], !teacherName.isEmpty {
                 courses[index].teacher = teacherName
             }

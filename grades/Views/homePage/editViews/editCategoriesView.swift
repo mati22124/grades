@@ -24,19 +24,18 @@ struct editCategoriesView: View {
         ZStack {
             Color.primaryCol.ignoresSafeArea()
             ScrollView {
-                VStack {
+                VStack(spacing: 12) {
                     ForEach($vm.categories, id: \.self) { $cat in
                         singleCategoryView(category: $cat, ctd: $ctd, showDeleteAlert: $showDeleteAlert)
-                            .padding(.horizontal)
-                            .padding(.vertical, 5)
+                            .padding(.horizontal, 20)
                     }
                     
                     if !vm.isValid {
                         Text("Weights must sum to 100%!")
-                            .modifier(textStyle(size: 16))
+                            .font(.custom("ProductSans-Bold", size: 16))
+                            .foregroundColor(.red)
+                            .padding(.top, 10)
                     }
-                    
-                    Spacer()
                     
                     Button {
                         do {
@@ -46,98 +45,174 @@ struct editCategoriesView: View {
                             print("coulnt save categories: \(error)")
                         }
                     } label: {
-                        Text("Save Categories")
-                            .font(.custom("ProductSans-Bold", size: 18))
-                            .foregroundColor(.secCol)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(vm.isValid ? .terCol : .gray)
-                            .cornerRadius(12)
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Save Categories")
+                                .font(.custom("ProductSans-Bold", size: 16))
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(vm.isValid ? Color.terCol : Color.gray)
+                        .cornerRadius(10)
                     }
                     .disabled(!vm.isValid)
-                    .padding()
+                    .padding(.horizontal, 20)
+                    .padding(.bottom)
                 }
-                .navigationTitle("Edit Categories")
-                .toolbar {
-                    Button {
-                        vm.categories.append(category(name: "New Category", grades: [], weight: 1.0))
-                        print(vm.categories)
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(.secCol)
-                    }
-                }
-                .alert("Confirm delete", isPresented: $showDeleteAlert) {
-                    Button("Delete", role: .destructive) {
-                        vm.deleteCategory(catToDelete: ctd)
-                        ctd = nil
-                    }
-                    Button("Cancel", role: .cancel) {
-                        ctd = nil
-                    }
-                } message: {
-                    Text("Are you sure you want to delete the \(ctd?.name ?? "NOT WORKING DONT DELETE") category? When saved, all grades inside the category will be deleted.")
-                }
+                .padding(.top, 10)
             }
+        }
+        .navigationTitle("Edit Categories")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleTextColor(.secCol)
+        .toolbar {
+            Button {
+                vm.categories.append(category(name: "New Category", grades: [], weight: 0.1))
+                print(vm.categories)
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundStyle(.terCol)
+            }
+        }
+        .alert("Confirm delete", isPresented: $showDeleteAlert) {
+            Button("Delete", role: .destructive) {
+                vm.deleteCategory(catToDelete: ctd)
+                ctd = nil
+            }
+            Button("Cancel", role: .cancel) {
+                ctd = nil
+            }
+        } message: {
+            Text("Are you sure you want to delete the \(ctd?.name ?? "NOT WORKING DONT DELETE") category? When saved, all grades inside the category will be deleted.")
         }
     }
 }
 
 struct singleCategoryView: View {
     @Binding var category: category
-    @State private var weightValue: Double // Add this state variable
+    @State private var weightValue: Double
+    @State private var weightPercentage: String
 
     @Binding var ctd: category?
     @Binding var showDeleteAlert: Bool
     
     init(category: Binding<category>, ctd: Binding<category?>, showDeleteAlert: Binding<Bool>) {
         self._category = category
-        self._weightValue = State(initialValue: category.wrappedValue.weight)
+        let initialWeight = category.wrappedValue.weight
+        self._weightValue = State(initialValue: initialWeight)
+        self._weightPercentage = State(initialValue: String(format: "%.0f", initialWeight * 100))
         self._ctd = ctd
         self._showDeleteAlert = showDeleteAlert
     }
     
     var body: some View {
-        VStack {
-            ZStack {
-                
+        VStack(spacing: 12) {
+            HStack {
                 Text(category.name)
-                    .modifier(textStyle(size: 22))
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .font(.custom("ProductSans-Bold", size: 22))
+                    .foregroundColor(.secCol)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     ctd = category
                     showDeleteAlert = true
                 } label: {
-                    Image(systemName: "trash")
+                    Image(systemName: "trash.fill")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 20))
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.horizontal, 5)
-                
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
             
-            Text("Weight: \(weightValue * 100, specifier: "%.2f")%")
-                .modifier(textStyle(size: 15))
-                .frame(alignment: .center)
-
-            Slider(value: $weightValue, in: 0...1, step: 0.01) { _ in
-                category.weight = weightValue
+            VStack(spacing: 16) {
+                // Weight display
+                Text("Weight: \(Int(weightValue * 100))%")
+                    .font(.custom("ProductSans-Bold", size: 18))
+                    .foregroundColor(.secCol)
+                
+                // Slider
+                Slider(value: $weightValue, in: 0...1, step: 0.01) { _ in
+                    category.weight = weightValue
+                    weightPercentage = String(format: "%.0f", weightValue * 100)
+                }
+                .tint(Color.terCol)
+                .padding(.horizontal)
+                
+                // Increment/Decrement buttons
+                HStack(spacing: 8) {
+                    // Decrement buttons
+                    Button(action: { adjustWeight(-10) }) {
+                        Text("-10")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.red.opacity(0.8))
+                            .cornerRadius(6)
+                    }
+                    
+                    Button(action: { adjustWeight(-5) }) {
+                        Text("-5")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.red.opacity(0.6))
+                            .cornerRadius(6)
+                    }
+                    
+                    Button(action: { adjustWeight(-1) }) {
+                        Text("-1")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.red.opacity(0.4))
+                            .cornerRadius(6)
+                    }
+                    
+                    // Increment buttons
+                    Button(action: { adjustWeight(1) }) {
+                        Text("+1")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.green.opacity(0.4))
+                            .cornerRadius(6)
+                    }
+                    
+                    Button(action: { adjustWeight(5) }) {
+                        Text("+5")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.green.opacity(0.6))
+                            .cornerRadius(6)
+                    }
+                    
+                    Button(action: { adjustWeight(10) }) {
+                        Text("+10")
+                            .font(.custom("ProductSans-Bold", size: 12))
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 30)
+                            .background(Color.green.opacity(0.8))
+                            .cornerRadius(6)
+                    }
+                }
             }
-            .tint(Color.terCol)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
         }
-        .padding()
-        .background(Color.white.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-
+        .background(Color.black.opacity(0.3))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
-}
-
-struct textStyle: ViewModifier {
-    let size: CGFloat
-    func body(content: Content) -> some View {
-        content
-            .font(.custom("ProductSans-Regular", size: size))
-            .foregroundColor(.secCol)
+    
+    private func adjustWeight(_ change: Int) {
+        let newPercentage = (weightValue * 100) + Double(change)
+        let clampedPercentage = min(100, max(0, newPercentage))
+        weightValue = clampedPercentage / 100.0
+        category.weight = weightValue
+        weightPercentage = String(format: "%.0f", clampedPercentage)
     }
 }
 

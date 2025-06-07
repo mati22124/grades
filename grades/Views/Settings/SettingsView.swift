@@ -33,6 +33,7 @@ struct SettingsView: View {
                             try? authManager.shared.signOut()
                             coursesManager.shared.removeListener()
                             settingsManager.shared.removeListener()
+                            finalGradesManager.shared.removeListener()
                             showSignInView = true
                         } label: {
                             SettingsButtonView(
@@ -54,7 +55,8 @@ struct SettingsView: View {
                    
                         VStack(spacing: 10) {
                             Text("Bug Reporting")
-                                .modifier(textStyle(size: 20))
+                                .font(.custom("ProductSans-Regular", size: 20))
+                                .foregroundColor(.secCol)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                             Button {
@@ -78,7 +80,8 @@ struct SettingsView: View {
                             }
                             
                             Text("Shake to report a bug!")
-                                .modifier(textStyle(size: 15))
+                                .font(.custom("ProductSans-Regular", size: 15))
+                                .foregroundColor(.secCol)
                         }
                         .padding(.vertical, 10)
                     }
@@ -96,6 +99,7 @@ struct SettingsView: View {
                 try? authManager.shared.deleteAccount()
                 coursesManager.shared.removeListener()
                 settingsManager.shared.removeListener()
+                finalGradesManager.shared.removeListener()
                 showSignInView = true
             }
             Button("Cancel", role: .cancel) { }

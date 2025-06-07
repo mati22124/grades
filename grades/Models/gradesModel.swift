@@ -21,6 +21,7 @@ class course: Codable, Identifiable, Equatable {
     var id: String
     var markingPeriod: Int?
     var year: Int?
+    var credits: Double?
     
     // add func vars for average
     var average: Double {
@@ -51,31 +52,34 @@ class course: Codable, Identifiable, Equatable {
         }
     }
     
-    init(name: String, teacher: String, isPoints: Bool) {
+    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil) {
         self.name = name
         self.grades = []
         self.categories = []
         self.isPoints = isPoints
         self.teacher = teacher
         self.id = UUID().uuidString
+        self.credits = credits
     }
     
-    init(name: String, teacher: String, isPoints: Bool, grades: [grade]) {
+    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil) {
         self.name = name
         self.grades = grades
         self.categories = []
         self.isPoints = isPoints
         self.teacher = teacher
         self.id = UUID().uuidString
+        self.credits = credits
     }
     
-    init(name: String, teacher: String, grades: [grade], categories: [category]) {
+    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil) {
         self.name = name
         self.grades = grades
         self.categories = categories
         self.isPoints = false
         self.teacher = teacher
         self.id = UUID().uuidString
+        self.credits = credits
     }
 }
 
@@ -151,5 +155,26 @@ struct category: Codable, Identifiable, Equatable, Hashable {
         let x = grades.reduce(0, { $0 + ($1.earned * $1.weight) }) / grades.reduce(0, { $0 + ($1.points * $1.weight) })
         if x.isNaN { return 0 }
         return x*weight*100
+    }
+}
+
+// Final grade from previous years - just stores the letter grade
+struct finalGrade: Codable, Identifiable, Equatable {
+    var name: String // Course name
+    var teacher: String
+    var letterGrade: String // A+, A, A-, B+, etc.
+    var year: Int
+    var markingPeriod: Int?
+    var credits: Double
+    var id: String
+    
+    init(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int? = nil, credits: Double) {
+        self.name = name
+        self.teacher = teacher
+        self.letterGrade = letterGrade
+        self.year = year
+        self.markingPeriod = markingPeriod
+        self.credits = credits
+        self.id = UUID().uuidString
     }
 }

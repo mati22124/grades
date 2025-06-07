@@ -18,6 +18,7 @@ import SwiftUI
 
 struct courseImportPreviewView: View {
     @Binding var course: course
+    @EnvironmentObject var viewModel: gradesViewModel
     
     @State var menuIsVisible: Bool = false
         
@@ -29,6 +30,7 @@ struct courseImportPreviewView: View {
                 VStack(spacing: 15) {
                     // Header Card
                     CourseHeaderCard(course: $course, isShowingPhantom: .constant(false), isPreview: true)
+                        .environmentObject(viewModel)
                     
                     // phantom assignments
                     // normal assignments
@@ -71,4 +73,5 @@ struct courseImportPreviewView: View {
         ]
     )
     courseImportPreviewView(course: $c)
+        .environmentObject(gradesViewModel())
 }

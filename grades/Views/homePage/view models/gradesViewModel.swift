@@ -57,6 +57,12 @@ final class gradesViewModel: ObservableObject {
         try? publishCourses()
     }
     
+    func addCourseObject(_ newCourse: course) throws {
+        guard let _ = user else { throw authError.noUser }
+        courses.append(newCourse)
+        try publishCourses()
+    }
+    
     func saveCourse(name: String, teacher: String, isPoints: Bool, ocourse: course) throws {
         if name.isEmpty || teacher.isEmpty { throw coursesError.courseEmpty }
         guard let _ = user else { throw authError.noUser }

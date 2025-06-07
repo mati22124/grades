@@ -13,7 +13,13 @@ struct addCourseView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var viewModel: gradesViewModel
     
-    @State private var courseInfo = CourseInfo()
+    @State private var courseName: String = ""
+    @State private var courseTeacher: String = ""
+    @State private var isPointsBased: Bool = false
+    @State private var creditsString: String = ""
+    @State private var markingPeriodString: String = ""
+    @State private var yearString: String = ""
+    
     @State private var isSubmitting = false
     @State private var errorMessage: String?
     @State private var showError = false
@@ -21,18 +27,145 @@ struct addCourseView: View {
     // MARK: - Body
     var body: some View {
         ZStack {
-            Color.primaryCol
-                .ignoresSafeArea()
+            Color.primaryCol.ignoresSafeArea()
             
-            ScrollView {
+            GeometryReader { _ in
                 VStack(spacing: 20) {
-                    courseFormFields
-                    addCourseButton
-                    Spacer(minLength: 20)
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Course Name")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            TextField("Course Name", text: $courseName)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, 10)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Course Teacher")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            TextField("Course Teacher", text: $courseTeacher)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
+                                .foregroundColor(.white)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Credits")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            TextField("e.g. 1.0", text: $creditsString)
+                                .font(.custom("ProductSans-Regular", size: 16))
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
+                                .foregroundColor(.white)
+                                .keyboardType(.decimalPad)
+                        }
+                        
+                        // Marking Period and Year
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Marking Period")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                TextField("e.g. 1, 2, 3, 4", text: $markingPeriodString)
+                                    .font(.custom("ProductSans-Regular", size: 16))
+                                    .padding()
+                                    .background(Color.black.opacity(0.3))
+                                    .cornerRadius(10)
+                                    .foregroundColor(.white)
+                                    .keyboardType(.numberPad)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Year")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                TextField("e.g. 2024", text: $yearString)
+                                    .font(.custom("ProductSans-Regular", size: 16))
+                                    .padding()
+                                    .background(Color.black.opacity(0.3))
+                                    .cornerRadius(10)
+                                    .foregroundColor(.white)
+                                    .keyboardType(.numberPad)
+                            }
+                        }
+                        
+                        HStack {
+                            Text("Points-based Course")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            Spacer()
+                            
+                            Toggle(isOn: $isPointsBased) {
+                                Text("")
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    Spacer(minLength: 40)
+                    
+                    Button(action: {
+                        Task {
+                            do {
+                                isSubmitting = true
+                                if courseName.isEmpty || courseTeacher.isEmpty {
+                                    throw coursesError.courseEmpty
+                                }
+                                
+                                let newCourse = course(name: courseName, teacher: courseTeacher, isPoints: isPointsBased)
+                                newCourse.credits = Double(creditsString)
+                                newCourse.markingPeriod = Int(markingPeriodString)
+                                newCourse.year = Int(yearString)
+                                
+                                try viewModel.addCourseObject(newCourse)
+                                dismiss()
+                                isSubmitting = false
+                            } catch coursesError.courseEmpty {
+                                isSubmitting = false
+                                errorMessage = "Please fill out all fields before adding the course."
+                                showError = true
+                            } catch {
+                                isSubmitting = false
+                                errorMessage = "An error occurred while adding the course: \(error.localizedDescription)"
+                                showError = true
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text(isSubmitting ? "Adding..." : "Add Course")
+                                .font(.custom("ProductSans-Bold", size: 16))
+                        }
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(isSubmitting ? Color.gray : Color.terCol)
+                        .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    .disabled(isSubmitting || courseName.isEmpty || courseTeacher.isEmpty)
                 }
-                .padding(.horizontal, 20)
             }
         }
+        .removeFocusOnTap()
         .navigationTitle("Add Course")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarTitleTextColor(.secCol)
@@ -41,115 +174,6 @@ struct addCourseView: View {
         }, message: {
             Text(errorMessage ?? "An unknown error occurred")
         })
-    }
-    
-    // MARK: - Course Form Fields
-    private var courseFormFields: some View {
-        VStack(spacing: 15) {
-            CustomTextField(
-                text: $courseInfo.name,
-                placeholder: "Course Name",
-                icon: Image(systemName: "book.fill")
-            )
-            
-            CustomTextField(
-                text: $courseInfo.teacher,
-                placeholder: "Course Teacher",
-                icon: Image(systemName: "person.fill")
-            )
-            
-            Toggle(isOn: $courseInfo.isPointsBased) {
-                Label {
-                    Text("Points-based Course")
-                        .foregroundStyle(.secCol)
-                } icon: {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(courseInfo.isPointsBased ? .terCol : .gray)
-                }
-            }
-            .toggleStyle(SwitchToggleStyle(tint: .terCol))
-        }
-        .font(.custom("ProductSans-Regular", size: 16))
-    }
-    
-    // MARK: - Add Course Button
-    private var addCourseButton: some View {
-        Button(action: submitCourse) {
-            HStack {
-                if isSubmitting {
-                    ProgressView()
-                        .tint(.secCol)
-                }
-                Text(isSubmitting ? "Adding..." : "Add Course")
-                    .font(.custom("ProductSans-Bold", size: 18))
-            }
-            .frame(maxWidth: .infinity)
-            .foregroundColor(isSubmitting ? .gray : .secCol)
-            .padding()
-            .background(Color.white.opacity(0.075))
-            .clipShape(Capsule())
-            .shadow(
-                color: Color.black.opacity(0.1),
-                radius: 5
-            )
-        }
-        .disabled(isSubmitting)
-    }
-    
-    // MARK: - Actions
-    private func submitCourse() {
-        Task {
-            isSubmitting = true
-            do {
-                try viewModel.addCourse(
-                    name: courseInfo.name,
-                    teacher: courseInfo.teacher,
-                    isPoints: courseInfo.isPointsBased
-                )
-                dismiss()
-            } catch coursesError.courseEmpty {
-                errorMessage = "Please fill out all fields before adding the course."
-                showError = true
-            } catch {
-                errorMessage = "An error occurred while adding the course: \(error.localizedDescription)"
-                showError = true
-            }
-            isSubmitting = false
-        }
-    }
-}
-
-// MARK: - Supporting Types
-private struct CourseInfo {
-    var name: String = ""
-    var teacher: String = ""
-    var isPointsBased: Bool = false
-}
-
-// MARK: - Custom TextField
-private struct CustomTextField: View {
-    let text: Binding<String>
-    let placeholder: String
-    let icon: Image
-    
-    var body: some View {
-        HStack {
-            icon
-                .foregroundStyle(.terCol)
-                .padding(.leading)
-            
-            TextField("", text: text, prompt: Text(placeholder).foregroundStyle(.secCol))
-                .padding(.vertical, 14)
-                .autocapitalization(.none)
-                .autocorrectionDisabled()
-                .foregroundStyle(.white)
-                .font(.custom("ProductSans-Regular", size: 16))
-                .tint(.white)
-        }
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.1))
-        )
     }
 }
 

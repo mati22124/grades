@@ -11,25 +11,30 @@ struct classesView: View {
     @Binding var showSignInView: Bool
     
     @EnvironmentObject var viewModel: gradesViewModel
+    @StateObject private var finalGradesVM = finalGradesViewModel()
     
     @State private var didAppear: Bool = false
     @State private var menuIsPresentedCourse: Bool = false
     @State private var showingAlert: Bool = false
     
     @State private var courseToDelete: course? = nil
+    @State private var finalGradeToDelete: finalGrade? = nil
+    @State private var showingFinalGradeAlert: Bool = false
     @State private var selectedMarkingPeriod: Int? = nil
     @State private var selectedYear: Int? = nil
     
-    // Get unique marking periods from courses
+    // Get unique marking periods from courses and final grades
     var availableMarkingPeriods: [Int] {
-        let periods = viewModel.courses.compactMap { $0.markingPeriod }
-        return Array(Set(periods)).sorted()
+        let coursePeriods = viewModel.courses.compactMap { $0.markingPeriod }
+        let finalGradePeriods = finalGradesVM.finalGrades.compactMap { $0.markingPeriod }
+        return Array(Set(coursePeriods + finalGradePeriods)).sorted()
     }
     
-    // Get unique years from courses
+    // Get unique years from courses and final grades
     var availableYears: [Int] {
-        let years = viewModel.courses.compactMap { $0.year }
-        return Array(Set(years)).sorted()
+        let courseYears = viewModel.courses.compactMap { $0.year }
+        let finalGradeYears = finalGradesVM.finalGrades.map { $0.year }
+        return Array(Set(courseYears + finalGradeYears)).sorted()
     }
     
     // Filter courses based on selected marking period and year
@@ -41,6 +46,74 @@ struct classesView: View {
         }
     }
     
+    // Filter final grades based on selected marking period and year
+    var filteredFinalGrades: [finalGrade] {
+        finalGradesVM.finalGrades.filter { finalGrade in
+            let matchesMP = selectedMarkingPeriod == nil || finalGrade.markingPeriod == selectedMarkingPeriod
+            let matchesYear = selectedYear == nil || finalGrade.year == selectedYear
+            return matchesMP && matchesYear
+        }
+    }
+    
+    // Group courses and final grades by year and marking period
+    var groupedItems: [(key: String, year: Int, markingPeriod: Int, courses: [course], finalGrades: [finalGrade])] {
+        // Get all unique year-mp combinations from both courses and final grades
+        var allKeys = Set<String>()
+        
+        filteredCourses.forEach { course in
+            allKeys.insert("\(course.year ?? 0)-\(course.markingPeriod ?? 0)")
+        }
+        
+        filteredFinalGrades.forEach { finalGrade in
+            if let mp = finalGrade.markingPeriod {
+                allKeys.insert("\(finalGrade.year)-\(mp)")
+            } else {
+                allKeys.insert("\(finalGrade.year)-0")
+            }
+        }
+        
+        // Group courses and final grades by their keys
+        let groupedCourses = Dictionary(grouping: filteredCourses) { course in
+            "\(course.year ?? 0)-\(course.markingPeriod ?? 0)"
+        }
+        
+        let groupedFinalGrades = Dictionary(grouping: filteredFinalGrades) { finalGrade in
+            if let mp = finalGrade.markingPeriod {
+                return "\(finalGrade.year)-\(mp)"
+            } else {
+                return "\(finalGrade.year)-0" // Use 0 for academic year only
+            }
+        }
+        
+        // Create combined groups
+        return allKeys.map { key in
+            let components = key.split(separator: "-")
+            let year = Int(components[0]) ?? 0
+            let mp = Int(components[1]) ?? 0
+            return (
+                key: key,
+                year: year,
+                markingPeriod: mp,
+                courses: groupedCourses[key] ?? [],
+                finalGrades: groupedFinalGrades[key] ?? []
+            )
+        }
+        .sorted { lhs, rhs in
+            if lhs.year != rhs.year {
+                return lhs.year > rhs.year // Higher years first
+            } else {
+                // Within same year: MP 0 (full year) first, then MP 1, 2, 3, etc.
+                if lhs.markingPeriod == 0 {
+                    return true
+                } else if rhs.markingPeriod == 0 {
+                    return false
+                } else {
+                    return lhs.markingPeriod > rhs.markingPeriod
+                }
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -49,23 +122,54 @@ struct classesView: View {
                 VStack(spacing: 20) {
                     ScrollView {
                         VStack(spacing: 12) {
-                            if (filteredCourses.isEmpty) {
+                            if (filteredCourses.isEmpty && filteredFinalGrades.isEmpty) {
                                 Text("No Courses")
                                     .tint(.secCol)
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .font(.custom("ProductSans-Regular", size: 25))
                             }
-                            ForEach(filteredCourses) { course in
-                                let index = viewModel.courses.firstIndex(where: { $0.id == course.id })!
-                                NavigationLink {
-                                    CourseDetailView(course: $viewModel.courses[index])
-                                } label: {
-                                    SwipeToDeleteView(content: {
-                                        ClassGradeBlock(classGrade: $viewModel.courses[index])
-                                            .environmentObject(viewModel)
-                                    }, onDelete: {
-                                        courseToDelete = viewModel.courses[index]
-                                    }, onEdit: editCourseView(originalCourse: $viewModel.courses[index]).environmentObject(viewModel))
+                            ForEach(groupedItems, id: \.key) { group in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    // Section header
+                                    HStack {
+                                        Text(String(group.year)+"-"+String(group.year+1))
+                                            .font(.custom("ProductSans-Bold", size: 20))
+                                            .foregroundColor(.secCol)
+                                        if group.markingPeriod != 0 {
+                                            Text("MP \(group.markingPeriod)")
+                                                .font(.custom("ProductSans-Regular", size: 18))
+                                                .foregroundColor(.secCol.opacity(0.8))
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.top, group.key == groupedItems.first?.key ? 0 : 10)
+                                    
+                                    // Regular courses in this group
+                                    ForEach(group.courses) { course in
+                                        let index = viewModel.courses.firstIndex(where: { $0.id == course.id })!
+                                        NavigationLink {
+                                            CourseDetailView(course: $viewModel.courses[index])
+                                                .environmentObject(viewModel)
+                                        } label: {
+                                            SwipeToDeleteView(content: {
+                                                ClassGradeBlock(classGrade: $viewModel.courses[index])
+                                                    .environmentObject(viewModel)
+                                            }, onDelete: {
+                                                courseToDelete = viewModel.courses[index]
+                                            }, onEdit: editCourseView(originalCourse: $viewModel.courses[index]).environmentObject(viewModel))
+                                        }
+                                    }
+                                    
+                                    // Final grades in this group
+                                    ForEach(group.finalGrades) { finalGrade in
+                                        SwipeToDeleteView(content: {
+                                            FinalGradeBlock(finalGrade: finalGrade)
+                                        }, onDelete: {
+                                            finalGradeToDelete = finalGrade
+                                            showingFinalGradeAlert = true
+                                        }, onEdit: editFinalGradeView(originalFinalGrade: finalGrade))
+                                    }
                                 }
                             }
                         }
@@ -102,6 +206,19 @@ struct classesView: View {
                 } message: {
                     Text("Are you sure you want to delete all \(filteredCourses.count) courses? This action cannot be undone.")
                 }
+                .alert("Confirm delete final grade", isPresented: $showingFinalGradeAlert) {
+                    Button("Delete", role: .destructive) {
+                        if let finalGrade = finalGradeToDelete {
+                            try? finalGradesVM.removeFinalGrade(finalGrade)
+                            finalGradeToDelete = nil
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {
+                        finalGradeToDelete = nil
+                    }
+                } message: {
+                    Text("Are you sure you want to delete \(finalGradeToDelete?.name ?? "this final grade")?")
+                }
                 .frame(maxWidth: .infinity)
                 .ignoresSafeArea(.keyboard)
                 .padding(.horizontal, 20)
@@ -109,6 +226,7 @@ struct classesView: View {
                 
                 menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
                     menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill"),
+                    menuItem(destination: AddFinalGradeView(), optionName: "Add Final Grade", icon: "graduationcap.fill"),
                     menuItem(action: {
                         viewModel.showDeleteAllConfirmation = true
                     }, optionName: "Delete All", icon: "trash.fill")
@@ -122,6 +240,7 @@ struct classesView: View {
                     Task {
                         do {
                             try await viewModel.loadCurrentUser()
+                            await finalGradesVM.loadFinalGrades()
                             didAppear = true
                         } catch {
                             print("error: \(error)")
@@ -134,6 +253,7 @@ struct classesView: View {
                     Task {
                         do {
                             try await viewModel.loadCurrentUser()
+                            await finalGradesVM.loadFinalGrades()
                             didAppear = true
                         } catch {
                             print("error: \(error)")
@@ -142,6 +262,7 @@ struct classesView: View {
                 } else if newValue {
                     didAppear = false
                     viewModel.courses = []
+                    finalGradesVM.finalGrades = []
                 }
             })
             .navigationTitle("Courses")
@@ -254,7 +375,7 @@ struct CourseFilterMenu: View {
                         selectedYear = year
                     } label: {
                         HStack {
-                            Text("\(year)")
+                            Text(String(year)+"-"+String(year+1))
                             Spacer()
                             if selectedYear == year {
                                 Image(systemName: "checkmark")
@@ -268,6 +389,41 @@ struct CourseFilterMenu: View {
                 .foregroundColor(.terCol)
                 .font(.system(size: 18))
         }
+    }
+}
+
+struct FinalGradeBlock: View {
+    let finalGrade: finalGrade
+    
+    var body: some View {
+        HStack(alignment: .center) {
+            VStack {
+                Text(finalGrade.name)
+                    .font(.custom("ProductSans-Bold", size: 22))
+                    .foregroundColor(.secCol)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if finalGrade.teacher != "" {
+                    Text(finalGrade.teacher)
+                        .font(.custom("ProductSans-Regular", size: 13))
+                        .foregroundColor(.secCol)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            
+            Spacer()
+            Text(finalGrade.letterGrade)
+                .font(.custom("ProductSans-Bold", size: 30))
+                .foregroundColor(.secCol)
+        
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.terCol)
+            .cornerRadius(5)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+        }
+        .padding()
+        .background(Color.black.opacity(0.3))
+        .cornerRadius(16)
     }
 }
 
