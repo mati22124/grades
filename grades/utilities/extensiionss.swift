@@ -92,6 +92,11 @@ extension Double {
             return "F"
         }
     }
+    
+    func averageToGPA(courseLevel: CourseLevel?, settings: UserSettings? = nil) -> Double {
+        let letterGrade = averageToGrade(settings: settings)
+        return letterGrade.toGPA(courseLevel: courseLevel, settings: settings)
+    }
 
 }
 
@@ -148,6 +153,53 @@ extension String {
         case "Sat": return 7
         case "Sun": return 1
         default: return 0  // or throw an error if you prefer
+        }
+    }
+    
+    func toGPA(courseLevel: CourseLevel?, settings: UserSettings? = nil) -> Double {
+        let gpaScales = settings?.gpaScales ?? GPAScales.defaultScales
+        
+        let scale: GPAScale
+        switch courseLevel {
+        case .AP:
+            scale = gpaScales.apScale
+        case .honors:
+            scale = gpaScales.honorsScale
+        case .CP:
+            scale = gpaScales.cpScale
+        case .none:
+            scale = gpaScales.cpScale // Default to CP scale for unspecified courses
+        }
+        
+        switch self {
+        case "A+":
+            return scale.aPlus
+        case "A":
+            return scale.a
+        case "A-":
+            return scale.aMinus
+        case "B+":
+            return scale.bPlus
+        case "B":
+            return scale.b
+        case "B-":
+            return scale.bMinus
+        case "C+":
+            return scale.cPlus
+        case "C":
+            return scale.c
+        case "C-":
+            return scale.cMinus
+        case "D+":
+            return scale.dPlus
+        case "D":
+            return scale.d
+        case "D-":
+            return scale.dMinus
+        case "F":
+            return scale.f
+        default:
+            return scale.f
         }
     }
 }

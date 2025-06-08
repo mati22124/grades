@@ -17,6 +17,7 @@ struct editFinalGradeView: View {
     @State private var year: Int = Calendar.current.component(.year, from: Date())
     @State private var markingPeriod: Int? = nil
     @State private var credits: Double = 5.0
+    @State private var courseLevel: CourseLevel? = nil
     @State private var isPressed = false
     
     @Environment(\.dismiss) private var dismiss
@@ -66,25 +67,48 @@ struct editFinalGradeView: View {
                                 .autocorrectionDisabled()
                         }
                         
-                        // Final Grade
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Final Grade")
-                                .font(.custom("ProductSans-Bold", size: 14))
-                                .foregroundColor(.secCol.opacity(0.8))
-                            
-                            HStack {
-                                Picker("Letter Grade", selection: $letterGrade) {
-                                    ForEach(letterGrades, id: \.self) { grade in
-                                        Text(grade).tag(grade)
+                        // Final Grade and Course Level
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Final Grade")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                HStack {
+                                    Picker("Letter Grade", selection: $letterGrade) {
+                                        ForEach(letterGrades, id: \.self) { grade in
+                                            Text(grade).tag(grade)
+                                        }
                                     }
+                                    .pickerStyle(.menu)
+                                    .tint(.terCol)
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .pickerStyle(.menu)
-                                .tint(.terCol)
-                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
                             }
-                            .padding()
-                            .background(Color.black.opacity(0.3))
-                            .cornerRadius(10)
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Course Level")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                HStack {
+                                    Picker("Course Level", selection: $courseLevel) {
+                                        Text("None").tag(nil as CourseLevel?)
+                                        ForEach(CourseLevel.allCases, id: \.self) { level in
+                                            Text(level.displayName).tag(level as CourseLevel?)
+                                        }
+                                    }
+                                    .pickerStyle(.menu)
+                                    .tint(.terCol)
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .cornerRadius(10)
+                            }
                         }
                         
                         // Year and Marking Period
@@ -143,6 +167,7 @@ struct editFinalGradeView: View {
                         year = originalFinalGrade.year
                         markingPeriod = originalFinalGrade.markingPeriod
                         credits = originalFinalGrade.credits
+                        courseLevel = originalFinalGrade.courseLevel
                     }
                     
                     Spacer(minLength: 40)
@@ -185,6 +210,7 @@ struct editFinalGradeView: View {
             updatedFinalGrade.year = year
             updatedFinalGrade.markingPeriod = markingPeriod
             updatedFinalGrade.credits = credits
+            updatedFinalGrade.courseLevel = courseLevel
             
             try finalGradesVM.updateFinalGrade(updatedFinalGrade)
             dismiss()

@@ -16,6 +16,7 @@ struct editCourseView: View {
     @State private var creditsString: String = ""
     @State private var markingPeriodString: String = ""
     @State private var yearString: String = ""
+    @State private var courseLevel: CourseLevel? = nil
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: gradesViewModel
@@ -54,18 +55,42 @@ struct editCourseView: View {
                                 .foregroundColor(.white)
                         }
                         
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Credits")
-                                .font(.custom("ProductSans-Bold", size: 14))
-                                .foregroundColor(.secCol.opacity(0.8))
-                            
-                            TextField("e.g. 1.0", text: $creditsString)
-                                .font(.custom("ProductSans-Regular", size: 16))
+                        // Course Level and Credits
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Course Level")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                HStack {
+                                    Picker("Course Level", selection: $courseLevel) {
+                                        Text("None").tag(nil as CourseLevel?)
+                                        ForEach(CourseLevel.allCases, id: \.self) { level in
+                                            Text(level.displayName).tag(level as CourseLevel?)
+                                        }
+                                    }
+                                    .pickerStyle(.menu)
+                                    .tint(.terCol)
+                                    .frame(maxWidth: .infinity)
+                                }
                                 .padding()
                                 .background(Color.black.opacity(0.3))
                                 .cornerRadius(10)
-                                .foregroundColor(.white)
-                                .keyboardType(.decimalPad)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Credits")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                TextField("e.g. 5.0", text: $creditsString)
+                                    .font(.custom("ProductSans-Regular", size: 16))
+                                    .padding()
+                                    .background(Color.black.opacity(0.3))
+                                    .cornerRadius(10)
+                                    .foregroundColor(.white)
+                                    .keyboardType(.decimalPad)
+                            }
                         }
                         
                         // Marking Period and Year
@@ -123,6 +148,7 @@ struct editCourseView: View {
                         if let year = originalCourse.year {
                             yearString = String(year)
                         }
+                        courseLevel = originalCourse.courseLevel
                     }
                     
                     Spacer(minLength: 40)
@@ -134,6 +160,7 @@ struct editCourseView: View {
                                 originalCourse.credits = Double(creditsString)
                                 originalCourse.markingPeriod = Int(markingPeriodString)
                                 originalCourse.year = Int(yearString)
+                                originalCourse.courseLevel = courseLevel
                                 try viewModel.publishCourses()
                                 dismiss()
                                 isPressed = false

@@ -29,6 +29,15 @@ struct SettingsView: View {
                             )
                         }
                         
+                        NavigationLink {
+                            GPAScaleSettingsView()
+                        } label: {
+                            SettingsButtonView(
+                                title: "GPA Scale",
+                                icon: "graduationcap.fill"
+                            )
+                        }
+                        
                         Button {
                             try? authManager.shared.signOut()
                             coursesManager.shared.removeListener()

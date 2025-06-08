@@ -39,7 +39,7 @@ final class settingsManager {
     
     func setUserSettings(settings: UserSettings) async throws {
         let authUser = try authManager.shared.getAuthUser()
-        try await usercollection.document(authUser.uid).collection("settings").document("preferences").setData(from: settings)
+        try usercollection.document(authUser.uid).collection("settings").document("preferences").setData(from: settings)
     }
     
     func updateGradingScale(gradingScale: GradingScale) async throws {

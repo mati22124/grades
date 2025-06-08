@@ -7,6 +7,16 @@
 
 import Foundation
 
+enum CourseLevel: String, Codable, CaseIterable {
+    case AP = "AP"
+    case honors = "Honors/Excel"
+    case CP = "CP"
+    
+    var displayName: String {
+        return self.rawValue
+    }
+}
+
 class course: Codable, Identifiable, Equatable {
     static func == (lhs: course, rhs: course) -> Bool {
         lhs.id == rhs.id
@@ -22,6 +32,7 @@ class course: Codable, Identifiable, Equatable {
     var markingPeriod: Int?
     var year: Int?
     var credits: Double?
+    var courseLevel: CourseLevel?
     
     // add func vars for average
     var average: Double {
@@ -52,7 +63,7 @@ class course: Codable, Identifiable, Equatable {
         }
     }
     
-    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil, courseLevel: CourseLevel? = nil) {
         self.name = name
         self.grades = []
         self.categories = []
@@ -60,9 +71,10 @@ class course: Codable, Identifiable, Equatable {
         self.teacher = teacher
         self.id = UUID().uuidString
         self.credits = credits
+        self.courseLevel = courseLevel
     }
     
-    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil, courseLevel: CourseLevel? = nil) {
         self.name = name
         self.grades = grades
         self.categories = []
@@ -70,9 +82,10 @@ class course: Codable, Identifiable, Equatable {
         self.teacher = teacher
         self.id = UUID().uuidString
         self.credits = credits
+        self.courseLevel = courseLevel
     }
     
-    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil) {
+    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil, courseLevel: CourseLevel? = nil) {
         self.name = name
         self.grades = grades
         self.categories = categories
@@ -80,6 +93,7 @@ class course: Codable, Identifiable, Equatable {
         self.teacher = teacher
         self.id = UUID().uuidString
         self.credits = credits
+        self.courseLevel = courseLevel
     }
 }
 
@@ -166,15 +180,17 @@ struct finalGrade: Codable, Identifiable, Equatable {
     var year: Int
     var markingPeriod: Int?
     var credits: Double
+    var courseLevel: CourseLevel?
     var id: String
     
-    init(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int? = nil, credits: Double) {
+    init(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int? = nil, credits: Double, courseLevel: CourseLevel? = nil) {
         self.name = name
         self.teacher = teacher
         self.letterGrade = letterGrade
         self.year = year
         self.markingPeriod = markingPeriod
         self.credits = credits
+        self.courseLevel = courseLevel
         self.id = UUID().uuidString
     }
 }
