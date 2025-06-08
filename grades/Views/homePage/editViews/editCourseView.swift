@@ -17,6 +17,7 @@ struct editCourseView: View {
     @State private var markingPeriodString: String = ""
     @State private var yearString: String = ""
     @State private var courseLevel: CourseLevel? = nil
+    @State private var isCore: Bool = false
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: gradesViewModel
@@ -124,17 +125,32 @@ struct editCourseView: View {
                             }
                         }
                         
-                        HStack {
-                            Text("Points-based Course")
-                                .font(.custom("ProductSans-Bold", size: 14))
-                                .foregroundColor(.secCol.opacity(0.8))
-                            
-                            Spacer()
-                            
-                            Toggle(isOn: $originalCourse.isPoints) {
-                                Text("")
+                        VStack(spacing: 16) {
+                            HStack {
+                                Text("Points-based Course")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                Spacer()
+                                
+                                Toggle(isOn: $originalCourse.isPoints) {
+                                    Text("")
+                                }
+                                .toggleStyle(SwitchToggleStyle(tint: .terCol))
                             }
-                            .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                            
+                            HStack {
+                                Text("Core Class")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                Spacer()
+                                
+                                Toggle(isOn: $isCore) {
+                                    Text("")
+                                }
+                                .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -149,6 +165,7 @@ struct editCourseView: View {
                             yearString = String(year)
                         }
                         courseLevel = originalCourse.courseLevel
+                        isCore = originalCourse.isCore ?? false
                     }
                     
                     Spacer(minLength: 40)
@@ -161,6 +178,7 @@ struct editCourseView: View {
                                 originalCourse.markingPeriod = Int(markingPeriodString)
                                 originalCourse.year = Int(yearString)
                                 originalCourse.courseLevel = courseLevel
+                                originalCourse.isCore = isCore
                                 try viewModel.publishCourses()
                                 dismiss()
                                 isPressed = false

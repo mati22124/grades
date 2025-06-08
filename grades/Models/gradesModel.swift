@@ -33,6 +33,7 @@ class course: Codable, Identifiable, Equatable {
     var year: Int?
     var credits: Double?
     var courseLevel: CourseLevel?
+    var isCore: Bool?
     
     // add func vars for average
     var average: Double {
@@ -63,7 +64,7 @@ class course: Codable, Identifiable, Equatable {
         }
     }
     
-    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil, courseLevel: CourseLevel? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
         self.name = name
         self.grades = []
         self.categories = []
@@ -72,9 +73,10 @@ class course: Codable, Identifiable, Equatable {
         self.id = UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
+        self.isCore = isCore
     }
     
-    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil, courseLevel: CourseLevel? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
         self.name = name
         self.grades = grades
         self.categories = []
@@ -83,9 +85,10 @@ class course: Codable, Identifiable, Equatable {
         self.id = UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
+        self.isCore = isCore
     }
     
-    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil, courseLevel: CourseLevel? = nil) {
+    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
         self.name = name
         self.grades = grades
         self.categories = categories
@@ -94,6 +97,7 @@ class course: Codable, Identifiable, Equatable {
         self.id = UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
+        self.isCore = isCore
     }
 }
 
@@ -181,9 +185,10 @@ struct finalGrade: Codable, Identifiable, Equatable {
     var markingPeriod: Int?
     var credits: Double
     var courseLevel: CourseLevel?
+    var isCore: Bool?
     var id: String
     
-    init(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int? = nil, credits: Double, courseLevel: CourseLevel? = nil) {
+    init(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int? = nil, credits: Double, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
         self.name = name
         self.teacher = teacher
         self.letterGrade = letterGrade
@@ -191,6 +196,7 @@ struct finalGrade: Codable, Identifiable, Equatable {
         self.markingPeriod = markingPeriod
         self.credits = credits
         self.courseLevel = courseLevel
+        self.isCore = isCore
         self.id = UUID().uuidString
     }
 }

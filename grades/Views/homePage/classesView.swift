@@ -285,6 +285,24 @@ struct ClassGradeBlock: View {
     @Binding var classGrade: course
     @EnvironmentObject var viewModel: gradesViewModel
     
+    private func buildCourseDetailsString(credits: Double?, isCore: Bool?, level: CourseLevel?) -> String {
+        var details: [String] = []
+        
+        if let credits = credits {
+            details.append("\(String(format: "%.1f", credits)) credits")
+        }
+        
+        if isCore == true {
+            details.append("Core")
+        }
+        
+        if let level = level {
+            details.append(level.displayName)
+        }
+        
+        return details.joined(separator: " - ")
+    }
+    
     var body: some View {
         HStack(alignment: .center) {
             VStack {
@@ -296,6 +314,15 @@ struct ClassGradeBlock: View {
                     Text(classGrade.teacher)
                         .font(.custom("ProductSans-Regular", size: 13))
                         .foregroundColor(.secCol)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
+                // Course details
+                let courseDetails = buildCourseDetailsString(credits: classGrade.credits, isCore: classGrade.isCore, level: classGrade.courseLevel)
+                if !courseDetails.isEmpty {
+                    Text(courseDetails)
+                        .font(.custom("ProductSans-Regular", size: 12))
+                        .foregroundColor(.secCol.opacity(0.7))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
@@ -395,6 +422,24 @@ struct CourseFilterMenu: View {
 struct FinalGradeBlock: View {
     let finalGrade: finalGrade
     
+    private func buildCourseDetailsString(credits: Double?, isCore: Bool?, level: CourseLevel?) -> String {
+        var details: [String] = []
+        
+        if let credits = credits {
+            details.append("\(String(format: "%.1f", credits)) credits")
+        }
+        
+        if isCore == true {
+            details.append("Core")
+        }
+        
+        if let level = level {
+            details.append(level.displayName)
+        }
+        
+        return details.joined(separator: " - ")
+    }
+    
     var body: some View {
         HStack(alignment: .center) {
             VStack {
@@ -406,6 +451,15 @@ struct FinalGradeBlock: View {
                     Text(finalGrade.teacher)
                         .font(.custom("ProductSans-Regular", size: 13))
                         .foregroundColor(.secCol)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
+                // Course details
+                let courseDetails = buildCourseDetailsString(credits: finalGrade.credits, isCore: finalGrade.isCore, level: finalGrade.courseLevel)
+                if !courseDetails.isEmpty {
+                    Text(courseDetails)
+                        .font(.custom("ProductSans-Regular", size: 12))
+                        .foregroundColor(.secCol.opacity(0.7))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }

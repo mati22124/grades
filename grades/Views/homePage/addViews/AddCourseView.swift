@@ -20,6 +20,7 @@ struct addCourseView: View {
     @State private var markingPeriodString: String = ""
     @State private var yearString: String = ""
     @State private var courseLevel: CourseLevel? = nil
+    @State private var isCore: Bool = false
     
     @State private var isSubmitting = false
     @State private var errorMessage: String?
@@ -129,17 +130,32 @@ struct addCourseView: View {
                             }
                         }
                         
-                        HStack {
-                            Text("Points-based Course")
-                                .font(.custom("ProductSans-Bold", size: 14))
-                                .foregroundColor(.secCol.opacity(0.8))
-                            
-                            Spacer()
-                            
-                            Toggle(isOn: $isPointsBased) {
-                                Text("")
+                        VStack(spacing: 16) {
+                            HStack {
+                                Text("Points-based Course")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                Spacer()
+                                
+                                Toggle(isOn: $isPointsBased) {
+                                    Text("")
+                                }
+                                .toggleStyle(SwitchToggleStyle(tint: .terCol))
                             }
-                            .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                            
+                            HStack {
+                                Text("Core Class")
+                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                
+                                Spacer()
+                                
+                                Toggle(isOn: $isCore) {
+                                    Text("")
+                                }
+                                .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -154,7 +170,7 @@ struct addCourseView: View {
                                     throw coursesError.courseEmpty
                                 }
                                 
-                                let newCourse = course(name: courseName, teacher: courseTeacher, isPoints: isPointsBased, courseLevel: courseLevel)
+                                let newCourse = course(name: courseName, teacher: courseTeacher, isPoints: isPointsBased, courseLevel: courseLevel, isCore: isCore)
                                 newCourse.credits = Double(creditsString)
                                 newCourse.markingPeriod = Int(markingPeriodString)
                                 newCourse.year = Int(yearString)

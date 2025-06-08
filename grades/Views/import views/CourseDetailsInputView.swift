@@ -13,6 +13,8 @@ struct CourseDetailsInputView: View {
     @State private var year: String = ""
     @State private var credits: String = ""
     @State private var teacherNames: [String: String] = [:]
+    @State private var courseLevels: [String: CourseLevel?] = [:]
+    @State private var isCoreCourses: [String: Bool] = [:]
     @Environment(\.dismiss) private var dismiss
     
     var onComplete: () -> Void
@@ -87,29 +89,86 @@ struct CourseDetailsInputView: View {
                         .background(Color.secCol.opacity(0.2))
                         .padding(.horizontal)
                     
-                    Text("Enter teacher names for each course")
+                    Text("Enter teacher names and course levels")
                         .font(.custom("ProductSans-Bold", size: 16))
                         .foregroundColor(.secCol.opacity(0.8))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     
-                    VStack(spacing: 16) {
+                    VStack(spacing: 20) {
                         ForEach(courses) { course in
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 12) {
                                 Text(course.name)
-                                    .font(.custom("ProductSans-Bold", size: 14))
+                                    .font(.custom("ProductSans-Bold", size: 16))
                                     .foregroundColor(.secCol)
                                 
-                                TextField("Teacher name", text: Binding(
-                                    get: { teacherNames[course.id] ?? "" },
-                                    set: { teacherNames[course.id] = $0 }
-                                ))
-                                .font(.custom("ProductSans-Regular", size: 16))
-                                .padding()
-                                .background(Color.black.opacity(0.3))
-                                .cornerRadius(10)
-                                .foregroundColor(.white)
+                                // Teacher name field
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Teacher")
+                                        .font(.custom("ProductSans-Regular", size: 14))
+                                        .foregroundColor(.secCol.opacity(0.8))
+                                    
+                                    TextField("Teacher name", text: Binding(
+                                        get: { teacherNames[course.id] ?? "" },
+                                        set: { teacherNames[course.id] = $0 }
+                                    ))
+                                    .font(.custom("ProductSans-Regular", size: 16))
+                                    .padding()
+                                    .background(Color.black.opacity(0.3))
+                                    .cornerRadius(10)
+                                    .foregroundColor(.white)
+                                }
+                                
+                                // Course level selector
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Course Level")
+                                        .font(.custom("ProductSans-Regular", size: 14))
+                                        .foregroundColor(.secCol.opacity(0.8))
+                                    
+                                    HStack(spacing: 0) {
+                                        ForEach([nil, CourseLevel.CP, CourseLevel.honors, CourseLevel.AP], id: \.self) { level in
+                                            Button {
+                                                courseLevels[course.id] = level
+                                            } label: {
+                                                Text(level?.displayName ?? "None")
+                                                    .font(.custom("ProductSans-Bold", size: 14))
+                                                    .foregroundColor(courseLevels[course.id] == level ? .primaryCol : .white)
+                                                    .frame(maxWidth: .infinity)
+                                                    .padding(.vertical, 12)
+                                                    .background(
+                                                        courseLevels[course.id] == level ? Color.terCol : Color.black.opacity(0.3)
+                                                    )
+                                            }
+                                        }
+                                    }
+                                    .cornerRadius(10)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.secCol.opacity(0.2), lineWidth: 1)
+                                    )
+                                }
+                                
+                                // Core Class Toggle
+                                HStack {
+                                    Text("Core Class")
+                                        .font(.custom("ProductSans-Regular", size: 14))
+                                        .foregroundColor(.secCol.opacity(0.8))
+                                    
+                                    Spacer()
+                                    
+                                    Toggle(isOn: Binding(
+                                        get: { isCoreCourses[course.id] ?? false },
+                                        set: { isCoreCourses[course.id] = $0 }
+                                    )) {
+                                        Text("")
+                                    }
+                                    .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                                }
+                                .padding(.top, 8)
                             }
+                            .padding()
+                            .background(Color.black.opacity(0.2))
+                            .cornerRadius(12)
                         }
                     }
                     .padding(.horizontal)
@@ -156,6 +215,8 @@ struct CourseDetailsInputView: View {
             if let teacherName = teacherNames[courses[index].id], !teacherName.isEmpty {
                 courses[index].teacher = teacherName
             }
+            courses[index].courseLevel = courseLevels[courses[index].id] ?? nil
+            courses[index].isCore = isCoreCourses[courses[index].id] ?? false
         }
         
         onComplete()

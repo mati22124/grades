@@ -18,6 +18,7 @@ struct editFinalGradeView: View {
     @State private var markingPeriod: Int? = nil
     @State private var credits: Double = 5.0
     @State private var courseLevel: CourseLevel? = nil
+    @State private var isCore: Bool = false
     @State private var isPressed = false
     
     @Environment(\.dismiss) private var dismiss
@@ -158,6 +159,20 @@ struct editFinalGradeView: View {
                                 .foregroundColor(.white)
                                 .keyboardType(.decimalPad)
                         }
+                        
+                        // Core Class Toggle
+                        HStack {
+                            Text("Core Class")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            Spacer()
+                            
+                            Toggle(isOn: $isCore) {
+                                Text("")
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                        }
                     }
                     .padding(.horizontal)
                     .onAppear {
@@ -168,6 +183,7 @@ struct editFinalGradeView: View {
                         markingPeriod = originalFinalGrade.markingPeriod
                         credits = originalFinalGrade.credits
                         courseLevel = originalFinalGrade.courseLevel
+                        isCore = originalFinalGrade.isCore ?? false
                     }
                     
                     Spacer(minLength: 40)
@@ -211,6 +227,7 @@ struct editFinalGradeView: View {
             updatedFinalGrade.markingPeriod = markingPeriod
             updatedFinalGrade.credits = credits
             updatedFinalGrade.courseLevel = courseLevel
+            updatedFinalGrade.isCore = isCore
             
             try finalGradesVM.updateFinalGrade(updatedFinalGrade)
             dismiss()

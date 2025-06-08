@@ -26,6 +26,11 @@ struct mainView: View {
                             .environmentObject(gradesVm)
                     }
                     
+                    Tab("Reports", systemImage: "chart.bar.xaxis") {
+                        ReportsView()
+                            .environmentObject(gradesVm)
+                    }
+                    
                     Tab("Import", systemImage: "square.and.arrow.up") {
                         importView()
                             .environmentObject(gradesVm)
@@ -45,18 +50,25 @@ struct mainView: View {
                     }
                     .tag(0)
                     
+                    ReportsView()
+                        .environmentObject(gradesVm)
+                        .tabItem {
+                            Label("Reports", systemImage: "chart.bar.xaxis")
+                        }
+                    .tag(1)
+                    
                     importView()
                         .environmentObject(gradesVm)
                         .tabItem {
                             Label("Import", systemImage: "square.and.arrow.up")
                         }
-                    .tag(1)
+                    .tag(2)
 
                     SettingsView(showSignInView: $showSignInView)
                         .tabItem {
                             Label("Settings", systemImage: "gear")
                         }
-                    .tag(2)
+                    .tag(3)
                 }
                 .tint(.terCol)
             }

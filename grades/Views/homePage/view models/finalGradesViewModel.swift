@@ -41,7 +41,7 @@ final class finalGradesViewModel: ObservableObject {
         }
     }
     
-    func addFinalGrade(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int?, credits: Double, courseLevel: CourseLevel? = nil) throws {
+    func addFinalGrade(name: String, teacher: String, letterGrade: String, year: Int, markingPeriod: Int?, credits: Double, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) throws {
         guard let _ = currentUser else { throw authError.noUser }
         
         let newFinalGrade = finalGrade(
@@ -51,7 +51,8 @@ final class finalGradesViewModel: ObservableObject {
             year: year,
             markingPeriod: markingPeriod,
             credits: credits,
-            courseLevel: courseLevel
+            courseLevel: courseLevel,
+            isCore: isCore
         )
         
         try finalGradesManager.shared.addFinalGrade(data: newFinalGrade)

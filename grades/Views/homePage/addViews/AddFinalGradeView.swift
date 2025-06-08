@@ -18,6 +18,7 @@ struct AddFinalGradeView: View {
     @State private var markingPeriod: Int? = nil
     @State private var credits: Double = 5.0
     @State private var courseLevel: CourseLevel? = nil
+    @State private var isCore: Bool = false
     @State private var isPressed = false
     
     let letterGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"]
@@ -155,6 +156,20 @@ struct AddFinalGradeView: View {
                                 .foregroundColor(.white)
                                 .keyboardType(.decimalPad)
                         }
+                        
+                        // Core Class Toggle
+                        HStack {
+                            Text("Core Class")
+                                .font(.custom("ProductSans-Bold", size: 14))
+                                .foregroundColor(.secCol.opacity(0.8))
+                            
+                            Spacer()
+                            
+                            Toggle(isOn: $isCore) {
+                                Text("")
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: .terCol))
+                        }
                     }
                     .padding(.horizontal)
                     
@@ -198,7 +213,8 @@ struct AddFinalGradeView: View {
                 year: year,
                 markingPeriod: markingPeriod,
                 credits: credits,
-                courseLevel: courseLevel
+                courseLevel: courseLevel,
+                isCore: isCore
             )
             dismiss()
             isPressed = false
