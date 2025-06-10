@@ -16,16 +16,28 @@ struct menuButtonAdd: View {
         ZStack {
             if isMenuPresented {
                 VStack {
-                    Rectangle()
-                        .fill(.primaryCol.opacity(0.2))
-                        .background(.ultraThinMaterial)  // This creates the frosted glass effect
-                        .environment(\.colorScheme, .dark)
-                        .ignoresSafeArea(edges: .all)
-                        .onTapGesture {
-                            withAnimation {
-                                isMenuPresented = false
+                    if #available(iOS 26.0, *) {
+                        Rectangle()
+                            .fill(.primaryCol.opacity(0.2))
+                            .glassEffect(in: RoundedRectangle(cornerRadius: 0.1))
+                            .environment(\.colorScheme, .dark)
+                            .ignoresSafeArea(edges: .all)
+                            .onTapGesture {
+                                withAnimation {
+                                    isMenuPresented = false
+                                }
                             }
-                        }
+                    } else {
+                        Rectangle()
+                            .fill(.primaryCol.opacity(0.2))
+                            .background(.ultraThinMaterial)  // This creates the frosted glass effect
+                            .environment(\.colorScheme, .dark)
+                            .ignoresSafeArea(edges: .all)
+                            .onTapGesture {
+                                withAnimation {
+                                    isMenuPresented = false
+                                }
+                            }                    }
                 }
                 .transition(.opacity)
             }
@@ -86,30 +98,48 @@ struct menuButtonAdd: View {
                                         }
                                     }
                                 }
-                              
+                                
                             }
                         }
                         .padding()
                         .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
-                    Button {
-                        withAnimation {
-                            isMenuPresented.toggle()
-                        }
-                    } label: {
-                        Circle()
-                            .frame(width: 50, height: 50,alignment: .trailing)
-                            .foregroundStyle(.terCol)
-                            .overlay {
-                                Image(systemName: "xmark")
-                                    .foregroundStyle(.white)
-                                    .fontWeight(.bold)
+                    if #available(iOS 26.0, *) {
+                        Button {
+                            withAnimation {
+                                isMenuPresented.toggle()
                             }
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.white)
+                                .fontWeight(.bold)
+                                .padding(15)
                             .rotationEffect(.degrees(isMenuPresented ? 0 : -45))
+                        }
+                        .buttonStyle(.glass)
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                        .padding(.top, 10)
+                    } else {
+                        Button {
+                            withAnimation {
+                                isMenuPresented.toggle()
+                            }
+                        } label: {
+                            Circle()
+                                .frame(width: 50, height: 50,alignment: .trailing)
+                                .foregroundStyle(.terCol)
+                                .overlay {
+                                    Image(systemName: "xmark")
+                                        .foregroundStyle(.white)
+                                        .fontWeight(.bold)
+                                }
+                                .rotationEffect(.degrees(isMenuPresented ? 0 : -45))
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                        .padding(.top, 10)
                     }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .padding(.top, 10)
                 }
             }
         }

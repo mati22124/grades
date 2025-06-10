@@ -119,63 +119,64 @@ struct classesView: View {
             ZStack {
                 Color.primaryCol.edgesIgnoringSafeArea(.all)
                 
-                VStack(spacing: 20) {
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            if (filteredCourses.isEmpty && filteredFinalGrades.isEmpty) {
-                                Text("No Courses")
-                                    .tint(.secCol)
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .font(.custom("ProductSans-Regular", size: 25))
-                            }
-                            ForEach(groupedItems, id: \.key) { group in
-                                VStack(alignment: .leading, spacing: 8) {
-                                    // Section header
-                                    HStack {
-                                        Text(String(group.year)+"-"+String(group.year+1))
-                                            .font(.custom("ProductSans-Bold", size: 20))
-                                            .foregroundColor(.secCol)
-                                        if group.markingPeriod != 0 {
-                                            Text("MP \(group.markingPeriod)")
-                                                .font(.custom("ProductSans-Regular", size: 18))
-                                                .foregroundColor(.secCol.opacity(0.8))
-                                        }
-                                        Spacer()
+                ScrollView {
+                    VStack(spacing: 12) {
+                        if (filteredCourses.isEmpty && filteredFinalGrades.isEmpty) {
+                            Text("No Courses")
+                                .tint(.secCol)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .font(.custom("ProductSans-Regular", size: 25))
+                        }
+                        ForEach(groupedItems, id: \.key) { group in
+                            VStack(alignment: .leading, spacing: 8) {
+                                // Section header
+                                HStack {
+                                    Text(String(group.year)+"-"+String(group.year+1))
+                                        .font(.custom("ProductSans-Bold", size: 20))
+                                        .foregroundColor(.secCol)
+                                    if group.markingPeriod != 0 {
+                                        Text("MP \(group.markingPeriod)")
+                                            .font(.custom("ProductSans-Regular", size: 18))
+                                            .foregroundColor(.secCol.opacity(0.8))
                                     }
-                                    .padding(.horizontal)
-                                    .padding(.top, group.key == groupedItems.first?.key ? 0 : 10)
-                                    
-                                    // Regular courses in this group
-                                    ForEach(group.courses) { course in
-                                        let index = viewModel.courses.firstIndex(where: { $0.id == course.id })!
-                                        NavigationLink {
-                                            CourseDetailView(course: $viewModel.courses[index])
-                                                .environmentObject(viewModel)
-                                        } label: {
-                                            SwipeToDeleteView(content: {
-                                                ClassGradeBlock(classGrade: $viewModel.courses[index])
-                                                    .environmentObject(viewModel)
-                                            }, onDelete: {
-                                                courseToDelete = viewModel.courses[index]
-                                            }, onEdit: editCourseView(originalCourse: $viewModel.courses[index]).environmentObject(viewModel))
-                                        }
-                                    }
-                                    
-                                    // Final grades in this group
-                                    ForEach(group.finalGrades) { finalGrade in
+                                    Spacer()
+                                }
+                                .padding(.horizontal)
+                                .padding(.top, group.key == groupedItems.first?.key ? 0 : 10)
+                                
+                                // Regular courses in this group
+                                ForEach(group.courses) { course in
+                                    let index = viewModel.courses.firstIndex(where: { $0.id == course.id })!
+                                    NavigationLink {
+                                        CourseDetailView(course: $viewModel.courses[index])
+                                            .environmentObject(viewModel)
+                                    } label: {
                                         SwipeToDeleteView(content: {
-                                            FinalGradeBlock(finalGrade: finalGrade)
+                                            ClassGradeBlock(classGrade: $viewModel.courses[index])
+                                                .environmentObject(viewModel)
                                         }, onDelete: {
-                                            finalGradeToDelete = finalGrade
-                                            showingFinalGradeAlert = true
-                                        }, onEdit: editFinalGradeView(originalFinalGrade: finalGrade))
+                                            courseToDelete = viewModel.courses[index]
+                                        }, onEdit: editCourseView(originalCourse: $viewModel.courses[index]).environmentObject(viewModel))
                                     }
+                                }
+                                
+                                // Final grades in this group
+                                ForEach(group.finalGrades) { finalGrade in
+                                    SwipeToDeleteView(content: {
+                                        FinalGradeBlock(finalGrade: finalGrade)
+                                    }, onDelete: {
+                                        finalGradeToDelete = finalGrade
+                                        showingFinalGradeAlert = true
+                                    }, onEdit: editFinalGradeView(originalFinalGrade: finalGrade))
                                 }
                             }
                         }
-                        .padding(.top, 10)
                     }
+                    .padding(.top, 10)
+                    .padding(.bottom, 30)
+                    .padding(.horizontal, 20)
                 }
+                .preferredColorScheme(.light)
                 .onChange(of: courseToDelete, { _, newValue in
                     if let _ = courseToDelete {
                         showingAlert = true
@@ -221,8 +222,6 @@ struct classesView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .ignoresSafeArea(.keyboard)
-                .padding(.horizontal, 20)
-                
                 
                 menuButtonAdd(isMenuPresented: $menuIsPresentedCourse, menuItems: [
                     menuItem(destination: addCourseView().environmentObject(viewModel), optionName: "Add Course", icon: "plus.circle.fill"),
