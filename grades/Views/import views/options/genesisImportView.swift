@@ -11,7 +11,7 @@ struct genesisImportView: View {
     @State private var isShowingView: Bool = false
     
     @State private var isShowingEdit: Bool = false
-    @State private var url: String = ""
+    @AppStorage("genesisURL") private var url: String = ""
 
     @State var showAlert: Bool = false
     @State private var showCourseDetails: Bool = false
