@@ -9,12 +9,25 @@ import Foundation
 
 enum CourseLevel: String, Codable, CaseIterable {
     case AP = "AP"
-    case honors = "Honors/Excel"
+    case honors = "Honors"
     case CP = "CP"
     
     var displayName: String {
         return self.rawValue
     }
+}
+
+struct tempCourse: Codable, Identifiable, Equatable {
+    static func == (lhs: tempCourse, rhs: tempCourse) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    var name: String
+    var teacher: String
+    var courseCode: String
+    var section: String
+    var id: String
+    var MP: String
 }
 
 class course: Codable, Identifiable, Equatable {
@@ -64,37 +77,37 @@ class course: Codable, Identifiable, Equatable {
         }
     }
     
-    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil, uuid: String? = nil) {
         self.name = name
         self.grades = []
         self.categories = []
         self.isPoints = isPoints
         self.teacher = teacher
-        self.id = UUID().uuidString
+        self.id = uuid ?? UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
         self.isCore = isCore
     }
     
-    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
+    init(name: String, teacher: String, isPoints: Bool, grades: [grade], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil, uuid: String? = nil) {
         self.name = name
         self.grades = grades
         self.categories = []
         self.isPoints = isPoints
         self.teacher = teacher
-        self.id = UUID().uuidString
+        self.id = uuid ?? UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
         self.isCore = isCore
     }
     
-    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil) {
+    init(name: String, teacher: String, grades: [grade], categories: [category], credits: Double? = nil, courseLevel: CourseLevel? = nil, isCore: Bool? = nil, uuid: String? = nil) {
         self.name = name
         self.grades = grades
         self.categories = categories
         self.isPoints = false
         self.teacher = teacher
-        self.id = UUID().uuidString
+        self.id = uuid ?? UUID().uuidString
         self.credits = credits
         self.courseLevel = courseLevel
         self.isCore = isCore

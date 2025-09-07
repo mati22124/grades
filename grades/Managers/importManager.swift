@@ -103,6 +103,7 @@ enum importError: Error {
     case noGrades
     case noImage
     case nothingInImage
+    case nothingInGradebook
 }
 
 extension importError: LocalizedError {
@@ -116,6 +117,8 @@ extension importError: LocalizedError {
             return NSLocalizedString("No Image provided. Try again.", comment: "Import Error")
         case .nothingInImage:
             return NSLocalizedString("Couldn't find any grades in the image provided. Try taking a different photo.", comment: "Import Error")
+        case .nothingInGradebook:
+            return NSLocalizedString("Couldn't find any grades in the gradebook. Try again when the gradebook is avaliable.", comment: "Import Error")
         }
     }
 }

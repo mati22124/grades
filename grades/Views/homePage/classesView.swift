@@ -123,7 +123,7 @@ struct classesView: View {
                     VStack(spacing: 12) {
                         if (filteredCourses.isEmpty && filteredFinalGrades.isEmpty) {
                             Text("No Courses")
-                                .tint(.secCol)
+                                .foregroundStyle(.secCol)
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .font(.custom("ProductSans-Regular", size: 25))
                         }
@@ -176,6 +176,7 @@ struct classesView: View {
                     .padding(.bottom, 30)
                     .padding(.horizontal, 20)
                 }
+                .background(.clear)
                 .preferredColorScheme(.light)
                 .onChange(of: courseToDelete, { _, newValue in
                     if let _ = courseToDelete {

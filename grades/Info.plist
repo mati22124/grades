@@ -15,12 +15,12 @@
 	</array>
 	<key>GIDClientID</key>
 	<string>108657214658-384ghrvm582ffcqutpq5mdtsbjqgeg9r.apps.googleusercontent.com</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ProductSansRegular.ttf</string>
 		<string>ProductSansBold.ttf</string>
 	</array>
+	<key>UIDesignRequiresCompatibility</key>
+	<false/>
 </dict>
 </plist>

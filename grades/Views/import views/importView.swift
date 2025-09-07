@@ -34,6 +34,13 @@ struct importView: View {
                             textName: "Camera",
                             destination: photoImportView()
                         )
+                        importItemView(
+                            bgColor: .secCol,
+                            textColor: .primaryCol,
+                            imageName: "arrow.triangle.2.circlepath.circle.fill",
+                            textName: "Genesis Auto",
+                            destination: genesisAutoImport().environmentObject(viewModel)
+                        )
                     }
                     .padding()
                     Spacer()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A42BB22E2E6A6714000F52D4 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A42BB22D2E6A6714000F52D4 /* Alamofire */; };
 		A4318D0B2CACE3CE004FF11C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0A2CACE3CE004FF11C /* FirebaseAnalytics */; };
 		A4318D0D2CACE3CE004FF11C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0C2CACE3CE004FF11C /* FirebaseAuth */; };
 		A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A4318D0E2CACE3CE004FF11C /* FirebaseFirestore */; };
@@ -54,6 +55,7 @@
 				A4E704E52CA718FA006793E2 /* TabBar in Frameworks */,
 				A4B5BC762CED54D200060FEF /* SwiftAnthropic in Frameworks */,
 				A4318D0B2CACE3CE004FF11C /* FirebaseAnalytics in Frameworks */,
+				A42BB22E2E6A6714000F52D4 /* Alamofire in Frameworks */,
 				A4DEB8042CA222DA008EFE1A /* GoogleSignInSwift in Frameworks */,
 				A4318D0F2CACE3CE004FF11C /* FirebaseFirestore in Frameworks */,
 				A4C6267A2CACEE0A00C7E2FA /* FirebaseFirestoreCombine-Community in Frameworks */,
@@ -119,6 +121,7 @@
 				A4B5BC752CED54D200060FEF /* SwiftAnthropic */,
 				A476BD782D13DA47003FC8B0 /* SwiftSoup */,
 				A45196242D582CE8003BA79A /* Shake */,
+				A42BB22D2E6A6714000F52D4 /* Alamofire */,
 			);
 			productName = grades;
 			productReference = A46FAF432CA1D4CD00B9C882 /* grades.app */;
@@ -155,6 +158,7 @@
 				A4B5BC742CED54D200060FEF /* XCRemoteSwiftPackageReference "SwiftAnthropic" */,
 				A476BD772D13D9CC003FC8B0 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				A45196232D582CE8003BA79A /* XCRemoteSwiftPackageReference "shake-ios" */,
+				A42BB22C2E6A6714000F52D4 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A46FAF442CA1D4CD00B9C882 /* Products */;
@@ -320,6 +324,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = grades/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -352,6 +357,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = grades/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -395,6 +401,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A42BB22C2E6A6714000F52D4 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 		A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -446,6 +460,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A42BB22D2E6A6714000F52D4 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A42BB22C2E6A6714000F52D4 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		A4318D0A2CACE3CE004FF11C /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A4318D082CACE331004FF11C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

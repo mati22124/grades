@@ -37,7 +37,8 @@ struct menuButtonAdd: View {
                                 withAnimation {
                                     isMenuPresented = false
                                 }
-                            }                    }
+                            }
+                    }
                 }
                 .transition(.opacity)
             }

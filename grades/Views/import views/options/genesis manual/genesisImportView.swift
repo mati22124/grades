@@ -75,7 +75,6 @@ struct genesisImportView: View {
                     
                 }
                 Button {
-                    url = "https://"
                     isShowingEdit = true
                 } label: {
                     HStack {
@@ -89,16 +88,12 @@ struct genesisImportView: View {
                     .background(.terCol)
                     .clipShape(Capsule())
                 }
-                .alert("Edit URL", isPresented: $isShowingEdit) {
-                    TextField("Enter the full URL here", text: $url)
-                    Button("OK", action: { // TODO: regex to verify url
-                        webVM.url = URL(string: url)!
-                        webVM.loadUrl()
-                    })
-                } message: {
-                    Text("Enter your genesis URL here")
-                }
-                
+                .sheet(isPresented: $isShowingEdit, onDismiss: {
+                    webVM.url = URL(string: url)!
+                    webVM.loadUrl()
+                }, content: {
+                    GenesisURLEditView()
+                })
                 
                 Button {
                     isShowingView = true
