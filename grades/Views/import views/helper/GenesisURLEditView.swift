@@ -14,17 +14,12 @@ struct GenesisURLEditView: View {
     @State private var customURL: String = ""
     
     let schools: [(name: String, url: String)] = [
-        ("West Windsor-Plainsboro Regional", "https://genesis.wwprsd.org"),
-        ("Princeton Public Schools", "https://genesis.princetonk12.org"),
-        ("Montgomery Township School District", "https://genesis.mtsd.k12.nj.us"),
-        ("South Brunswick School District", "https://genesis.sbschools.org"),
-        ("East Brunswick Public Schools", "https://genesis.ebnet.org"),
-        ("Hillsborough Township Public Schools", "https://genesis.htps.us"),
-        ("Bridgewater-Raritan Regional", "https://genesis.brrsd.k12.nj.us"),
-        ("Franklin Township Public Schools", "https://genesis.franklinboe.org"),
-        ("Lawrence Township Public Schools", "https://genesis.ltps.org"),
-        ("Hopewell Valley Regional", "https://genesis.hvrsd.org"),
-        ("Livingston High School", "https://students.livingston.org/livingston"),
+        ("Montville Township Public Schools", "https://students.montville.net/genesis"),
+        ("Livingston Public School", "https://students.livingston.org/livingston"),
+        ("Livingston Public School", "https://students.livingston.org/livingston"),
+        ("South Brunswick Public Schools", "https://students.sbschools.org/genesis"),
+        ("Monroe Township Schools - Parents", "https://parents.monroe.k12.nj.us/genesis"),
+        ("Caldwell-West Caldwell School District", "https://students.c1.genesisedu.net/cwcboe"),
         ("Custom URL", "custom")
     ]
     
@@ -82,6 +77,12 @@ struct GenesisURLEditView: View {
                                     .font(.custom("ProductSans-Regular", size: 16))
                                     .tint(.white)
                                     .keyboardType(.URL)
+                                
+                                Text("Enter the base Genesis URL up to (but not including) '/sis/'\n\nExample: https://students.example.org/genesis\n(Not the full login page URL)")
+                                    .font(.custom("ProductSans-Regular", size: 14))
+                                    .foregroundColor(.secCol.opacity(0.8))
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.horizontal)
                             }
                             .transition(.opacity.combined(with: .move(edge: .top)))
                         }
@@ -122,7 +123,13 @@ struct GenesisURLEditView: View {
                         
                         Button(action: {
                             if selectedOption == "custom" {
-                                genesisURL = customURL.isEmpty ? "https://" : customURL
+                                // Extract base URL up to /sis/ if present
+                                if let range = customURL.range(of: #"^(.*?)(?=/sis/)"#, options: .regularExpression) {
+                                    genesisURL = String(customURL[range])
+                                } else {
+                                    // If no /sis/ found, use the URL as is (assuming it's already the base URL)
+                                    genesisURL = customURL
+                                }
                             } else {
                                 genesisURL = selectedOption
                             }
