@@ -9,7 +9,7 @@ import Foundation
 
 enum CourseLevel: String, Codable, CaseIterable {
     case AP = "AP"
-    case honors = "Honors"
+    case honors = "Honors/Excel"
     case CP = "CP"
     
     var displayName: String {
