@@ -177,7 +177,6 @@ struct classesView: View {
                     .padding(.horizontal, 20)
                 }
                 .background(.clear)
-                .preferredColorScheme(.light)
                 .onChange(of: courseToDelete, { _, newValue in
                     if let _ = courseToDelete {
                         showingAlert = true
